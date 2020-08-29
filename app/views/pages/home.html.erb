@@ -1,2 +1,13 @@
-<h1>Pages#home</h1>
-<p>Find me in app/views/pages/home.html.erb</p>
+<div class="container my-5">
+  <h3 class="text-center">Realbeez tool</h3>
+  <div class="row mt-5">
+    <div class="col-12 col-md-6 border">
+      <p>Je suis un propriétaire</p>
+      <%= link_to "Voir mes biens", companies_path  %>
+    </div>
+    <div class="col-12 col-md-6 border">
+      <p class="">Je suis un locataire</p>
+      <%= link_to "Voir mon appartement", companies_path  %>
+    </div>
+  </div>
+</div>
