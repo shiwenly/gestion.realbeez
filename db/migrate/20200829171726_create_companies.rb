@@ -5,7 +5,7 @@ class CreateCompanies < ActiveRecord::Migration[5.2]
       t.string :address
       t.boolean :corporate_tax
       t.boolean :vat
-      t.text :access, array: true, default: [], using: "(string_to_array(access, ','))"
+      t.string :associe
       t.references :user, foreign_key: true
 
       t.timestamps
