@@ -51,7 +51,7 @@ class CompaniesController < ApplicationController
       :address,
       :corporate_tax,
       :vat,
-      :access
+      :associe
     )
   end
 

@@ -8,8 +8,8 @@
           <%= f.input :address %>
           <%= f.input :corporate_tax, as: :radio_buttons, collection: [[true, "Oui"], [false, "Non"]], label_method: :second, value_method: :first, label: "Soumis à l'IS" %>
           <%= f.input :vat, as: :radio_buttons, collection: [[true, "Oui"], [false, "Non"]], label_method: :second, value_method: :first, label: "Soumis à la TVA" %>
-          <%= f.input :access, label: "Associé" %>
-          <%= f.submit "Créer", class: "btn mb-2" %>
+          <%= f.input :associe, label: "Ajouter l' email des associés séparé d'une , " %>
+          <%= f.submit "Modifier", class: "btn mb-2" %>
         <% end %>
       </div>
     </div>
