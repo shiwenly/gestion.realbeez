@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_30_133053) do
+ActiveRecord::Schema.define(version: 2020_08_30_150246) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -90,6 +90,19 @@ ActiveRecord::Schema.define(version: 2020_08_30_133053) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  create_table "waters", force: :cascade do |t|
+    t.date "submission_date"
+    t.decimal "quantity", precision: 10, scale: 2
+    t.string "photo"
+    t.string "statut"
+    t.bigint "user_id"
+    t.bigint "tenant_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tenant_id"], name: "index_waters_on_tenant_id"
+    t.index ["user_id"], name: "index_waters_on_user_id"
+  end
+
   add_foreign_key "apartments", "buildings"
   add_foreign_key "apartments", "users"
   add_foreign_key "buildings", "companies"
@@ -97,4 +110,6 @@ ActiveRecord::Schema.define(version: 2020_08_30_133053) do
   add_foreign_key "companies", "users"
   add_foreign_key "tenants", "apartments"
   add_foreign_key "tenants", "users"
+  add_foreign_key "waters", "tenants"
+  add_foreign_key "waters", "users"
 end

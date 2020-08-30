@@ -20,4 +20,9 @@ Rails.application.routes.draw do
   end
   resources :tenants, only: [:show, :edit, :destroy, :update ]
 
+  resources :tenants do
+    resources :waters, only: [:new, :create]
+  end
+  resources :waters, only: [:show, :edit, :destroy, :update, :index ]
+
 end
