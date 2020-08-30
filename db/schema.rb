@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_30_110057) do
+ActiveRecord::Schema.define(version: 2020_08_30_133053) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,6 +52,28 @@ ActiveRecord::Schema.define(version: 2020_08_30_110057) do
     t.index ["user_id"], name: "index_companies_on_user_id"
   end
 
+  create_table "tenants", force: :cascade do |t|
+    t.string "first_name"
+    t.string "last_name"
+    t.string "email"
+    t.string "phone"
+    t.decimal "rent", precision: 10, scale: 2
+    t.decimal "service_charge", precision: 10, scale: 2
+    t.decimal "deposit", precision: 10, scale: 2
+    t.string "contract"
+    t.string "inventory"
+    t.date "move_in_date"
+    t.date "move_out_date"
+    t.string "statut"
+    t.bigint "user_id"
+    t.bigint "apartment_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "current_tenant", default: true
+    t.index ["apartment_id"], name: "index_tenants_on_apartment_id"
+    t.index ["user_id"], name: "index_tenants_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -73,4 +95,6 @@ ActiveRecord::Schema.define(version: 2020_08_30_110057) do
   add_foreign_key "buildings", "companies"
   add_foreign_key "buildings", "users"
   add_foreign_key "companies", "users"
+  add_foreign_key "tenants", "apartments"
+  add_foreign_key "tenants", "users"
 end

@@ -9,7 +9,7 @@ class CompaniesController < ApplicationController
 
   def show
     authorize @company
-    @buildings = policy_scope(Building.where("statut = ?", "active" ).order(created_at: :asc))
+    @buildings = policy_scope(Building.where("statut = ? AND company_id = ?", "active", @company.id ).order(created_at: :asc))
   end
 
   def new

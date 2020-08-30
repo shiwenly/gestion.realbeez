@@ -1,1 +1,36 @@
-show.html.erb
+<div class="container mt-5">
+  <h3 class="mt-5 text-center">Détails du locataire</h3>
+  <h5 class="text-center">de l'appartement : <%= @apartment.name %></h5>
+  <h5 class="text-center mb-4">situé au <%= @apartment.building.address %></h5>
+  <p> <%= link_to "Ajouter un nouveau", new_apartment_tenant_path(@apartment) %></p>
+  <p><%= link_to "Retour", building_path(@apartment.building)  %></p>
+  <% @tenants.each do |tenant| %>
+    <% associe = tenant.apartment.building.company.associe.split(",").map(&:strip) %>
+    <% if associe.include?(current_user.email) %>
+      <div class="row">
+        <div class="border p-3 col-12 col-md-6 offset-md-3 mt-4">
+          <p>Locataire en place : <%= tenant.current_tenant ? "Oui" : "Non"%></p>
+          <p>Nom : <%= tenant.first_name %></p>
+          <p>Prénom : <%= tenant.last_name %></p>
+          <p>Email : <%= tenant.email %></p>
+          <p>Téléphone : <%= tenant.phone %></p>
+          <p>Montant du loyer : <%= tenant.rent %></p>
+          <p>Montant des charges : <%= tenant.service_charge %></p>
+          <p>Montant de la caution : <%= tenant.deposit %></p>
+          <p>Le contrat de bail : <%= tenant.contract %></p>
+          <p>L'état des lieux : <%= tenant.inventory %></p>
+          <p>Date d'entrée : <%= tenant.move_in_date %></p>
+          <% if tenant.current_tenant == false  %>
+            <p>Date de sortie : <%= tenant.move_out_date %></p>
+          <% end %>
+          <p>Statut : <%= tenant.statut %> </p>
+          <div class="mt-3">
+            <%= link_to "Voir", tenant_path(tenant)  %>
+            <%= link_to "Modifier", edit_tenant_path(tenant)  %>
+            <%= link_to "Supprimer", tenant_path(tenant), method: :delete  %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+</div>

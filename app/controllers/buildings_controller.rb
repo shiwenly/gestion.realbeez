@@ -4,7 +4,7 @@ class BuildingsController < ApplicationController
 
   def show
     authorize @building
-    @apartments = policy_scope(Apartment.where("statut = ?", "active" ).order(created_at: :asc))
+    @apartments = policy_scope(Apartment.where("statut = ? AND building_id = ?", "active", @building.id).order(created_at: :asc))
   end
 
   def new

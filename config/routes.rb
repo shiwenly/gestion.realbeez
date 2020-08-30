@@ -15,4 +15,9 @@ Rails.application.routes.draw do
   end
   resources :apartments, only: [:show, :edit, :destroy, :update ]
 
+  resources :apartments do
+    resources :tenants, only: [:new, :create]
+  end
+  resources :tenants, only: [:show, :edit, :destroy, :update ]
+
 end

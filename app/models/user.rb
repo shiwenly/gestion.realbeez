@@ -8,4 +8,5 @@ class User < ApplicationRecord
   has_many :companies, dependent: :destroy
   has_many :buildings, dependent: :destroy
   has_many :apartments, dependent: :destroy
+  has_many :tenants, dependent: :destroy
 end

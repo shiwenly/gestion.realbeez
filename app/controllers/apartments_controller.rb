@@ -4,7 +4,7 @@ class ApartmentsController < ApplicationController
 
   def show
     authorize @apartment
-
+    @tenants = policy_scope(Tenant.where("statut = ? AND apartment_id = ?", "active", @apartment.id ).order(created_at: :asc))
   end
 
   def new
