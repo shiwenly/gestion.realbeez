@@ -4,11 +4,12 @@ class CompaniesController < ApplicationController
   before_action :set_company, only: [:edit, :show, :update, :destroy]
 
   def index
-    @companies = policy_scope(Company).order(created_at: :asc)
+    @companies = policy_scope(Company.where("statut = ?", "active" ).order(created_at: :asc))
   end
 
   def show
     authorize @company
+    @buildings = policy_scope(Building.where("statut = ?", "active" ).order(created_at: :asc))
   end
 
   def new
@@ -18,6 +19,7 @@ class CompaniesController < ApplicationController
   def create
     authorize @company = Company.new(company_params)
     @company.user_id = current_user.id
+    @company.statut = "active"
     if @company.save
       redirect_to companies_path
     else
@@ -39,7 +41,9 @@ class CompaniesController < ApplicationController
   end
 
   def destroy
-    authorize @company.destroy
+    authorize @company
+    @company.statut = "deleted"
+    @company.save
     redirect_to companies_path
   end
 

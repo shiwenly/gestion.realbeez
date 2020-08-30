@@ -1,1 +1,21 @@
-show.html.erb
+<div class="container mt-5">
+  <h3 class="text-center mt-5 mb-4">Liste de vos batiments</h3>
+  <p> <%= link_to "Ajouter un batiment", new_company_building_path(@company) %></p>
+  <p><%= link_to "Retour", companies_path  %></p>
+  <% @buildings.each do |building| %>
+    <% associe = building.company.associe.split(",").map(&:strip) %>
+    <% if associe.include?(current_user.email) %>
+      <div class="row">
+        <div class="border p-3 col-12 col-md-6 offset-md-3 mt-4">
+          <p><%= building.address %></p>
+          <p>Nombre d'appartements : <%= building.number_of_flat %></p>
+          <div class="mt-3">
+            <%= link_to "Voir", building_path(building)  %>
+            <%= link_to "Modifier", edit_building_path(building)  %>
+            <%= link_to "Supprimer", building_path(building), method: :delete  %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+</div>
