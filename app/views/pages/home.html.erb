@@ -2,15 +2,19 @@
   <h3 class="text-center">Realbeez tool</h3>
   <div class="row mt-5">
     <% if current_user.statut =="Propriétaire" %>
-      <div class="col-12 col-md-6 offset-md-3 border">
-        <p>Je suis un propriétaire</p>
-        <%= link_to "Voir mes biens", companies_path  %>
+      <div class="col-12 col-md-6 offset-md-3">
+        <div class="border p-3">
+          <p>Je suis un propriétaire</p>
+          <%= link_to "Voir mes biens", companies_path  %>
+        </div>
       </div>
     <% end %>
     <% if current_user.statut =="Locataire" %>
       <div class="col-12 col-md-6 offset-md-3 border">
-        <p class="">Je suis un locataire</p>
-        <%= link_to "Voir mon appartement", companies_path  %>
+        <div class="border p-3">
+          <p class="">Je suis un locataire</p>
+          <%= link_to "Voir mon appartement", companies_path  %>
+        </div>
       </div>
     <% end %>
   </div>
