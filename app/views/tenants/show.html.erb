@@ -1,5 +1,6 @@
 <div class="container mt-5">
   <h3 class="mt-5 text-center">Le paiement du loyer et la consommation d'eau</h3>
+  <h5 class="text-center">de <%= @tenant.first_name %> <%= @tenant.last_name %></h5>
   <p><%= link_to "Retour", apartment_path(@tenant.apartment)  %></p>
   <!-- LOYER -->
   <div class="my-5">
