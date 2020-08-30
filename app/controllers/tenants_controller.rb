@@ -2,14 +2,10 @@ class TenantsController < ApplicationController
   skip_before_action :authenticate_user!, only: []
   before_action :set_tenant, only: [:edit, :show, :update, :destroy]
 
-  def index
-
-  end
-
   def show
     authorize @tenant
     @waters = policy_scope(Water.where("statut = ? AND tenant_id = ?", "active", @tenant.id ).order(created_at: :asc))
-
+    @rents = policy_scope(Rent.where("statut = ? AND tenant_id = ?", "active", @tenant.id ).order(created_at: :asc))
   end
 
   def new
