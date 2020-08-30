@@ -4,7 +4,7 @@
     <div class="col-12 col-md-6 col-lg-6">
       <div class="center">
         <%= simple_form_for [@tenant, @water] do |f| %>
-          <%= f.input :submission_date, label: "Date de la déclaration" %>
+          <%= f.input :submission_date, start_year: Date.today.year, label: "Date de la déclaration", :order => [:day, :month, :year] %>
           <%= f.input :quantity, label: "Quantité" %>
           <%= f.input :photo, label: "Photo à télécharger" %>
           <%= f.submit "Modifier", class: "btn mb-2" %>

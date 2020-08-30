@@ -10,10 +10,12 @@
       </div>
     <% end %>
     <% if current_user.statut =="Locataire" %>
-      <div class="col-12 col-md-6 offset-md-3 border">
+      <div class="col-12 col-md-6 offset-md-3">
         <div class="border p-3">
           <p class="">Je suis un locataire</p>
-          <%= link_to "Voir mon appartement", companies_path  %>
+          <% if @tenant != nil %>
+            <%= link_to "Voir mon dossier", tenant_path(@tenant)  %>
+          <% end %>
         </div>
       </div>
     <% end %>
