@@ -4,7 +4,7 @@ class BuildingsController < ApplicationController
 
   def show
     authorize @building
-    @company = @building.company
+    @apartments = policy_scope(Apartment.where("statut = ?", "active" ).order(created_at: :asc))
   end
 
   def new
@@ -57,6 +57,5 @@ class BuildingsController < ApplicationController
   def set_building
     @building = Building.find(params[:id])
   end
-
 
 end

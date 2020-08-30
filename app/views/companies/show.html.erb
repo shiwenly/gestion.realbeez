@@ -1,5 +1,6 @@
 <div class="container mt-5">
-  <h3 class="text-center mt-5 mb-4">Liste de vos batiments</h3>
+  <h3 class="text-center mt-5">Liste de vos batiments </h3>
+  <h5 class="text-center mb-4">de la société <%= @company.name %></h5>
   <p> <%= link_to "Ajouter un batiment", new_company_building_path(@company) %></p>
   <p><%= link_to "Retour", companies_path  %></p>
   <% @buildings.each do |building| %>

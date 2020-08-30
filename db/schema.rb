@@ -10,10 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_30_095852) do
+ActiveRecord::Schema.define(version: 2020_08_30_110057) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "apartments", force: :cascade do |t|
+    t.string "name"
+    t.string "water"
+    t.string "statut"
+    t.bigint "building_id"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["building_id"], name: "index_apartments_on_building_id"
+    t.index ["user_id"], name: "index_apartments_on_user_id"
+  end
 
   create_table "buildings", force: :cascade do |t|
     t.string "address"
@@ -56,6 +68,8 @@ ActiveRecord::Schema.define(version: 2020_08_30_095852) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "apartments", "buildings"
+  add_foreign_key "apartments", "users"
   add_foreign_key "buildings", "companies"
   add_foreign_key "buildings", "users"
   add_foreign_key "companies", "users"
