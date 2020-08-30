@@ -1,22 +1,21 @@
-<div class="container mt-5">
-  <h3 class="mt-5 text-center">Le paiement du loyer et la consommation d'eau</h3>
-  <h5 class="text-center">de <%= @tenant.first_name %> <%= @tenant.last_name %></h5>
-  <!-- LOYER -->
-  <div class="my-5">
-    <% associe = @tenant.apartment.building.company.associe.split(",").map(&:strip) %>
-    <% if associe.include?(current_user.email) %>
-      <p><%= link_to "Retour", apartment_path(@tenant.apartment)  %></p>
-    <% end %>
-    <h5 class="border-top pt-3">Paiement du loyer</h5>
-    <div class="mt_3">
-      <% associe = @tenant.apartment.building.company.associe.split(",").map(&:strip) %>
+<% associe = @tenant.apartment.building.company.associe.split(",").map(&:strip) %>
+<% if associe.include?(current_user.email) || @tenant.email == current_user.email %>
+  <div class="container mt-5">
+    <h3 class="mt-5 text-center">Le paiement du loyer et la consommation d'eau</h3>
+    <h5 class="text-center">de <%= @tenant.first_name %> <%= @tenant.last_name %></h5>
+    <!-- LOYER -->
+    <div class="my-5">
       <% if associe.include?(current_user.email) %>
-        <%= link_to "Déclarer le paiement du loyer", new_tenant_rent_path(@tenant) %>
+        <p><%= link_to "Retour", apartment_path(@tenant.apartment)  %></p>
       <% end %>
-    </div>
-    <% @rents.each do |rent| %>
-      <% associe = rent.tenant.apartment.building.company.associe.split(",").map(&:strip) %>
-      <% if associe.include?(current_user.email) || rent.tenant.email == current_user.email %>
+      <h5 class="border-top pt-3">Paiement du loyer</h5>
+      <div class="mt_3">
+        <% associe = @tenant.apartment.building.company.associe.split(",").map(&:strip) %>
+        <% if associe.include?(current_user.email) %>
+          <%= link_to "Déclarer le paiement du loyer", new_tenant_rent_path(@tenant) %>
+        <% end %>
+      </div>
+      <% @rents.each do |rent| %>
         <div class="row">
           <div class="p-3 col-12 col-md-6 offset-md-3 mt-4">
             <div class="border p-3">
@@ -35,17 +34,14 @@
           </div>
         </div>
       <% end %>
-    <% end %>
-  </div>
-  <!-- EAU -->
-  <div clas="my-5">
-    <h5 class="border-top pt-3">Consommation d'eau</h5>
-    <div class="mt_3">
-      <%= link_to "Déclarer ma consommation d'eau", new_tenant_water_path(@tenant) %>
     </div>
-    <% @waters.each do |water| %>
-      <% associe = water.tenant.apartment.building.company.associe.split(",").map(&:strip) %>
-      <% if associe.include?(current_user.email) || water.tenant.email == current_user.email %>
+    <!-- EAU -->
+    <div clas="my-5">
+      <h5 class="border-top pt-3">Consommation d'eau</h5>
+      <div class="mt_3">
+        <%= link_to "Déclarer ma consommation d'eau", new_tenant_water_path(@tenant) %>
+      </div>
+      <% @waters.each do |water| %>
         <div class="row">
           <div class="p-3 col-12 col-md-6 offset-md-3 mt-4">
             <div class="border p-3">
@@ -62,6 +58,8 @@
           </div>
         </div>
       <% end %>
-    <% end %>
+    </div>
   </div>
-</div>
+<% else %>
+  <h3 class="text-center my-5" style="color:red">Vous n'avez pas accès à cette page</h3>
+<% end %>

@@ -1,12 +1,12 @@
-<div class="container mt-5">
-  <h3 class="mt-5 text-center">Détails du locataire</h3>
-  <h5 class="text-center">de l'appartement : <%= @apartment.name %></h5>
-  <h5 class="text-center mb-4">situé au <%= @apartment.building.address %></h5>
-  <p> <%= link_to "Ajouter un nouveau", new_apartment_tenant_path(@apartment) %></p>
-  <p><%= link_to "Retour", building_path(@apartment.building)  %></p>
-  <% @tenants.each do |tenant| %>
-    <% associe = tenant.apartment.building.company.associe.split(",").map(&:strip) %>
-    <% if associe.include?(current_user.email) %>
+<% associe = @apartment.building.company.associe.split(",").map(&:strip) %>
+<% if associe.include?(current_user.email) %>
+  <div class="container mt-5">
+    <h3 class="mt-5 text-center">Détails du locataire</h3>
+    <h5 class="text-center">de l'appartement : <%= @apartment.name %></h5>
+    <h5 class="text-center mb-4">situé au <%= @apartment.building.address %></h5>
+    <p> <%= link_to "Ajouter un nouveau", new_apartment_tenant_path(@apartment) %></p>
+    <p><%= link_to "Retour", building_path(@apartment.building)  %></p>
+    <% @tenants.each do |tenant| %>
       <div class="row">
         <div class="p-3 col-12 col-md-6 offset-md-3 mt-4">
           <div class="border p-3">
@@ -34,5 +34,7 @@
         </div>
       </div>
     <% end %>
-  <% end %>
-</div>
+  </div>
+<% else %>
+  <h3 class="text-center my-5" style="color:red">Vous n'avez pas accès à cette page</h3>
+<% end %>
