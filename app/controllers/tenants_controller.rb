@@ -4,8 +4,15 @@ class TenantsController < ApplicationController
 
   def show
     authorize @tenant
-    @waters = policy_scope(Water.where("statut = ? AND tenant_id = ?", "active", @tenant.id ).order(created_at: :asc))
-    @rents = policy_scope(Rent.where("statut = ? AND tenant_id = ?", "active", @tenant.id ).order(created_at: :asc))
+    @waters = policy_scope(Water.where("statut = ? AND tenant_id = ?", "active", @tenant.id ).order(submission_date: :asc))
+    # @rents = policy_scope(Rent.where("statut = ? AND tenant_id = ?", "active", @tenant.id ).order(period: :asc))
+    if params[:search] == nil
+      @rents_unorder = Rent.search_by_date(Date.today.year)
+      @rents = @rents_unorder.select{|a| a.statut == "active" && a.tenant_id == @tenant.id}.sort_by { |b| b.period }
+    else
+      @rents_unorder = Rent.search_by_date(params[:search][:date].to_i)
+      @rents = @rents_unorder.select{|a| a.statut == "active" && a.tenant_id == @tenant.id}.sort_by { |b| b.period }
+    end
   end
 
   def new
@@ -44,6 +51,10 @@ class TenantsController < ApplicationController
     @tenant.statut = "deleted"
     @tenant.save
     redirect_to apartment_path(@tenant.apartment)
+  end
+
+  def search_by_date
+
   end
 
   private
