@@ -5,6 +5,26 @@ class ApartmentsController < ApplicationController
   def show
     authorize @apartment
     @tenants = policy_scope(Tenant.where("statut = ? AND apartment_id = ?", "active", @apartment.id ).order(created_at: :asc))
+
+    unless @tenants == []
+      @tenant = @apartment.tenants.select { |t| t.current_tenant == true}[0]
+      @rents_unorder = Rent.search_by_date(Date.today.year)
+      @rents = @rents_unorder.select{|a| a.statut == "active" && a.tenant_id == @tenant.id && a.tenant.apartment == @apartment}.sort_by { |b| b.period }
+      @sum_rent_ask = 0
+      @sum_service_charge_ask = 0
+      @sum_rent_paid = 0
+      @sum_service_charge_paid = 0
+      @rents.each do |rent|
+        @sum_rent_ask += rent.rent_ask
+        @sum_service_charge_ask += rent.service_charge_ask
+        @sum_rent_paid += rent.rent_paid
+        @sum_service_charge_paid += rent.service_charge_paid
+      end
+      @solde = @sum_rent_ask + @sum_service_charge_ask - @sum_rent_paid - @sum_service_charge_paid
+      unless @tenant.rent == nil
+        @loyer_annuel = (@tenant.rent + @tenant.service_charge) *12
+      end
+    end
   end
 
   def new

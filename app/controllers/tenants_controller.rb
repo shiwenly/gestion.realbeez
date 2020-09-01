@@ -48,6 +48,7 @@ class TenantsController < ApplicationController
     @tenant.apartment = @apartment
     @tenant.user_id = current_user.id
     @tenant.statut = "active"
+    @tenant.current_tenant = true
     if @tenant.save
       redirect_to apartment_path(@apartment)
     else
@@ -83,9 +84,15 @@ class TenantsController < ApplicationController
 
   def tenant_params
     params.require(:tenant).permit(
-      :submission_date,
-      :quantity,
-      :photo
+      :first_name,
+      :last_name,
+      :email,
+      :phone,
+      :rent,
+      :service_charge,
+      :deposit,
+      :contract,
+      :inventory
     )
   end
 

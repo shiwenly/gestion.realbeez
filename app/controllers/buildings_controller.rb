@@ -5,6 +5,40 @@ class BuildingsController < ApplicationController
   def show
     authorize @building
     @apartments = policy_scope(Apartment.where("statut = ? AND building_id = ?", "active", @building.id).order(created_at: :asc))
+
+    unless @apartments == []
+      @building_sum_rent_ask = 0
+      @building_sum_service_charge_ask = 0
+      @building_sum_rent_paid = 0
+      @building_sum_service_charge_paid = 0
+      @building_solde = 0
+      @building_loyer_annuel = 0
+      @apartments.each do |apartment|
+        unless apartment.tenants == []
+          @tenant = apartment.tenants.select { |t| t.current_tenant == true}[0]
+          @rents_unorder = Rent.search_by_date(Date.today.year)
+          @rents = @rents_unorder.select{|a| a.statut == "active" && a.tenant_id == @tenant.id && a.tenant.apartment == apartment && a.tenant.apartment.building == @building }.sort_by { |b| b.period }
+          @sum_rent_ask = 0
+          @sum_service_charge_ask = 0
+          @sum_rent_paid = 0
+          @sum_service_charge_paid = 0
+          @rents.each do |rent|
+            @sum_rent_ask += rent.rent_ask
+            @sum_service_charge_ask += rent.service_charge_ask
+            @sum_rent_paid += rent.rent_paid
+            @sum_service_charge_paid += rent.service_charge_paid
+          end
+          @solde = @sum_rent_ask + @sum_service_charge_ask - @sum_rent_paid - @sum_service_charge_paid
+          @loyer_annuel = (@tenant.rent + @tenant.service_charge) *12
+          @building_sum_rent_ask += @sum_rent_ask
+          @building_sum_service_charge_ask += @sum_service_charge_ask
+          @building_sum_rent_paid += @sum_rent_paid
+          @building_sum_service_charge_paid += @sum_service_charge_paid
+          @building_solde += @solde
+          @building_loyer_annuel += @loyer_annuel
+        end
+      end
+    end
   end
 
   def new
