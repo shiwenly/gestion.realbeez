@@ -4,14 +4,36 @@ class TenantsController < ApplicationController
 
   def show
     authorize @tenant
-    @waters = policy_scope(Water.where("statut = ? AND tenant_id = ?", "active", @tenant.id ).order(submission_date: :asc))
+    @waters = policy_scope(Water.where("statut = ? AND tenant_id = ?", "active", @tenant.id ).order(submission_date: :desc).limit(10))
     # @rents = policy_scope(Rent.where("statut = ? AND tenant_id = ?", "active", @tenant.id ).order(period: :asc))
     if params[:search] == nil
       @rents_unorder = Rent.search_by_date(Date.today.year)
       @rents = @rents_unorder.select{|a| a.statut == "active" && a.tenant_id == @tenant.id}.sort_by { |b| b.period }
+      @sum_rent_ask = 0
+      @sum_service_charge_ask = 0
+      @sum_rent_paid = 0
+      @sum_service_charge_paid = 0
+      @rents.each do |rent|
+        @sum_rent_ask += rent.rent_ask
+        @sum_service_charge_ask += rent.service_charge_ask
+        @sum_rent_paid += rent.rent_paid
+        @sum_service_charge_paid += rent.service_charge_paid
+      end
+      @solde = @sum_rent_ask + @sum_service_charge_ask - @sum_rent_paid - @sum_service_charge_paid
     else
       @rents_unorder = Rent.search_by_date(params[:search][:date].to_i)
       @rents = @rents_unorder.select{|a| a.statut == "active" && a.tenant_id == @tenant.id}.sort_by { |b| b.period }
+      @sum_rent_ask = 0
+      @sum_service_charge_ask = 0
+      @sum_rent_paid = 0
+      @sum_service_charge_paid = 0
+      @rents.each do |rent|
+        @sum_rent_ask += rent.rent_ask
+        @sum_service_charge_ask += rent.service_charge_ask
+        @sum_rent_paid += rent.rent_paid
+        @sum_service_charge_paid += rent.service_charge_paid
+      end
+      @solde = @sum_rent_ask + @sum_service_charge_ask - @sum_rent_paid - @sum_service_charge_paid
     end
   end
 
