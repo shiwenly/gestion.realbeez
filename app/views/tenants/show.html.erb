@@ -44,10 +44,12 @@
                   <td><%= rent.rent_paid %></td>
                   <td><%= rent.service_charge_paid %></td>
                   <td><%= rent.rent_ask + rent.service_charge_ask - rent.service_charge_paid - rent.rent_paid %></td>
-                  <td>
-                    <%= link_to "", edit_rent_path(rent), class:"fas fa-edit" %> /
-                    <%= link_to "",rent_path(rent), method: :delete, class:"fas fa-trash" %>
-                  </td>
+                  <% if associe.include?(current_user.email)  %>
+                    <td>
+                      <%= link_to "", edit_rent_path(rent), class:"fas fa-edit" %> /
+                      <%= link_to "",rent_path(rent), method: :delete, class:"fas fa-trash" %>
+                    </td>
+                  <% end %>
                 </tr>
               <% end %>
               <tr style="font-weight: bolder">
