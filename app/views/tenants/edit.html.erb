@@ -12,7 +12,7 @@
           <%= f.input :rent, label: "Montant du loyer" %>
           <%= f.input :service_charge, label: "Montant des charges" %>
           <%= f.input :deposit, label: "Dépôt de garantie" %>
-          <%= f.input :contract, as: :file, label: "Le contrat de bail" %>
+          <%= f.input :contract, label: "Le contrat de bail", as: :file %>
           <%= f.input :inventory, as: :file, label: "L'état des lieux" %>
           <%= f.input :move_in_date, label: "Date d'entrée", :order => [:day, :month, :year] %>
           <%= f.input :move_out_date, label: "Date de sortie", :order => [:day, :month, :year] %>
