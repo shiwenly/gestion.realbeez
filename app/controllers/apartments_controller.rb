@@ -21,9 +21,8 @@ class ApartmentsController < ApplicationController
         @sum_service_charge_paid += rent.service_charge_paid
       end
       @solde = @sum_rent_ask + @sum_service_charge_ask - @sum_rent_paid - @sum_service_charge_paid
-      unless @tenant.rent == nil
-        @loyer_annuel = (@tenant.rent + @tenant.service_charge) *12
-      end
+      @loyer_annuel = (@tenant.rent + @tenant.service_charge) *12
+
     end
   end
 

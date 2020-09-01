@@ -92,7 +92,9 @@ class TenantsController < ApplicationController
       :service_charge,
       :deposit,
       :contract,
-      :inventory
+      :inventory,
+      :move_in_date,
+      :move_out_date
     )
   end
 
