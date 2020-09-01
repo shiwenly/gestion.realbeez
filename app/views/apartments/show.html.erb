@@ -31,7 +31,9 @@
             <p>Montant du loyer : <%= tenant.rent %></p>
             <p>Montant des charges : <%= tenant.service_charge %></p>
             <p>Montant de la caution : <%= tenant.deposit %></p>
-            <p>Le contrat de bail : <%= tenant.contract %></p>
+            <% if  %>
+              <p>Le contrat de bail : <%= tenant.contract %></p>
+            <% end %>
             <p>L'état des lieux : <%= tenant.inventory %></p>
             <p>Date d'entrée : <%= tenant.move_in_date %></p>
             <% if tenant.current_tenant == false  %>
