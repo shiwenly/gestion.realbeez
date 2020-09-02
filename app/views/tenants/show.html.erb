@@ -18,8 +18,16 @@
           <p>Montant du loyer : <%= @tenant.rent %></p>
           <p>Montant des charges : <%= @tenant.service_charge %></p>
           <p>Montant de la caution : <%= @tenant.deposit %></p>
-          <p>Le contrat de bail : <%= @tenant.contract %></p>
-          <p>L'état des lieux : <%= @tenant.inventory %></p>
+          <!-- cloudinary -->
+          <p class="mb-1">Contrat de bail :
+            <%= link_to "Ouvrir", "https://res.cloudinary.com/myhouze/image/upload/#{@tenant.contract.filename}", :target => "_blank",class: "btn btn-transparent mx-2" %>
+            <%= link_to "Télécharger", "https://res.cloudinary.com/myhouze/image/upload/fl_attachment/#{@tenant.contract.filename}", :target => "_blank",class: "btn btn-transparent" %>
+          </p>
+          <p>Etat des lieux :
+            <%= link_to "Ouvrir", "https://res.cloudinary.com/myhouze/image/upload/#{@tenant.inventory.filename}", :target => "_blank",class: "btn btn-transparent mx-2" %>
+            <%= link_to "Télécharger", "https://res.cloudinary.com/myhouze/image/upload/fl_attachment/#{@tenant.inventory.filename}", :target => "_blank",class: "btn btn-transparent" %>
+          </p>
+          <!-- ------- -->
           <p>Date d'entrée : <%= @tenant.move_in_date %></p>
           <% if @tenant.current_tenant == false  %>
             <p>Date de sortie : <%= @tenant.move_out_date %></p>
@@ -117,7 +125,9 @@
                 <tr>
                   <td><%= water.submission_date.strftime("%d/%m/%Y") %></td>
                   <td><%= water.quantity %></td>
-                  <td><%= water.photo %></td>
+                  <td>
+                    <%= link_to "Ouvrir", "https://res.cloudinary.com/myhouze/image/upload/#{water.photo.filename}", :target => "_blank",class: "btn btn-transparent py-0", style: "font-size:12px" %>
+                  </td>
                   <td>
                     <%= link_to "", edit_water_path(water), class:"fas fa-edit" %> /
                     <%= link_to "", water_path(water), method: :delete, class:"fas fa-trash" %>

@@ -6,7 +6,7 @@
     <h5 class="text-center mb-4">situé au <%= @apartment.building.address %></h5>
     <p> <%= link_to "Ajouter un nouveau", new_apartment_tenant_path(@apartment) %></p>
     <p><%= link_to "Retour", building_path(@apartment.building)  %></p>
-    <% unless @apartment.tenants == [] %>
+    <% unless @tenants == [] %>
       <div class="row">
         <div class="p-3 col-12 col-md-6 offset-md-3 mt-4">
           <div class="border p-3">
@@ -31,10 +31,6 @@
             <p>Montant du loyer : <%= tenant.rent %></p>
             <p>Montant des charges : <%= tenant.service_charge %></p>
             <p>Montant de la caution : <%= tenant.deposit %></p>
-            <% if  %>
-              <p>Le contrat de bail : <%= tenant.contract %></p>
-            <% end %>
-            <p>L'état des lieux : <%= tenant.inventory %></p>
             <p>Date d'entrée : <%= tenant.move_in_date %></p>
             <% if tenant.current_tenant == false  %>
               <p>Date de sortie : <%= tenant.move_out_date %></p>
