@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_01_205845) do
+ActiveRecord::Schema.define(version: 2020_09_02_140617) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -96,8 +96,8 @@ ActiveRecord::Schema.define(version: 2020_09_01_205845) do
     t.decimal "rent", precision: 10, scale: 2
     t.decimal "service_charge", precision: 10, scale: 2
     t.decimal "deposit", precision: 10, scale: 2
-    t.string "contract"
-    t.string "inventory"
+    t.string "contract", default: "image/upload/v1598991055/default_annonce_k6x0wm.png"
+    t.string "inventory", default: "image/upload/v1598991055/default_annonce_k6x0wm.png"
     t.date "move_in_date"
     t.date "move_out_date"
     t.string "statut"
@@ -129,7 +129,7 @@ ActiveRecord::Schema.define(version: 2020_09_01_205845) do
   create_table "waters", force: :cascade do |t|
     t.date "submission_date"
     t.decimal "quantity", precision: 10, scale: 2
-    t.string "photo"
+    t.string "photo", default: "image/upload/v1598991055/default_annonce_k6x0wm.png"
     t.string "statut"
     t.bigint "user_id"
     t.bigint "tenant_id"
