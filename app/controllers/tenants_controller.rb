@@ -50,7 +50,7 @@ class TenantsController < ApplicationController
     @tenant.statut = "active"
     @tenant.current_tenant = true
     if @tenant.save
-      redirect_to apartment_path(@apartment)
+      redirect_to tenant_path(@tenant)
     else
       render :new
     end
@@ -63,7 +63,7 @@ class TenantsController < ApplicationController
   def update
     authorize @tenant
     if @tenant.update(tenant_params)
-      redirect_to apartment_path(@tenant.apartment)
+      redirect_to tenant_path(@tenant)
     else
       render :edit
     end

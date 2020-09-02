@@ -38,7 +38,7 @@ class ApartmentsController < ApplicationController
     @apartment.user_id = current_user.id
     @apartment.statut = "active"
     if @apartment.save
-      redirect_to building_path(@building)
+      redirect_to building_path(@apartment.building)
     else
       render :new
     end
