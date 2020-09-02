@@ -9,30 +9,18 @@ class TenantsController < ApplicationController
     if params[:search] == nil
       @rents_unorder = Rent.search_by_date(Date.today.year)
       @rents = @rents_unorder.select{|a| a.statut == "active" && a.tenant_id == @tenant.id}.sort_by { |b| b.period }
-      @sum_rent_ask = 0
-      @sum_service_charge_ask = 0
-      @sum_rent_paid = 0
-      @sum_service_charge_paid = 0
-      @rents.each do |rent|
-        @sum_rent_ask += rent.rent_ask
-        @sum_service_charge_ask += rent.service_charge_ask
-        @sum_rent_paid += rent.rent_paid
-        @sum_service_charge_paid += rent.service_charge_paid
-      end
+      @sum_rent_ask = @rents.map{|a| a.rent_ask}.sum
+      @sum_service_charge_ask = @rents.map{|a| a.service_charge_ask }.sum
+      @sum_rent_paid = @rents.map{|a| a.rent_paid}.sum
+      @sum_service_charge_paid = @rents.map{|a| a.service_charge_paid }.sum
       @solde = @sum_rent_ask + @sum_service_charge_ask - @sum_rent_paid - @sum_service_charge_paid
     else
       @rents_unorder = Rent.search_by_date(params[:search][:date].to_i)
       @rents = @rents_unorder.select{|a| a.statut == "active" && a.tenant_id == @tenant.id}.sort_by { |b| b.period }
-      @sum_rent_ask = 0
-      @sum_service_charge_ask = 0
-      @sum_rent_paid = 0
-      @sum_service_charge_paid = 0
-      @rents.each do |rent|
-        @sum_rent_ask += rent.rent_ask
-        @sum_service_charge_ask += rent.service_charge_ask
-        @sum_rent_paid += rent.rent_paid
-        @sum_service_charge_paid += rent.service_charge_paid
-      end
+      @sum_rent_ask = @rents.map{|a| a.rent_ask}.sum
+      @sum_service_charge_ask = @rents.map{|a| a.service_charge_ask }.sum
+      @sum_rent_paid = @rents.map{|a| a.rent_paid}.sum
+      @sum_service_charge_paid = @rents.map{|a| a.service_charge_paid }.sum
       @solde = @sum_rent_ask + @sum_service_charge_ask - @sum_rent_paid - @sum_service_charge_paid
     end
   end
