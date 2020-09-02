@@ -94,7 +94,8 @@ class TenantsController < ApplicationController
       :contract,
       :inventory,
       :move_in_date,
-      :move_out_date
+      :move_out_date,
+      :current_tenant
     )
   end
 
