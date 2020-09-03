@@ -1,23 +1,27 @@
-<div class="container my-5">
-  <h3 class="text-center">Realbeez tool</h3>
-  <div class="row mt-5">
-    <% if current_user.statut =="Propriétaire" %>
-      <div class="col-12 col-md-6 offset-md-3">
-        <div class="border p-3">
-          <p>Je suis un propriétaire</p>
-          <%= link_to "Voir mes biens", companies_path  %>
+<!-- LAPTOP VERSION -->
+<div class="pt-5" style="height: 93vh; background-size: cover; background-position: center; background-image:linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.1)), url(https://images.unsplash.com/photo-1471623432079-b009d30b6729?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80)">
+  <div class="container pt-5 mb-5">
+    <div class="row pt-5">
+      <% if current_user.statut =="Propriétaire" %>
+        <div class="col-12 col-md-6 offset-md-3">
+          <div class="border p-3"  style="border-radius: 5px; background-color: white; padding: 14px 30px">
+            <h3 class="text-center mt-4" style="color: #D8A727; font-family: Simply Rounded; font-size: 24px; letter-spacing: 1px">Je suis un propriétaire</h3>
+            <div class="d-flex justify-content-center">
+              <%= link_to "Accéder à mon compte", companies_path, class:"btn btn-transparent-bold  mt-5 mb-4"  %>
+            </div>
+          </div>
         </div>
-      </div>
-    <% end %>
-    <% if current_user.statut =="Locataire" %>
-      <div class="col-12 col-md-6 offset-md-3">
-        <div class="border p-3">
-          <p class="">Je suis un locataire</p>
-          <% if @tenant != nil %>
-            <%= link_to "Voir mon dossier", tenant_path(@tenant)  %>
-          <% end %>
+      <% end %>
+      <% if current_user.statut =="Locataire" %>
+        <div class="col-12 col-md-6 offset-md-3">
+          <div class="border p-3"  style="border-radius: 5px; background-color: white; padding: 14px 30px">
+            <h3 class="text-center mt-4" style="color: #D8A727; font-family: Simply Rounded; font-size: 24px; letter-spacing: 1px">Je suis un locataire</h3>
+            <div class="d-flex justify-content-center">
+              <%= link_to "Voir mon dossier", tenant_path(@tenant), class:"btn btn-transparent-bold  mt-5 mb-4"  %>
+            </div>
+          </div>
         </div>
-      </div>
-    <% end %>
+      <% end %>
+    </div>
   </div>
 </div>

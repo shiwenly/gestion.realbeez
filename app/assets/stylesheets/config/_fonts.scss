@@ -14,3 +14,10 @@ $headers-font: "Nunito", "Helvetica", "sans-serif";
 //        font-url('FontFile.ttf') format('truetype')
 // }
 // $my-font: "Font Name";
+
+@font-face {
+  font-family: "Simply Rounded";
+  src: font-url("SimplyRounded.ttf") format("opentype"), font-url("SimplyRoundedBold.ttf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}

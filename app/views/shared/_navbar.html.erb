@@ -1,6 +1,10 @@
-<div class="navbar navbar-expand-sm navbar-light navbar-lewagon">
+<div class="navbar navbar-expand-sm navbar-light navbar-lewagon py-0">
   <%= link_to root_path, class: "navbar-brand" do %>
-    <%= cl_image_tag "https://res.cloudinary.com/myhouze/image/upload/v1598990980/logo_rb_wegxxi.png", style: "width:30px", class: "pb-1" %>
+    <div class="d-flex align-items-center">
+      <%= cl_image_tag "https://res.cloudinary.com/myhouze/image/upload/v1598990980/logo_rb_wegxxi.png", style: "width:30px", class: "pb-1" %>
+      <p class="ml-2 mb-0 p-0" style="font-family: Simply Rounded"><span style="color:#3a3a3c; font-size: 35px">Rb</span></p>
+      <p class="mb-0 p-0" style="color:#D8A727; font-size: 35px; font-family: Simply Rounded">tool</p>
+    </div>
   <% end %>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
