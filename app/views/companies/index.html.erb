@@ -6,7 +6,7 @@
   </p>
   <div class="row mt-5">
     <div class="col-12 col-md-6 offset-md-3">
-      <p><%= link_to "Ajouter une société", new_company_path, class:"btn btn-transparent"%></p>
+      <p><%= link_to "Ajouter une société", new_company_path, class:"btn btn-transparent-bold"%></p>
     </div>
   </div>
   <% counter = 1 %>
@@ -29,7 +29,7 @@
               <p class="mb-1">Les associés :
                 <% if company.associe != nil && company.associe != "" %>
                   <% company.associe.split(",").each do |a| %>
-                    <span style="color: #D8A727"><%= a %></span>
+                    <span class="py-1 px-2 mx-2" style="color: #D8A727; border-radius:20px; border: solid 1px #D8A727"><%= a %></span>
                   <% end %>
                 <% end %>
               </p>
