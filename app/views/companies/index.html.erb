@@ -26,13 +26,14 @@
               <p class=" mt-0 mb-3" style="" ><i class="fas fa-map-marker-alt mr-3" style="color: #D8A727"></i><%= company.address %></p>
               <p class="mb-1">Société à l'IS : <%= company.corporate_tax ? "Oui" : "Non" %></p>
               <p>Société soumis à la TVA : <%= company.vat ? "Oui" : "Non" %></p>
-              <p class="mb-1">Les associés :
-                <% if company.associe != nil && company.associe != "" %>
+              <% if company.associe != nil && company.associe != "" %>
+                <p class="mb-1">Les associés :
                   <% company.associe.split(",").each do |a| %>
-                    <span class="py-1 px-2 mx-2" style="color: #D8A727; border-radius:20px; border: solid 1px #D8A727"><%= a %></span>
+                    <span class="px-2" style="color: #D8A727; border-radius:20px; border: solid 1px #D8A727; font-size: 14px">
+                      <%= a %></span>
                   <% end %>
-                <% end %>
-              </p>
+                </p>
+              <% end %>
             <% end %>
             <div class="d-flex mt-3 justify-content-end">
               <%= link_to "Voir détails", company_path(company), class:"btn btn-yellow-mustard"  %>
