@@ -1,5 +1,5 @@
 <h3 class="text-center mt-5 mb-4">Declarer ma consommation d'eau</h3>
-<div class="container center">
+<div class="container center mb-5">
   <div class="row justify-content-center">
     <div class="col-12 col-md-6 col-lg-6">
       <div class="center">
@@ -7,7 +7,7 @@
           <%= f.input :submission_date, start_year: Date.today.year, label: "Date de la déclaration", :order => [:day, :month, :year] %>
           <%= f.input :quantity, label: "Quantité" %>
           <%= f.input :photo, as: :file, label: "Photo à télécharger" %>
-          <%= f.submit "Créer", class: "btn mb-2" %>
+          <%= f.submit "Créer", data: { confirm: "Confirmez votre saisie. Vous ne pourrez plus la modifier après validation", class: "btn btn-yellow-mustard mb-2" %>
         <% end %>
       </div>
     </div>

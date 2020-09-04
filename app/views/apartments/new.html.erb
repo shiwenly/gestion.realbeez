@@ -1,12 +1,12 @@
 <h3 class="text-center mt-5 mb-4">Ajouter un nouvel appartement</h3>
-<div class="container center">
+<div class="container center mb-5">
   <div class="row justify-content-center">
     <div class="col-12 col-md-6 col-lg-6">
       <div class="center">
         <%= simple_form_for [@building, @apartment] do |f| %>
           <%= f.input :name, label: "Nom de l'appartement" %>
           <%= f.input :water, label: "Numéro du compteur d'eau" %>
-          <%= f.submit "Créer", class: "btn mb-2" %>
+          <%= f.submit "Créer", class: "btn btn-yellow-mustard mb-2" %>
         <% end %>
       </div>
     </div>

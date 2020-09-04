@@ -21,7 +21,7 @@
             <p class="m-0 p-0" style="color: #D8A727; font-family: Simply Rounded; font-size: 22px; letter-spacing: 1px"><%= @tenant.first_name %> <%= @tenant.last_name %></p>
             <% if associe.include?(current_user.email) %>
               <%= link_to "", edit_tenant_path(@tenant)   , class:"fas fa-edit ml-2", style:"font-size:12px"  %> /
-              <%= link_to "", tenant_path(@tenant), method: :delete, class:"fas fa-trash", style:"font-size:12px" %>
+              <%= link_to "", tenant_path(@tenant), method: :delete, data: { confirm: "Confirmez la suppression du locataire #{@tenant.first_name} #{@tenant.last_name}?" }, class:"fas fa-trash", style:"font-size:12px" %>
             <% end %>
           </div>
           <p class=" mt-0 mb-1" style="" ><i class="fas fa-house-user mr-3" style="color: #D8A727"></i><%= @tenant.apartment.name %>, <%= @tenant.apartment.building.address %> </p>
@@ -90,7 +90,7 @@
                   <% if associe.include?(current_user.email) %>
                     <td>
                       <%= link_to "", edit_rent_path(rent), class:"fas fa-edit" %> /
-                      <%= link_to "",rent_path(rent), method: :delete, class:"fas fa-trash" %>
+                      <%= link_to "",rent_path(rent), method: :delete, data: { confirm: "Confirmez la suppression de la saisie?" }, class:"fas fa-trash" %>
                     </td>
                   <% end %>
                 </tr>
@@ -139,7 +139,7 @@
                   <td>
                     <% if associe.include?(current_user.email) %>
                       <%= link_to "", edit_water_path(water), class:"fas fa-edit" %> /
-                      <%= link_to "", water_path(water), method: :delete, class:"fas fa-trash" %>
+                      <%= link_to "", water_path(water), method: :delete, data: { confirm: "Confirmez la suppression de la saisie?" }, class:"fas fa-trash" %>
                     <% end %>
                   </td>
                 </tr>

@@ -1,5 +1,5 @@
 <h3 class="text-center mt-5 mb-4">Ajouter un nouveau locataire</h3>
-<div class="container center">
+<div class="container center mb-5">
   <div class="row justify-content-center">
     <div class="col-12 col-md-6 col-lg-6">
       <div class="center">
@@ -18,7 +18,7 @@
           <%= f.input :inventory, label: false %>
           <%= f.input :inventory_cache, as: :hidden %>
           <%= f.input :move_in_date, label: "Date d'entrée", :order => [:day, :month, :year] %>
-          <%= f.submit "Créer", class: "btn mb-2" %>
+          <%= f.submit "Créer", class: "btn btn-yellow-mustard mb-2" %>
         <% end %>
       </div>
     </div>

@@ -1,5 +1,5 @@
 <h3 class="text-center mt-5 mb-4">Ajouter une nouvelle société</h3>
-<div class="container center">
+<div class="container center mb-5">
   <div class="row justify-content-center">
     <div class="col-12 col-md-6 col-lg-6">
       <div class="center">
@@ -9,7 +9,7 @@
           <%= f.input :corporate_tax, as: :radio_buttons, collection: [[true, "Oui"], [false, "Non"]], label_method: :second, value_method: :first, label: "Soumis à l'IS" %>
           <%= f.input :vat, as: :radio_buttons, collection: [[true, "Oui"], [false, "Non"]], label_method: :second, value_method: :first, label: "Soumis à la TVA" %>
           <%= f.input :associe, label: "Ajouter l' email des associés séparé d'une , " %>
-          <%= f.submit "Créer", class: "btn mb-2" %>
+          <%= f.submit "Créer", class: "btn btn-yellow-mustard mb-2" %>
         <% end %>
       </div>
     </div>
