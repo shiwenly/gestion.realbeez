@@ -4,20 +4,20 @@
     <div class="row pt-5">
       <% if current_user.statut =="Propriétaire" %>
         <div class="col-12 col-md-6 offset-md-3">
-          <div class="border p-3"  style="border-radius: 5px; background-color: white; padding: 14px 30px">
-            <h3 class="text-center mt-4" style="color: #D8A727; font-family: Simply Rounded; font-size: 24px; letter-spacing: 1px">Je suis un propriétaire</h3>
+          <div class="border p-3"  style="border-radius: 5px; background-color: white; opacity: 0.9; padding: 14px 30px">
+            <h3 class="text-center mt-4 border-bottom pb-4 mx-5" style="color: #D8A727; font-family: Simply Rounded; font-size: 24px; letter-spacing: 1px">Je suis un propriétaire</h3>
             <div class="d-flex justify-content-center">
-              <%= link_to "Accéder à mon compte", companies_path, class:"btn btn-transparent-bold mt-5 mb-4"  %>
+              <%= link_to "Accéder à mon compte", companies_path, class:"btn btn-transparent-bold mt-4 mb-4 stretched-link"  %>
             </div>
           </div>
         </div>
       <% end %>
       <% if current_user.statut =="Locataire" %>
         <div class="col-12 col-md-6 offset-md-3">
-          <div class="border p-3"  style="border-radius: 5px; background-color: white; padding: 14px 30px">
-            <h3 class="text-center mt-4" style="color: #D8A727; font-family: Simply Rounded; font-size: 24px; letter-spacing: 1px">Je suis un locataire</h3>
+          <div class="border p-3"  style="border-radius: 5px; background-color: white; opacity: 0.9; padding: 14px 30px">
+            <h3 class="text-center mt-4 border-bottom pb-4 mx-5" style="color: #D8A727; font-family: Simply Rounded; font-size: 24px; letter-spacing: 1px">Je suis un locataire</h3>
             <div class="d-flex justify-content-center">
-              <%= link_to "Voir mon dossier", tenant_path(@tenant), class:"btn btn-transparent-bold  mt-5 mb-4"  %>
+              <%= link_to "Voir mon dossier", tenant_path(@tenant), class:"btn btn-transparent-bold  mt-4 mb-4 stretched-link"  %>
             </div>
           </div>
         </div>
