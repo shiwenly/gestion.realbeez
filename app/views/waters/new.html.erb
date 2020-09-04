@@ -7,7 +7,7 @@
           <%= f.input :submission_date, start_year: Date.today.year, label: "Date de la déclaration", :order => [:day, :month, :year] %>
           <%= f.input :quantity, label: "Quantité" %>
           <%= f.input :photo, as: :file, label: "Photo à télécharger" %>
-          <%= f.submit "Créer", data: { confirm: "Confirmez votre saisie. Vous ne pourrez plus la modifier après validation", class: "btn btn-yellow-mustard mb-2" %>
+          <%= f.submit "Créer", data: { confirm: "Confirmez votre saisie. Vous ne pourrez plus la modifier après validation."}, class: "btn btn-yellow-mustard mb-2" %>
         <% end %>
       </div>
     </div>
