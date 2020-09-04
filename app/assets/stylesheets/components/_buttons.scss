@@ -40,6 +40,27 @@ background-color:#d69d00;
 color:white;
 }
 
+.btn-yellow-mustard-small {
+  border: 2px solid transparent ;
+  border-radius: 2px;
+  background-color: #D8A727;
+  transition: all .15s ease-in-out;
+  color: white;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 12px;
+  padding-right: 12px;
+  font-size: 13px;
+  i {
+    padding-right: 4px;
+  }
+}
+
+.btn-yellow-mustard-small:hover {
+background-color:#d69d00;
+color:white;
+}
+
 .btn-transparent-bold {
   border: 1px solid #D8A727;
   padding: 4px 8px;

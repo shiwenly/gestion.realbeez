@@ -1,23 +1,35 @@
 <% associe = @tenant.apartment.building.company.associe.split(",").map(&:strip) %>
 <% if associe.include?(current_user.email) || @tenant.email == current_user.email %>
   <div class="container mt-5">
-    <h3 class="mt-5 text-center">Le paiement du loyer et la consommation d'eau</h3>
+    <h3 class="text-center mt-5" style="color: #D8A727; font-family: Simply Rounded; letter-spacing: 1px">Loyer et consommation d'eau</h3>
     <h5 class="text-center">de <%= @tenant.first_name %> <%= @tenant.last_name %></h5>
     <!-- Information tenant -->
     <% if associe.include?(current_user.email) %>
-      <p><%= link_to "Retour", apartment_path(@tenant.apartment)  %></p>
+      <p class="mt-5">
+        <%= link_to "Home", root_path, style:"text-decoration:none; color:rgb(100, 100, 100)"  %> >
+        <%= link_to "Sociétés", companies_path, style:"text-decoration:none; color:rgb(100, 100, 100)" %> >
+        <%= link_to "Immeubles", company_path(@tenant.apartment.building.company), style:"text-decoration:none; color:rgb(100, 100, 100)" %> >
+        <%= link_to "Appartments", building_path(@tenant.apartment.building), style:"text-decoration:none; color:rgb(100, 100, 100)"  %> >
+        <%= link_to "Locataire", apartment_path(@tenant.apartment), style:"text-decoration:none; color:rgb(100, 100, 100)"   %> >
+        <%= link_to "Loyer et eau", tenant_path(@tenant), style:"text-decoration:none; color:rgb(100, 100, 100)"  %>
+      </p>
     <% end %>
     <div class="row">
       <div class="p-3 col-12 col-md-6 offset-md-3 mt-4">
-        <div class="border p-3">
-          <p>Adresse du batiment : <%= @tenant.apartment.name %>, <%= @tenant.apartment.building.address %> </p>
-          <p>Nom : <%= @tenant.first_name %></p>
-          <p>Prénom : <%= @tenant.last_name %></p>
-          <p>Email : <%= @tenant.email %></p>
-          <p>Téléphone : <%= @tenant.phone %></p>
-          <p>Montant du loyer : <%= @tenant.rent %></p>
-          <p>Montant des charges : <%= @tenant.service_charge %></p>
-          <p>Montant de la caution : <%= @tenant.deposit %></p>
+        <div class="p-4 content border mb-4", style="box-shadow: 0 0 5px rgba(0,0,0,0.1); background-color: white">
+          <div class="d-flex align-items-center mb-4 justify-content-center">
+            <p class="m-0 p-0" style="color: #D8A727; font-family: Simply Rounded; font-size: 22px; letter-spacing: 1px"><%= @tenant.first_name %> <%= @tenant.last_name %></p>
+            <% if associe.include?(current_user.email) %>
+              <%= link_to "", edit_tenant_path(@tenant)   , class:"fas fa-edit ml-2", style:"font-size:12px"  %> /
+              <%= link_to "", tenant_path(@tenant), method: :delete, class:"fas fa-trash", style:"font-size:12px" %>
+            <% end %>
+          </div>
+          <p class=" mt-0 mb-1" style="" ><i class="fas fa-house-user mr-3" style="color: #D8A727"></i><%= @tenant.apartment.name %>, <%= @tenant.apartment.building.address %> </p>
+          <p class=" mt-0 mb-1" style="" ><i class="fas fa-envelope mr-3" style="color: #D8A727"></i><%= @tenant.email %></p>
+          <p class=" mt-0 mb-3" style="" ><i class="fas fa-phone-square mr-3" style="color: #D8A727"></i><%= @tenant.phone %></p>
+          <p class="mb-1">Loyer : <%= @tenant.rent %></p>
+          <p class="mb-1">Charges : <%= @tenant.service_charge %></p>
+          <p class="mb-3">Dépôt de garantie : <%= @tenant.deposit %></p>
           <!-- cloudinary -->
           <p class="mb-1">Contrat de bail :
             <%= link_to "Ouvrir", "https://res.cloudinary.com/myhouze/image/upload/#{@tenant.contract.filename}", :target => "_blank",class: "btn btn-transparent mx-2" %>
@@ -32,30 +44,24 @@
           <% if @tenant.current_tenant == false  %>
             <p>Date de sortie : <%= @tenant.move_out_date %></p>
           <% end %>
-          <% if associe.include?(current_user.email) %>
-            <div class="mt-3">
-              <%= link_to "Modifier", edit_tenant_path(@tenant)  %>
-              <% if associe.include?(current_user.email)  %>
-                <%= link_to "Supprimer", tenant_path(@tenant), method: :delete  %>
-              <% end %>
-            </div>
-          <% end %>
         </div>
       </div>
     </div>
     <!-- LOYER -->
     <div class="mt-5">
-      <h5 class="border-top pt-3">Paiement du loyer</h5>
+      <h5 class="border-top pt-3"><strong>Paiement du loyer</strong></h5>
       <div class="mt-2 mb-4">
         <% associe = @tenant.apartment.building.company.associe.split(",").map(&:strip) %>
         <% if associe.include?(current_user.email) %>
-          <%= link_to "Déclarer le paiement du loyer", new_tenant_rent_path(@tenant) %>
+          <%= link_to "Déclarer le paiement du loyer", new_tenant_rent_path(@tenant), class:"btn btn-transparent-bold" %>
         <% end %>
       </div>
       <!-- recherche date -->
       <%= form_for :search, defaults: { required: false }, url:tenant_path(@tenant), method: "GET", html: { class: '' } do |f| %>
-        <%= f.select :date,  [Date.today.year, Date.today.year - 1,Date.today.year - 2, Date.today.year - 3 ], html: { style:"border: solid"} %>
-        <%= f.submit "Choisir", class: "btn-yellow-mustard-big my-3" %>
+        <div class="mb-3 d-flex align-items-center">
+          <%= f.select :date,  [Date.today.year, Date.today.year - 1,Date.today.year - 2, Date.today.year - 3 ], html: { style:"border: solid"} %>
+          <%= f.submit "Choisir", class: "btn btn-yellow-mustard-small ml-2" %>
+        </div>
       <% end %>
       <!-- Tableau  -->
       <div class="" style="overflow:scroll;">
@@ -106,9 +112,9 @@
     </div>
     <!-- EAU -->
     <div clas="my-5">
-      <h5 class="border-top pt-3">Consommation d'eau</h5>
+      <h5 class="border-top pt-3"><strong>Consommation d'eau</strong></h5>
       <div class="mt-2 mb-4">
-        <%= link_to "Déclarer ma consommation d'eau", new_tenant_water_path(@tenant) %>
+        <%= link_to "Déclarer ma consommation d'eau", new_tenant_water_path(@tenant), class:"btn btn-transparent-bold" %>
       </div>
       <p class="">Numéro du compteur : <%= @tenant.apartment.water %> </p>
       <div class="" style="overflow:scroll;">
