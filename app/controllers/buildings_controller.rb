@@ -3,6 +3,7 @@ class BuildingsController < ApplicationController
   before_action :set_building, only: [:edit, :show, :update, :destroy]
 
   def show
+    # Appartments
     authorize @building
     @apartments = policy_scope(Apartment.where("statut = ? AND building_id = ?", "active", @building.id).order(created_at: :asc))
     unless @apartments == []
@@ -44,6 +45,20 @@ class BuildingsController < ApplicationController
           @building_loyer_annuel += @loyer_annuel
         end
       end
+      # Expense
+      # @expenses = policy_scope(Expense.where("statut = ? AND building_id = ?", "active", @building.id).order(created_at: :asc))
+      if params[:search] == nil
+        @expenses_unorder = Expense.search_by_date_expense(Date.today.year)
+        @expenses = @expenses_unorder.select{|a| a.statut == "active" && a.building_id == @building.id}.sort_by { |b| b.date }
+        @sum_ttc = @expenses.map{|a| a.amount_ttc}.sum
+        @sum_vat = @expenses.map{|a| a.amount_vat}.sum
+      else
+        @expenses_unorder = Expense.search_by_date_expense(params[:search][:date].to_i)
+        @expenses = @expenses_unorder.select{|a| a.statut == "active" && a.building_id == @building.id}.sort_by { |b| b.date }
+        @sum_ttc = @expenses.map{|a| a.amount_ttc}.sum
+        @sum_vat = @expenses.map{|a| a.amount_vat}.sum
+      end
+
     end
 
     # unless @apartments == []

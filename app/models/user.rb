@@ -11,4 +11,5 @@ class User < ApplicationRecord
   has_many :tenants, dependent: :destroy
   has_many :waters, dependent: :destroy
   has_many :rents, dependent: :destroy
+  has_many :expenses, dependent: :destroy
 end

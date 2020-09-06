@@ -1,0 +1,21 @@
+<h3 class="text-center mt-5 mb-4">Modifier une dépense</h3>
+<div class="container center mb-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-6 col-lg-6">
+      <div class="center">
+        <%= simple_form_for [@building, @expense] do |f| %>
+          <%= f.input :date, :order => [:day, :month, :year] %>
+          <!--      <#%= f.input :apartment_name, label: "Nom de l'appartement", collection: @apartments_name %> -->
+          <%= f.input :expense_type, collection: ["Assurance", "Intérets", "Rénovation", "Frais de gestion", "Eau", "Electricité", "Frais de maintenance", "Autres", "Impôts et taxes", "Frais bancaire"] %>
+          <%= f.input :supplier %>
+          <%= f.input :amount_ttc %>
+          <%= f.input :amount_vat %>
+          <%= f.input :photo, label: false %>
+          <%= f.input :photo_cache, as: :hidden %>
+          <%= f.input :deductible, as: :radio_buttons, collection: [[true, "Oui"], [false, "Non"]], label_method: :second, value_method: :first, label: "Charge déductible"  %>
+          <%= f.submit "Modifier", class: "btn btn-yellow-mustard mb-2" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
