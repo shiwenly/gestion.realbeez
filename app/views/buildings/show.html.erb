@@ -29,11 +29,11 @@
       <p><%= link_to "Ajouter un appartement", new_building_apartment_path(@building), class:"btn btn-transparent-bold"%></p>
     </div>
     <% counter = 1 %>
-    <% @apartments.each do |apartment| %>
-      <!-- ------------------------- -->
-      <div class="row">
-        <div class="p-3 col-12 col-md-6 offset-md-3">
-          <div class="p-4 content border mb-4", style="box-shadow: 0 0 5px rgba(0,0,0,0.1); background-color: white">
+    <!-- ------------------------- -->
+    <div class="row mb-4">
+      <% @apartments.each do |apartment| %>
+        <div class="p-3 col-12 col-md-6">
+          <div class="p-4 content border mb-3", style="box-shadow: 0 0 5px rgba(0,0,0,0.1); background-color: white">
             <div class="d-flex align-items-center mb-4 justify-content-center">
               <p class="m-0 p-0" style="color: #D8A727; font-family: Simply Rounded; font-size: 22px; letter-spacing: 1px">Appartement <%= counter %></p>
               <%= link_to "", edit_apartment_path(apartment)  , class:"fas fa-edit ml-2", style:"font-size:12px"  %> /
@@ -49,9 +49,9 @@
             <% end %>
           </div>
         </div>
-      </div>
-      <% counter += 1 %>
-    <% end %>
+        <% counter += 1 %>
+      <% end %>
+    </div>
     <!-- Expenes -->
     <h5 class="border-top pt-3"><strong>Les Dépenses</strong></h5>
     <div class="mt-2 mb-4">
