@@ -4,10 +4,8 @@
     <%= link_to "Home", root_path, style:"text-decoration:none; color:rgb(100, 100, 100)"  %> >
     <%= link_to "Sociétés", companies_path, style:"text-decoration:none; color:rgb(100, 100, 100)"  %>
   </p>
-  <div class="row mt-5">
-    <div class="col-12 col-md-6 offset-md-3">
-      <p><%= link_to "Ajouter une société", new_company_path, class:"btn btn-transparent-bold"%></p>
-    </div>
+  <div class="mt-2 mb-4 border-top pt-3">
+    <p><%= link_to "Ajouter une société", new_company_path, class:"btn btn-transparent-bold"%></p>
   </div>
   <% counter = 1 %>
   <% @companies.each do |company| %>

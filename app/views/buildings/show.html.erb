@@ -11,7 +11,7 @@
     </p>
     <% unless @apartments == [] %>
       <div class="row">
-        <div class="p-3 col-12 col-md-6 offset-md-3 mt-4">
+        <div class="p-3 col-12 col-md-6 offset-md-3 my-4">
           <div class="p-4 content border mb-4", style="box-shadow: 0 0 5px rgba(0,0,0,0.1); background-color: white">
             <p style="font-weight: bolder">Chiffres <%= Date.today.year %> : Immeuble <%= @building.address %></p>
             <p class="mb-1">Total loyers encaissés : <%= '%.0f' % (@building_sum_rent_paid + @building_sum_service_charge_paid) %> €</p>
@@ -34,7 +34,7 @@
       <% @apartments.each do |apartment| %>
         <div class="p-3 col-12 col-md-6">
           <div class="p-4 content border mb-3", style="box-shadow: 0 0 5px rgba(0,0,0,0.1); background-color: white">
-            <div class="d-flex align-items-center mb-4 justify-content-center">
+            <div class="d-flex align-items-center m-4 justify-content-center">
               <p class="m-0 p-0" style="color: #D8A727; font-family: Simply Rounded; font-size: 22px; letter-spacing: 1px">Appartement <%= counter %></p>
               <%= link_to "", edit_apartment_path(apartment)  , class:"fas fa-edit ml-2", style:"font-size:12px"  %> /
               <%= link_to "", apartment_path(apartment), method: :delete, data: { confirm: "Confirmez la suppression de l'appartement : #{apartment.name}?" }, class:"fas fa-trash", style:"font-size:12px" %>
