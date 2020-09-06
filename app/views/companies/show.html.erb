@@ -14,7 +14,7 @@
             <p style="font-weight: bolder; color: #D8A727">Chiffres <%= Date.today.year %> : Société <%= @company.name %></p>
             <p class="mb-1">Total loyers encaissés : <%= '%.0f' % (@company_building_sum_rent_paid + @company_building_sum_service_charge_paid) %> €</p>
             <p class="mb-1">Total loyers manquant : <%= '%.0f' % @company_building_solde %> €</p>
-            <p class="mb-1">Total loyers attendus pour <%= Date.today.year %> : <%= '%.0f' % @building_loyer_annuel  %> €</p>
+            <p class="mb-1">Total loyers attendus pour <%= Date.today.year %> : <%= '%.0f' % @company_building_loyer_annuel  %> €</p>
             <% if @company_building_loyer_annuel != 0 && @company_building_loyer_annuel != nil  %>
               <p>% atteint : <%= '%.2f' % ((@company_building_sum_rent_paid + @company_building_sum_service_charge_paid) / @company_building_loyer_annuel * 100)  %> %</p>
             <% end %>
