@@ -4,7 +4,13 @@
     <div class="col-12 col-md-6 col-lg-6">
       <div class="center">
         <%= simple_form_for [@building, @expense] do |f| %>
-          <%= f.input :date, :order => [:day, :month, :year] %>
+          <% if @building.company.corporate_tax == true %>
+            <p class="mb-2">Date de facturation</p>
+            <%= f.input :date, label:false, :order => [:day, :month, :year] %>
+          <% else %>
+            <p class="mb-2">Date de paiement</p>
+            <%= f.input :date, label:false, :order => [:day, :month, :year] %>
+          <% end %>
           <%= f.input :apartment_name, label: "Appartement concerné", collection: @apartment_name %>
           <%= f.input :expense_type, label: "Type de dépense", collection:
             [
