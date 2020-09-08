@@ -12,9 +12,9 @@
         <div class="p-3 col-12 col-md-6 offset-md-3 my-4">
           <div class="p-4 content border mb-4", style="box-shadow: 0 0 5px rgba(0,0,0,0.1); background-color: white">
             <p style="font-weight: bolder; color: #D8A727">Chiffres <%= Date.today.year %> : Société <%= @company.name %></p>
-            <p class="mb-1">Total loyers encaissés c.c. : <%= '%.0f' % (@company_building_sum_rent_paid + @company_building_sum_service_charge_paid) %> € (loyers h.c. <%= '%.0f' % @company_building_sum_rent_paid %> €)</p>
-            <p class="mb-1">Total loyers manquant : <%= '%.0f' % @company_building_solde %> €</p>
-            <p class="mb-1">Total loyers attendus pour <%= Date.today.year %> : <%= '%.0f' % @company_building_loyer_annuel  %> €</p>
+            <p class="mb-1">Total loyers c.c. encaissés : <%= '%.0f' % (@company_building_sum_rent_paid + @company_building_sum_service_charge_paid) %> € (loyers h.c. <%= '%.0f' % @company_building_sum_rent_paid %> €)</p>
+            <p class="mb-1">Total loyers c.c. manquant : <%= '%.0f' % @company_building_solde %> €</p>
+            <p class="mb-1">Total loyers c.c. attendus pour <%= Date.today.year %> : <%= '%.0f' % @company_building_loyer_annuel  %> €</p>
             <% if @company_building_loyer_annuel != 0 && @company_building_loyer_annuel != nil  %>
               <p>% atteint : <%= '%.2f' % ((@company_building_sum_rent_paid + @company_building_sum_service_charge_paid) / @company_building_loyer_annuel * 100)  %> %</p>
             <% end %>
