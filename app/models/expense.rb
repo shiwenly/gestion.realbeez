@@ -4,7 +4,7 @@ class Expense < ApplicationRecord
 
   mount_uploader :photo, PhotoUploader
 
-  validates :expense_type, :supplier, :amount_ttc, presence: true
+  validates :expense_type, :supplier, :amount_vat, :amount_ttc, presence: true
 
   include PgSearch::Model
   pg_search_scope :search_by_date_expense,
