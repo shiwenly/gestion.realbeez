@@ -32,7 +32,11 @@
               ] %>
           <%= f.input :supplier, label: "Nom du fournisseur et description" %>
           <%= f.input :amount_ttc, label: "Montant TTC" %>
-          <%= f.input :amount_vat, label: "Montant de TVA" %>
+          <% if @building.company.corporate_tax == true %>
+            <%= f.input :amount_vat, label: "Montant de TVA"%>
+          <% else %>
+            <%= f.input :amount_vat, as: :hidden, label: "Montant de TVA", input_html: { value: 0}%>
+          <% end %>
           <%= f.input :photo, label: false %>
           <%= f.input :photo_cache, as: :hidden %>
           <%= f.input :deductible, as: :radio_buttons, collection: [[true, "Oui"], [false, "Non"]], label_method: :second, value_method: :first, label: "Charge déductible", checked: true  %>

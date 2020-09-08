@@ -74,7 +74,9 @@
               <th scope="col">Type</th>
               <th scope="col">Fournisseurs</th>
               <th scope="col">MT TTC</th>
-              <th scope="col">TVA</th>
+              <% if @building.company.corporate_tax == true %>
+                <th scope="col">TVA</th>
+              <% end %>
               <th scope="col">Déductible</th>
               <th scope="col">Justificatif</th>
               <th scope="col"></th>
@@ -88,7 +90,9 @@
                 <td><%= expense.expense_type %></td>
                 <td><%= expense.supplier %></td>
                 <td><%= expense.amount_ttc %></td>
-                <td><%= expense.amount_vat %></td>
+                <% if @building.company.corporate_tax == true %>
+                  <td><%= expense.amount_vat %></td>
+                <% end %>
                 <td><%= expense.deductible ? "Oui" : "Non" %></td>
                 <td>
                   <%= link_to "Ouvrir", "https://res.cloudinary.com/myhouze/image/upload/#{expense.photo.filename}", :target => "_blank",class: "btn btn-transparent py-0", style: "font-size:12px" %>
@@ -105,7 +109,9 @@
               <td></td>
               <td></td>
               <td><%= @sum_ttc %></td>
-              <td><%= @sum_vat %></td>
+              <% if @building.company.corporate_tax == true %>
+                <td><%= @sum_vat %></td>
+              <% end %>
               <td></td>
               <td></td>
               <td></td>
