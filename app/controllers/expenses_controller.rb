@@ -10,9 +10,9 @@ class ExpensesController < ApplicationController
   def new
     authorize @expense = Expense.new
     @building = Building.find(params[:building_id])
-    @apartment_name = []
+    @apartment_name = ["Tous"]
     @apartments_name = @building.apartments.each do |apartment|
-      @apartment_name  << apartment.name
+      @apartment_name  << apartment.name.to_s
     end
   end
 
