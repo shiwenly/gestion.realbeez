@@ -14,9 +14,11 @@
         <div class="p-3 col-12 col-md-6 offset-md-3 my-4">
           <div class="p-4 content border mb-4", style="box-shadow: 0 0 5px rgba(0,0,0,0.1); background-color: white">
             <p style="font-weight: bolder">Chiffres <%= Date.today.year %> : Immeuble <%= @building.address %></p>
-            <p class="mb-1">Total loyers c.c. encaissés  : <%= '%.0f' % (@building_sum_rent_paid + @building_sum_service_charge_paid) %> € (loyers h.c. <%= '%.0f' % @building_sum_rent_paid  %> €) </p>
-            <p class="mb-1">Total loyers c.c. manquant  : <%= '%.0f' % @building_solde %> €</p>
-            <p class="mb-1">Total loyers c.c. attendus pour <%= Date.today.year %> : <%= '%.0f' % @building_loyer_annuel  %> €</p>
+            <p class="mb-1">Loyers charges comprises encaissés : <%= '%.0f' % (@building_sum_rent_paid + @building_sum_service_charge_paid) %> € </p>
+            <p><em>Loyers hors charges encaissés : </em><%= '%.0f' % @building_sum_rent_paid  %> €</p>
+            <p class="border-bottom mx-4"> </p>
+            <p class="mb-1">Loyers charges comprises manquant : <%= '%.0f' % @building_solde %> €</p>
+            <p class="mb-1">Loyers charges comprises attendus : <%= '%.0f' % @building_loyer_annuel  %> €</p>
             <% if @building_loyer_annuel != 0 && @building_loyer_annuel != nil  %>
               <p>% atteint : <%= '%.2f' % ((@building_sum_rent_paid + @building_sum_service_charge_paid) / @building_loyer_annuel * 100)  %> %</p>
             <% end %>
