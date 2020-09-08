@@ -84,7 +84,7 @@
             <% @expenses.each do |expense| %>
               <tr>
                 <td><%= expense.date.strftime("%d/%m/%Y") %></td>
-                <td><%= Apartment.find(expense.apartment_name.to_i).name %></td>
+                <td><%= expense.apartment_name %></td>
                 <td><%= expense.expense_type %></td>
                 <td><%= expense.supplier %></td>
                 <td><%= expense.amount_ttc %></td>

@@ -5,7 +5,7 @@
       <div class="center">
         <%= simple_form_for [@building, @expense] do |f| %>
           <%= f.input :date, :order => [:day, :month, :year] %>
-          <%= f.input :apartment_name, label: "Nom de l'appartement", collection: @apartments_name %>
+          <%= f.input :apartment_name, label: "Appartement concerné" %>
           <%= f.input :expense_type, label: "Type de dépense", collection: ["Assurance", "Eau", "Electricité", "Frais bancaire", "Frais de gestion", "Frais de maintenance","Intérets", "Impôts et taxes", "Rénovation", "Autres"] %>
           <%= f.input :supplier, label: "Nom du fournisseur et description" %>
           <%= f.input :amount_ttc, label: "Montant TTC" %>
