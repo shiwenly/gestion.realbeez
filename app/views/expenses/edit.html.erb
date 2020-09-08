@@ -33,7 +33,7 @@
           <% end %>
           <%= f.input :photo, label: false %>
           <%= f.input :photo_cache, as: :hidden %>
-          <%= f.input :deductible, as: :radio_buttons, collection: [[true, "Oui"], [false, "Non"]], label_method: :second, value_method: :first, label: "Charge déductible", checked: true  %>
+          <%= f.input :deductible, as: :radio_buttons, collection: [[true, "Oui"], [false, "Non"]], label_method: :second, value_method: :first, label: "Charge déductible" %>
           <%= f.submit "Modifier", class: "btn btn-yellow-mustard mb-2" %>
         <% end %>
       </div>
