@@ -31,11 +31,10 @@ class ExpensesController < ApplicationController
 
   def edit
     authorize @expense
-    # @building = @expense.building
-    # @apartment_name = []
-    # @apartments_name = @building.apartments.each do |apartment|
-    #   @apartment_name  << apartment.name
-    # end
+    @apartment_name = ["Tous"]
+    @apartments_name = @expense.building.apartments.each do |apartment|
+      @apartment_name  << apartment.name.to_s
+    end
   end
 
   def update
