@@ -29,7 +29,7 @@
           <% if @expense.building.company.corporate_tax == true %>
             <%= f.input :amount_vat, label: "Montant de TVA"%>
           <% else %>
-            <%= f.input :amount_vat, as: :hidden, label: "Montant de TVA", input_html: { value: 0}%>
+            <%= f.input :amount_vat, as: :hidden, label: "Montant de TVA"%>
           <% end %>
           <%= f.input :photo, label: false %>
           <%= f.input :photo_cache, as: :hidden %>

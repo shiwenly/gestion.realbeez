@@ -33,7 +33,7 @@
           <%= f.input :supplier, label: "Nom du fournisseur et description" %>
           <%= f.input :amount_ttc, label: "Montant TTC" %>
           <% if @building.company.corporate_tax == true %>
-            <%= f.input :amount_vat, label: "Montant de TVA"%>
+            <%= f.input :amount_vat, label: "Montant de TVA", input_html: { value: 0}%>
           <% else %>
             <%= f.input :amount_vat, as: :hidden, label: "Montant de TVA", input_html: { value: 0}%>
           <% end %>
