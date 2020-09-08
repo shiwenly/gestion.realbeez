@@ -6,7 +6,24 @@
         <%= simple_form_for [@building, @expense] do |f| %>
           <%= f.input :date, :order => [:day, :month, :year] %>
           <%= f.input :apartment_name, label: "Appartement concerné", collection: @apartment_name %>
-          <%= f.input :expense_type, label: "Type de dépense", collection: ["Assurance", "Eau", "Electricité", "Frais bancaire", "Frais de gestion", "Frais de maintenance","Intérets", "Impôts et taxes", "Rénovation", "Autres"] %>
+          <%= f.input :expense_type, label: "Type de dépense", collection:
+            [
+              "Assurance",
+              "Eau",
+              "Electricité",
+              "Frais bancaire",
+              "Honoraire de gestion",
+              "Frais de nettoyage",
+              "Maintenance chaudière",
+              "Remplacement chaudière",
+              "Réparation et rénovation",
+              "Intérêt d'emprunt",
+              "Taxe foncière",
+              "Frais de notaire",
+              "Frais de dossiers et caution",
+              "Charges non payées au départ du locataire",
+              "Autres frais non déductible"
+              ] %>
           <%= f.input :supplier, label: "Nom du fournisseur et description" %>
           <%= f.input :amount_ttc, label: "Montant TTC" %>
           <%= f.input :amount_vat, label: "Montant de TVA" %>
