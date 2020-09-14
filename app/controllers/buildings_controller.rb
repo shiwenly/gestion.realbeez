@@ -24,7 +24,7 @@ class BuildingsController < ApplicationController
           # Calculation
           apartment.tenants.each do |tenant|
             @rents_unorder = Rent.search_by_date(Date.today.year)
-            @rents = @rents_unorder.select{|a| a.statut == "active" && a.tenant_id == tenant.id && a.tenant.apartment == apartment && a.tenant.apartment.building == @building }.sort_by { |b| b.period }
+            @rents = @rents_unorder.select{|a| a.statut == "active" && a.tenant_id == tenant.id && a.tenant.statut == "active" && a.tenant.apartment == apartment && a.tenant.apartment.building == @building }.sort_by { |b| b.period }
             @sum_rent_ask = @rents.map{|a| a.rent_ask}.sum
             @sum_service_charge_ask = @rents.map{|a| a.service_charge_ask }.sum
             @sum_rent_paid = @rents.map{|a| a.rent_paid}.sum
