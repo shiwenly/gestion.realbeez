@@ -56,53 +56,53 @@ class LiassesController < ApplicationController
     @sum_ttc = @expenses.map{|a| a.amount_ttc}.sum
     @sum_vat = @expenses.map{|a| a.amount_vat}.sum
     # Assurance
-    @assurance = @expenses.select{|a| a.expense_type == "Assurance"}
+    @assurance = @expenses.select{|a| a.expense_type == "Assurance" && a.deductible == true }
     @sum_assurance = @assurance.map{|a| a.amount_ttc}.sum
     # Eau
-    @eau = @expenses.select{|a| a.expense_type == "Eau"}
+    @eau = @expenses.select{|a| a.expense_type == "Eau" && a.deductible == true}
     @sum_eau = @eau.map{|a| a.amount_ttc}.sum
     # Eléctricité
-    @electricite = @expenses.select{|a| a.expense_type == "Eléctricité"}
+    @electricite = @expenses.select{|a| a.expense_type == "Eléctricité" && a.deductible == true}
     @sum_electricite = @electricite.map{|a| a.amount_ttc}.sum
     # Frais bancaire
-    @frais_bancaire = @expenses.select{|a| a.expense_type == "Frais bancaire"}
+    @frais_bancaire = @expenses.select{|a| a.expense_type == "Frais bancaire" && a.deductible == true}
     @sum_frais_bancaire = @frais_bancaire.map{|a| a.amount_ttc}.sum
     # Honoraire
-    @honoraire = @expenses.select{|a| a.expense_type == "Honoraire de gestion"}
+    @honoraire = @expenses.select{|a| a.expense_type == "Honoraire de gestion" && a.deductible == true}
     @sum_honoraire = @honoraire.map{|a| a.amount_ttc}.sum
     # Frais de nettoyage
-    @frais_nettoyage = @expenses.select{|a| a.expense_type == "Frais de nettoyage"}
+    @frais_nettoyage = @expenses.select{|a| a.expense_type == "Frais de nettoyage" && a.deductible == true}
     @sum_frais_nettoyage = @frais_nettoyage.map{|a| a.amount_ttc}.sum
     # Maintenance chaudiere
-    @maintenance_chaudiere = @expenses.select{|a| a.expense_type == "Maintenance chaudière"}
+    @maintenance_chaudiere = @expenses.select{|a| a.expense_type == "Maintenance chaudière" && a.deductible == true}
     @sum_maintenance_chaudiere = @maintenance_chaudiere.map{|a| a.amount_ttc}.sum
     # Remplacement chaudiere
-    @remplacement_chaudiere = @expenses.select{|a| a.expense_type == "Remplacement chaudière"}
+    @remplacement_chaudiere = @expenses.select{|a| a.expense_type == "Remplacement chaudière" && a.deductible == true}
     @sum_remplacement_chaudiere = @remplacement_chaudiere.map{|a| a.amount_ttc}.sum
     # Réparation
-    @reparation = @expenses.select{|a| a.expense_type == "Réparation, entretien et amélioration"}
+    @reparation = @expenses.select{|a| a.expense_type == "Réparation, entretien et amélioration" && a.deductible == true}
     @sum_reparation = @reparation.map{|a| a.amount_ttc}.sum
     # Inreret
-    @interet = @expenses.select{|a| a.expense_type == "Intérêt d'emprunt"}
+    @interet = @expenses.select{|a| a.expense_type == "Intérêt d'emprunt" && a.deductible == true}
     @sum_interet = @interet.map{|a| a.amount_ttc}.sum
     # Taxe
-    @taxe = @expenses.select{|a| a.expense_type == "Taxe foncière"}
+    @taxe = @expenses.select{|a| a.expense_type == "Taxe foncière" && a.deductible == true}
     @sum_taxe = @taxe.map{|a| a.amount_ttc}.sum
     # Notaire
-    @notaire = @expenses.select{|a| a.expense_type == "Frais de notaire"}
+    @notaire = @expenses.select{|a| a.expense_type == "Frais de notaire" && a.deductible == true}
     @sum_notaire = @notaire.map{|a| a.amount_ttc}.sum
     # Frais de dossier et caution
-    @dossier = @expenses.select{|a| a.expense_type == "Frais de dossiers et caution"}
+    @dossier = @expenses.select{|a| a.expense_type == "Frais de dossiers et caution" && a.deductible == true}
     @sum_dossier = @dossier.map{|a| a.amount_ttc}.sum
     # Charge non payé
-    @non_paye = @expenses.select{|a| a.expense_type == "Charges non payées au départ du locataire"}
+    @non_paye = @expenses.select{|a| a.expense_type == "Charges non payées au départ du locataire" && a.deductible == true}
     @sum_non_paye = @non_paye.map{|a| a.amount_ttc}.sum
     # Frais admin
     @frais_admin = @sum_frais_bancaire + @sum_honoraire + @sum_dossier
     # Autre frais non deductible
     @autre_frais_non_deductible = 20 * @building.number_of_flat
     # Depense de réparataion
-    @depense_de_reparation = @sum_frais_nettoyage + @sum_maintenance_chaudiere + @sum_remplacement_chaudiere + @sum_reparation
+    @depense_de_reparation = @sum_frais_nettoyage + @sum_remplacement_chaudiere + @sum_reparation
     # Total deduction
     @total_deduction = @frais_admin + @autre_frais_non_deductible + @depense_de_reparation + @sum_assurance + @sum_taxe + @sum_non_paye
     # Total revenus
