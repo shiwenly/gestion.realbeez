@@ -5,7 +5,7 @@
     <h5 class="text-center">de l'appartement : <%= @apartment.name %></h5>
     <h5 class="text-center mb-4">situé au <%= @apartment.building.address %></h5>
     <p class="mt-5">
-      <%= link_to "Home", root_path, style:"text-decoration:none; color:rgb(100, 100, 100)"  %> >
+      <%= link_to "Page d'accueil", root_path, style:"text-decoration:none; color:rgb(100, 100, 100)"  %> >
       <%= link_to "Sociétés", companies_path, style:"text-decoration:none; color:rgb(100, 100, 100)" %> >
       <%= link_to "Immeubles", company_path(@apartment.building.company), style:"text-decoration:none; color:rgb(100, 100, 100)" %> >
       <%= link_to "Appartments", building_path(@apartment.building), style:"text-decoration:none; color:rgb(100, 100, 100)"  %> >

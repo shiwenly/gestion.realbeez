@@ -4,7 +4,7 @@
     <h3 class="text-center mt-5" style="color: #D8A727; font-family: Simply Rounded; letter-spacing: 1px">Liste de vos immeubles </h3>
     <h5 class="text-center mb-4">de la société <%= @company.name %></h5>
     <p class="mt-5">
-      <%= link_to "Home", root_path, style:"text-decoration:none; color:rgb(100, 100, 100)"  %> >
+      <%= link_to "Page d'accueil", root_path, style:"text-decoration:none; color:rgb(100, 100, 100)"  %> >
       <%= link_to "Sociétés", companies_path, style:"text-decoration:none; color:rgb(100, 100, 100)" %> >
       <%= link_to "Immeubles", company_path(@company), style:"text-decoration:none; color:rgb(100, 100, 100)" %></p>
     <% unless @buildings == [] %>
