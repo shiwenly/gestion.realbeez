@@ -123,6 +123,14 @@
         <br>
       </div>
     </div>
+    <!-- Expenes -->
+    <h5 class="border-top pt-3"><strong>Les liasses fiscales</strong></h5>
+    <div class="mt-2 mb-4">
+      <p><%= link_to "Créer une liasse fiscale", new_building_liass_path(@building), class:"btn btn-transparent-bold"%></p>
+    </div>
+    <% @liasses.each do |liasse| %>
+      <%= link_to liasse.year.strftime("%Y"), liass_path(liasse), class: "btn btn-transparent-bold mb-2" %>
+    <% end %>
   </div>
 <% else %>
   <h3 class="text-center my-5" style="color:red">Vous n'avez pas accès à cette page</h3>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_06_143105) do
+ActiveRecord::Schema.define(version: 2020_09_24_075747) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -91,6 +91,18 @@ ActiveRecord::Schema.define(version: 2020_09_06_143105) do
     t.index ["user_id"], name: "index_expenses_on_user_id"
   end
 
+  create_table "liasses", force: :cascade do |t|
+    t.date "year"
+    t.string "statut"
+    t.boolean "closed", default: false
+    t.bigint "user_id"
+    t.bigint "building_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["building_id"], name: "index_liasses_on_building_id"
+    t.index ["user_id"], name: "index_liasses_on_user_id"
+  end
+
   create_table "rents", force: :cascade do |t|
     t.date "period"
     t.decimal "rent_paid", precision: 10, scale: 2
@@ -165,6 +177,8 @@ ActiveRecord::Schema.define(version: 2020_09_06_143105) do
   add_foreign_key "companies", "users"
   add_foreign_key "expenses", "buildings"
   add_foreign_key "expenses", "users"
+  add_foreign_key "liasses", "buildings"
+  add_foreign_key "liasses", "users"
   add_foreign_key "rents", "tenants"
   add_foreign_key "rents", "users"
   add_foreign_key "tenants", "apartments"

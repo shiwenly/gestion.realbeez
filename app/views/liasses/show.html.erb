@@ -1,0 +1,31 @@
+<% associe = @building.company.associe.split(",").map(&:strip) %>
+<% if associe.include?(current_user.email) %>
+  <div class="container my-5">
+    <h3 class="text-center mt-5" style="color: #D8A727; font-family: Simply Rounded; letter-spacing: 1px">Liasse fiscal <%= @liasse.year.strftime("%Y") %></h3>
+    <h5 class="text-center mb-4">Immeuble <%= @building.address %></h5>
+    <p class="mt-5"><strong>2. Recettes</strong></p>
+    <p class="ml-5">1. Montant brut des fermages ou des loyers encaissés : <%= @building_sum_rent_paid %></p>
+    <p class="mt-4"><strong>3. Deductions, frais et charges</strong></p>
+    <!-- 6. Frais admin -->
+    <p class="ml-5">6. Frais d'administration et de gestion : <%=  @frais_admin  %></p>
+    <!-- 7. Autre Frais non deductible -->
+    <p class="ml-5">7. Autres frais de gestion non déductibles pour leur montant réel (forfait €20 x nb appart) : <%= @autre_frais_non_deductible %></p>
+    <!-- 8. Prime d'assurance -->
+    <p class="ml-5">8. Primes d'assurance : <%= @sum_assurance %></p>
+    <!-- 9. Dépense de réparation -->
+    <p class="ml-5">9. Dépenses de réparation, d'entretien et d'amélioration : <%= @depense_de_reparation %></p>
+    <!-- Charge non payé par locataire -->
+    <p class="ml-5">11. Charges récupérables non récupérées au départ du locataire : <%= @sum_non_paye %></p>
+    <!-- Taxe foncière -->
+    <p class="ml-5">13. Impositions : <%= @sum_taxe %></p>
+    <p class=""><strong>18. TOTAL DES DEDUCTIONS, FRAIS ET CHARGES : <%= @total_deduction %></strong></p>
+    <p class="ml-5">21. Intérêts des emprunts contracté l'acquisition, la reconstruction, l'agrandissement, la réparation, l'amélioration ou la conservation de l'immeuble : <%= @sum_interet %></p>
+    <!-- <p class="ml-5"><em>(lignes 6 + 7 + 8 + 9 + 10 + 11 + 12 + 13 + 14 - 15 + 16)</em></p> -->
+    <p class=""><strong>22. REVENUS (+) ou DEFICITS (-) : <%= @revenus %></strong></p>
+    <!-- <p class="ml-5"><em>(lignes 5 - 17 - (18a + 18b) - 19 - 20)</em></p> -->
+    <p class=""><strong>25. REVENUS NETS (+) ou DEFICITS (-) : <%= @revenus %></strong></p>
+    <!-- <p class="ml-5"><em>(lignes 21 + 22 - 23)</em></p> -->
+  </div>
+<% else %>
+  <h3 class="text-center my-5" style="color:red">Vous n'avez pas accès à cette page</h3>
+<% end %>

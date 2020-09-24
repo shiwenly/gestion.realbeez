@@ -59,6 +59,8 @@ class BuildingsController < ApplicationController
       @sum_ttc = @expenses.map{|a| a.amount_ttc}.sum
       @sum_vat = @expenses.map{|a| a.amount_vat}.sum
     end
+    # Liasse
+    @liasses = policy_scope(Liasse.where("statut = ? AND building_id = ?", "active", @building.id).order(year: :asc))
 
     # unless @apartments == []
     #   @building_sum_rent_ask = 0

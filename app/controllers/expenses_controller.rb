@@ -12,7 +12,9 @@ class ExpensesController < ApplicationController
     @building = Building.find(params[:building_id])
     @apartment_name = ["Tous"]
     @apartments_name = @building.apartments.each do |apartment|
-      @apartment_name  << apartment.name.to_s
+      if apartment.statut == "active"
+        @apartment_name  << apartment.name.to_s
+      end
     end
   end
 
@@ -33,7 +35,9 @@ class ExpensesController < ApplicationController
     authorize @expense
     @apartment_name = ["Tous"]
     @apartments_name = @expense.building.apartments.each do |apartment|
-      @apartment_name  << apartment.name.to_s
+      if apartment.statut == "active"
+        @apartment_name  << apartment.name.to_s
+      end
     end
   end
 

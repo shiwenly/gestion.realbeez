@@ -35,4 +35,9 @@ Rails.application.routes.draw do
   end
   resources :rents, only: [:edit, :destroy, :update]
 
+  resources :buildings do
+    resources :liasses, only: [:new, :create]
+  end
+  resources :liasses, only: [:show, :edit, :destroy, :update ]
+
 end
