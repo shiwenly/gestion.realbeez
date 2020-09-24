@@ -26,7 +26,7 @@ class LiassesController < ApplicationController
           @loyer_annuel = (apartment.tenants.last.rent + apartment.tenants.last.service_charge) *12
           # Calculation
           apartment.tenants.each do |tenant|
-            @rents_unorder = Rent.search_by_date(@liasse.year)
+            @rents_unorder = Rent.search_by_date(@liasse.year.strftime("%Y").to_i)
             @rents = @rents_unorder.select{|a| a.statut == "active" && a.tenant_id == tenant.id && a.tenant.statut == "active" && a.tenant.apartment == apartment && a.tenant.apartment.building == @building }.sort_by { |b| b.period }
             @sum_rent_ask = @rents.map{|a| a.rent_ask}.sum
             @sum_service_charge_ask = @rents.map{|a| a.service_charge_ask }.sum
@@ -80,7 +80,7 @@ class LiassesController < ApplicationController
     @remplacement_chaudiere = @expenses.select{|a| a.expense_type == "Remplacement chaudière"}
     @sum_remplacement_chaudiere = @remplacement_chaudiere.map{|a| a.amount_ttc}.sum
     # Réparation
-    @reparation = @expenses.select{|a| a.expense_type == "Réparation et rénovation"}
+    @reparation = @expenses.select{|a| a.expense_type == "Réparation, entretien et amélioration"}
     @sum_reparation = @reparation.map{|a| a.amount_ttc}.sum
     # Inreret
     @interet = @expenses.select{|a| a.expense_type == "Intérêt d'emprunt"}
@@ -97,12 +97,6 @@ class LiassesController < ApplicationController
     # Charge non payé
     @non_paye = @expenses.select{|a| a.expense_type == "Charges non payées au départ du locataire"}
     @sum_non_paye = @non_paye.map{|a| a.amount_ttc}.sum
-    # Autre frais deductible
-    @autre_deductible = @expenses.select{|a| a.expense_type == "Autres frais" && a.deductible == true}
-    @sum_autre_deductible = @autre_deductible.map{|a| a.amount_ttc}.sum
-    # Autre frais non deductible
-    @autre_non_deductible = @expenses.select{|a| a.expense_type == "Autres frais" && a.deductible == false}
-    @sum_autre_non_deductible = @autre_non_deductible.map{|a| a.amount_ttc}.sum
     # Frais admin
     @frais_admin = @sum_frais_bancaire + @sum_honoraire + @sum_dossier
     # Autre frais non deductible
