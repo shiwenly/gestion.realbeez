@@ -124,6 +124,7 @@ class LiassesController < ApplicationController
     @liasse.building = @building
     @liasse.user_id = current_user.id
     @liasse.statut = "active"
+    @liasse.year2 = @liasse.year.strftime("%Y")
     if @liasse.save
       redirect_to building_path(@building)
     else
