@@ -19,6 +19,7 @@
           <%= f.input :move_in_date, label: "Date d'entrée", :order => [:day, :month, :year] %>
           <%= f.input :move_out_date, label: "Date de sortie", :order => [:day, :month, :year] %>
           <%= f.submit "Modifier", class: "btn btn-yellow-mustard mb-2" %>
+          <%= link_to "Annuler", root_path, class:"btn btn-danger mb-2" %>
         <% end %>
       </div>
     </div>

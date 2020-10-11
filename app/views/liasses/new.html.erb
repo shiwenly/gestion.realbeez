@@ -7,6 +7,7 @@
           <p>Année<span class="ml-2" style="color:red; font-size: 12px">(Une seule liasse par année ne peut être créée.)</span></p>
           <%= f.input :year, label: false, :order => [:year] %>
           <%= f.submit "Créer", class: "btn btn-yellow-mustard mb-2" %>
+          <%= link_to "Annuler", root_path, class:"btn btn-danger mb-2" %>
         <% end %>
       </div>
     </div>

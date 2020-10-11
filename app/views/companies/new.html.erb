@@ -10,6 +10,7 @@
           <%= f.input :vat, as: :radio_buttons, collection: [[true, "Oui"], [false, "Non"]], label_method: :second, value_method: :first, label: "Soumis à la TVA" %>
           <%= f.input :associe, label: "Ajouter l' email des associés séparé d'une , " %>
           <%= f.submit "Créer", class: "btn btn-yellow-mustard mb-2" %>
+          <%= link_to "Annuler", root_path, class:"btn btn-danger mb-2" %>
         <% end %>
       </div>
     </div>

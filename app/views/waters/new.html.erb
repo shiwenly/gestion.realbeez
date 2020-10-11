@@ -9,6 +9,7 @@
           <%= f.input :photo, label: false %>
           <%= f.input :photo_cache, as: :hidden %>
           <%= f.submit "Créer", data: { confirm: "Confirmez votre saisie. Vous ne pourrez plus la modifier après validation."}, class: "btn btn-yellow-mustard mb-2" %>
+          <%= link_to "Annuler", root_path, class:"btn btn-danger mb-2" %>
         <% end %>
       </div>
     </div>

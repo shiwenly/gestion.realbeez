@@ -40,6 +40,7 @@
           <%= f.input :photo_cache, as: :hidden %>
           <%= f.input :deductible, as: :radio_buttons, collection: [[true, "Oui"], [false, "Non"]], label_method: :second, value_method: :first, label: "Charge déductible", checked: true  %>
           <%= f.submit "Créer", class: "btn btn-yellow-mustard mb-2" %>
+          <%= link_to "Annuler", root_path, class:"btn btn-danger mb-2" %>
         <% end %>
       </div>
     </div>
