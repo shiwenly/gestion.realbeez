@@ -54,6 +54,7 @@ class RentsController < ApplicationController
       :service_charge_ask,
       :rent_paid,
       :service_charge_paid,
+      :date_payment
     )
   end
 

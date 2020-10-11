@@ -4,6 +4,7 @@
     <div class="col-12 col-md-6 col-lg-6">
       <div class="center">
         <%= simple_form_for [@tenant, @rent] do |f| %>
+          <%= f.input :date_payment, label: "Date d'encaissement", start_year: Date.today.year, :order => [:day, :month, :year] %>
           <%= f.input :period, label: "Période", start_year: Date.today.year, :order => [:month, :year] %>
           <%= f.input :rent_ask, label: "Montant du loyer à payer", input_html: { value: @tenant.rent } %>
           <%= f.input :service_charge_ask, label: "Montant des charges à payer", input_html: { value: @tenant.service_charge } %>
