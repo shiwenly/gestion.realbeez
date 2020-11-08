@@ -1,24 +1,29 @@
-<h3 class="text-center mt-5 mb-4">J'accède à mon compte</h3>
-<div class="container center mb-5">
-  <div class="row justify-content-center">
-    <div class="col-12 col-md-6 col-lg-6">
-      <div class="center">
-        <%= simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-          <div class="form-inputs">
-            <%= f.input :email,
+<div class="pt-5" style="height: 89vh; background-size: cover; background-position: center; background-image:linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.1)), url(https://images.unsplash.com/photo-1471623432079-b009d30b6729?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80)">
+  <h4 class="text-center mt-5" style="color:white; font-weight: bold">Identifiez-vous pour accéder</h4>
+  <h4 class="text-center mb-4" style="color:white; font-weight: bold">à votre outil de gestion</h4>
+  <div class="container center mb-5">
+    <div class="row justify-content-center">
+      <div class="col-11 col-md-6 col-lg-6 border p-3" style="border-radius: 5px; background-color: white; opacity: 0.9; padding: 14px 30px">
+        <div class="center">
+          <%= simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+            <div class="form-inputs">
+              <%= f.input :email,
                 required: false,
                 autofocus: true,
                 input_html: { autocomplete: "email" } %>
-            <%= f.input :password,
+              <%= f.input :password, label: "Mot de passe",
                 required: false,
                 input_html: { autocomplete: "current-password" } %>
-            <%= f.input :remember_me, as: :boolean if devise_mapping.rememberable? %>
+              <%= f.input :remember_me, as: :boolean if devise_mapping.rememberable? %>
+            </div>
+            <div class="form-actions">
+              <%= f.button :submit, "Log in", class: "btn btn-yellow-mustard mb-2" %>
+            </div>
+          <% end %>
+          <div class="mt-4">
+            <%= render "devise/shared/links" %>
           </div>
-          <div class="form-actions">
-            <%= f.button :submit, "Log in", class: "btn btn-yellow-mustard mb-2" %>
-          </div>
-        <% end %>
-        <%= render "devise/shared/links" %>
+        </div>
       </div>
     </div>
   </div>
