@@ -1,10 +1,10 @@
-<% associe = @tenant.apartment.building.company.associe.split(",").map(&:strip) %>
-<% if associe.include?(current_user.email) || @tenant.email == current_user.email %>
+<% associe = @tenant.apartment.building.company.associe.downcase.split(",").map(&:strip) %>
+<% if associe.include?(current_user.email) || @tenant.email == current_user.email || @tenant.apartment.building.company.user == current_user || @tenant.user == current_user %>
   <div class="container mt-5">
     <h3 class="text-center mt-5" style="color: #D8A727; font-family: Simply Rounded; letter-spacing: 1px">Loyer et consommation d'eau</h3>
     <h5 class="text-center">de <%= @tenant.first_name %> <%= @tenant.last_name %></h5>
     <!-- Information tenant -->
-    <% if associe.include?(current_user.email) %>
+    <% if associe.include?(current_user.email) || @tenant.apartment.building.company.user == current_user || @tenant.user == current_user %>
       <p class="mt-5">
         <%= link_to "Page d'accueil", root_path, style:"text-decoration:none; color:rgb(100, 100, 100)"  %> >
         <%= link_to "Sociétés", companies_path, style:"text-decoration:none; color:rgb(100, 100, 100)" %> >
@@ -19,7 +19,7 @@
         <div class="p-4 content border mb-4", style="box-shadow: 0 0 5px rgba(0,0,0,0.1); background-color: white">
           <div class="d-flex align-items-center mb-4 justify-content-center">
             <p class="m-0 p-0" style="color: #D8A727; font-family: Simply Rounded; font-size: 22px; letter-spacing: 1px"><%= @tenant.first_name %> <%= @tenant.last_name %></p>
-            <% if associe.include?(current_user.email) %>
+            <% if associe.include?(current_user.email) || @tenant.apartment.building.company.user == current_user || @tenant.user == current_user %>
               <%= link_to "", edit_tenant_path(@tenant)   , class:"fas fa-edit ml-2", style:"font-size:12px"  %> /
               <%= link_to "", tenant_path(@tenant), method: :delete, data: { confirm: "Confirmez la suppression du locataire #{@tenant.first_name} #{@tenant.last_name}?" }, class:"fas fa-trash", style:"font-size:12px" %>
             <% end %>
@@ -52,7 +52,7 @@
       <h5 class="border-top pt-3"><strong>Paiement du loyer</strong></h5>
       <div class="mt-2 mb-4">
         <% associe = @tenant.apartment.building.company.associe.split(",").map(&:strip) %>
-        <% if associe.include?(current_user.email) %>
+        <% if associe.include?(current_user.email) || @tenant.apartment.building.company.user == current_user || @tenant.user == current_user %>
           <%= link_to "Déclarer le paiement du loyer", new_tenant_rent_path(@tenant), class:"btn btn-transparent-bold" %>
         <% end %>
       </div>
@@ -93,7 +93,7 @@
                   <td><%= rent.rent_paid %></td>
                   <td><%= rent.service_charge_paid %></td>
                   <td><%= rent.rent_ask + rent.service_charge_ask - rent.service_charge_paid - rent.rent_paid %></td>
-                  <% if associe.include?(current_user.email) %>
+                  <% if associe.include?(current_user.email) || @tenant.apartment.building.company.user == current_user || @tenant.user == current_user %>
                     <td>
                       <%= link_to "", edit_rent_path(rent), class:"fas fa-edit mr-2" %>
                       <%= link_to "",rent_path(rent), method: :delete, data: { confirm: "Confirmez la suppression de la saisie?" }, class:"fas fa-trash" %>
@@ -144,7 +144,7 @@
                     <%= link_to "Ouvrir", "https://res.cloudinary.com/myhouze/image/upload/#{water.photo.filename}", :target => "_blank",class: "btn btn-transparent py-0", style: "font-size:12px" %>
                   </td>
                   <td>
-                    <% if associe.include?(current_user.email) %>
+                    <% if associe.include?(current_user.email) || @tenant.apartment.building.company.user == current_user || @tenant.user == current_user %>
                       <%= link_to "", edit_water_path(water), class:"fas fa-edit mr-2" %>
                       <%= link_to "", water_path(water), method: :delete, data: { confirm: "Confirmez la suppression de la saisie?" }, class:"fas fa-trash" %>
                     <% end %>

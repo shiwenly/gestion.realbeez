@@ -1,5 +1,5 @@
-<% associe = @apartment.building.company.associe.split(",").map(&:strip) %>
-<% if associe.include?(current_user.email) %>
+<% associe = @apartment.building.company.associe.downcase.split(",").map(&:strip) %>
+<% if associe.include?(current_user.email) || @apartment.building.company.user == current_user || @apartment.user == current_user %>
   <div class="container mt-5">
     <h3 class="text-center mt-5" style="color: #D8A727; font-family: Simply Rounded; letter-spacing: 1px">Détails du locataire</h3>
     <h5 class="text-center">de l'appartement : <%= @apartment.name %></h5>

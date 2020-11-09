@@ -1,5 +1,5 @@
-<% associe = @building.company.associe.split(",").map(&:strip) %>
-<% if associe.include?(current_user.email) %>
+<% associe = @building.company.associe.downcase.split(",").map(&:strip) %>
+<% if associe.include?(current_user.email) || @building.company.user == current_user || @liasse.user == current_user %>
   <div class="container my-5">
     <h3 class="text-center mt-5" style="color: #D8A727; font-family: Simply Rounded; letter-spacing: 1px">Liasse fiscal <%= @liasse.year.strftime("%Y") %></h3>
     <h5 class="text-center mb-4">Immeuble <%= @building.address %></h5>
