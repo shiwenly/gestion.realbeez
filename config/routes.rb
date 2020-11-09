@@ -2,6 +2,8 @@ Rails.application.routes.draw do
   devise_for :users
   root to: 'pages#home'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  get '/mentions_legales', to: 'pages#mentions_legales', as: :mentions_legales
+
 
   resources :companies, only: [:show, :new, :create, :index, :edit, :destroy, :update ]
 
