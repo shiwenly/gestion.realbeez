@@ -1,138 +1,142 @@
-<% associe = @building.company.associe.downcase.split(",").map(&:strip) %>
-<% if associe.include?(current_user.email) || @building.company.user == current_user || @building.user == current_user %>
-  <div class="container my-5">
-    <h3 class="text-center mt-5" style="color: #D8A727; font-family: Simply Rounded; letter-spacing: 1px">Appartements, dépenses et liasses fiscales</h3>
-    <h5 class="text-center mb-4">situés au <%= @building.address %></h5>
-    <p class="mt-5">
-      <%= link_to "Page d'accueil", root_path, style:"text-decoration:none; color:rgb(100, 100, 100)"  %> >
-      <%= link_to "Sociétés", companies_path, style:"text-decoration:none; color:rgb(100, 100, 100)" %> >
-      <%= link_to "Immeubles", company_path(@building.company), style:"text-decoration:none; color:rgb(100, 100, 100)" %> >
-      <%= link_to "Appartements", building_path(@building), style:"text-decoration:none; color:rgb(100, 100, 100)"  %>
-    </p>
-    <% unless @apartments == [] %>
-      <div class="row">
-        <div class="p-3 col-12 col-md-6 offset-md-3 my-4">
-          <div class="p-4 content border mb-4", style="box-shadow: 0 0 5px rgba(0,0,0,0.1); background-color: white">
-            <p style="font-weight: bolder">Chiffres <%= Date.today.year %> : Immeuble <%= @building.address %></p>
-            <p class="mb-1">Loyers charges comprises encaissés : <%= '%.0f' % (@building_sum_rent_paid + @building_sum_service_charge_paid) %> € </p>
-            <p><em>Loyers hors charges encaissés : </em><%= '%.0f' % @building_sum_rent_paid  %> €</p>
-            <p class="border-bottom mx-4"> </p>
-            <p class="mb-1">Loyers charges comprises manquant : <%= '%.0f' % @building_solde %> €</p>
-            <p class="mb-1">Loyers charges comprises attendus : <%= '%.0f' % @building_loyer_annuel  %> €</p>
-            <% if @building_loyer_annuel != 0 && @building_loyer_annuel != nil  %>
-              <p>% atteint : <%= '%.2f' % ((@building_sum_rent_paid + @building_sum_service_charge_paid) / @building_loyer_annuel * 100)  %> %</p>
-            <% end %>
-          </div>
-        </div>
-      </div>
-    <% end %>
-    <!-- Liasse fiscale -->
-    <h5 class="border-top pt-3"><strong>Les liasses fiscales</strong></h5>
-    <div class="mt-2 mb-4">
-      <p><%= link_to "Créer une liasse fiscale", new_building_liass_path(@building), class:"btn btn-transparent-bold"%></p>
-    </div>
-    <% @liasses.each do |liasse| %>
-      <%= link_to liasse.year.strftime("%Y"), liass_path(liasse), class: "btn btn-transparent-bold mb-2" %>
-    <% end %>
-    <!-- Appartment -->
-    <h5 class="border-top mt-5 pt-3"><strong>Les Appartements</strong></h5>
-    <div class="mt-2 mb-4">
-      <p><%= link_to "Ajouter un appartement", new_building_apartment_path(@building), class:"btn btn-transparent-bold"%></p>
-    </div>
-    <% counter = 1 %>
-    <!-- ------------------------- -->
-    <div class="row mb-4">
-      <% @apartments.each do |apartment| %>
-        <div class="p-3 col-12 col-md-6">
-          <div class="p-4 content border mb-3", style="box-shadow: 0 0 5px rgba(0,0,0,0.1); background-color: white">
-            <div class="d-flex align-items-center m-4 justify-content-center">
-              <p class="m-0 p-0" style="color: #D8A727; font-family: Simply Rounded; font-size: 22px; letter-spacing: 1px">Appartement <%= counter %></p>
-              <%= link_to "", edit_apartment_path(apartment)  , class:"fas fa-edit ml-2", style:"font-size:12px"  %> /
-              <%= link_to "", apartment_path(apartment), method: :delete, data: { confirm: "Confirmez la suppression de l'appartement : #{apartment.name}?" }, class:"fas fa-trash", style:"font-size:12px" %>
+<% unless @building.statut == "deleted" || @building.company.statut == "deleted" %>
+  <% associe = @building.company.associe.downcase.split(",").map(&:strip) %>
+  <% if associe.include?(current_user.email) || @building.company.user == current_user || @building.user == current_user %>
+    <div class="container my-5">
+      <h3 class="text-center mt-5" style="color: #D8A727; font-family: Simply Rounded; letter-spacing: 1px">Appartements, dépenses et liasses fiscales</h3>
+      <h5 class="text-center mb-4">situés au <%= @building.address %></h5>
+      <p class="mt-5">
+        <%= link_to "Page d'accueil", root_path, style:"text-decoration:none; color:rgb(100, 100, 100)"  %> >
+        <%= link_to "Sociétés", companies_path, style:"text-decoration:none; color:rgb(100, 100, 100)" %> >
+        <%= link_to "Immeubles", company_path(@building.company), style:"text-decoration:none; color:rgb(100, 100, 100)" %> >
+        <%= link_to "Appartements", building_path(@building), style:"text-decoration:none; color:rgb(100, 100, 100)"  %>
+      </p>
+      <% unless @apartments == [] %>
+        <div class="row">
+          <div class="p-3 col-12 col-md-6 offset-md-3 my-4">
+            <div class="p-4 content border mb-4", style="box-shadow: 0 0 5px rgba(0,0,0,0.1); background-color: white">
+              <p style="font-weight: bolder">Chiffres <%= Date.today.year %> : Immeuble <%= @building.address %></p>
+              <p class="mb-1">Loyers charges comprises encaissés : <%= '%.0f' % (@building_sum_rent_paid + @building_sum_service_charge_paid) %> € </p>
+              <p><em>Loyers hors charges encaissés : </em><%= '%.0f' % @building_sum_rent_paid  %> €</p>
+              <p class="border-bottom mx-4"> </p>
+              <p class="mb-1">Loyers charges comprises manquant : <%= '%.0f' % @building_solde %> €</p>
+              <p class="mb-1">Loyers charges comprises attendus : <%= '%.0f' % @building_loyer_annuel  %> €</p>
+              <% if @building_loyer_annuel != 0 && @building_loyer_annuel != nil  %>
+                <p>% atteint : <%= '%.2f' % ((@building_sum_rent_paid + @building_sum_service_charge_paid) / @building_loyer_annuel * 100)  %> %</p>
+              <% end %>
             </div>
-            <%= link_to apartment_path(apartment), style:"text-decoration:none; color: rgb(100, 100, 100)" do %>
-              <p class=" mt-0 mb-3" style="" ><i class="fas fa-house-user mr-3" style="color: #D8A727"></i><%= apartment.name %></p>
-              <p>Numéro du compteur d'eau : <%= apartment.water %></p>
-              <!-- <p class="mb-1">Statut : <%#= apartment.statut %></p> -->
-              <div class="d-flex mt-3 justify-content-end">
-                <%= link_to "Voir détails", apartment_path(apartment) , class:"btn btn-yellow-mustard"  %>
-              </div>
-            <% end %>
           </div>
         </div>
-        <% counter += 1 %>
       <% end %>
-    </div>
-    <!-- Expenes -->
-    <h5 class="border-top pt-3"><strong>Les Dépenses</strong></h5>
-    <div class="mt-2 mb-4">
-      <p><%= link_to "Ajouter une dépense", new_building_expense_path(@building), class:"btn btn-transparent-bold"%></p>
-    </div>
-    <!-- recherche date -->
-    <%= form_for :search, defaults: { required: false }, url:building_path(@building), method: "GET", html: { class: '' } do |f| %>
-      <div class="mb-3 d-flex align-items-center">
-        <%= f.select :date,  [Date.today.year, Date.today.year - 1,Date.today.year - 2, Date.today.year - 3 ], html: { style:"border: solid"} %>
-        <%= f.submit "Choisir", class: "btn btn-yellow-mustard-small ml-2" %>
+      <!-- Liasse fiscale -->
+      <h5 class="border-top pt-3"><strong>Les liasses fiscales</strong></h5>
+      <div class="mt-2 mb-4">
+        <p><%= link_to "Créer une liasse fiscale", new_building_liass_path(@building), class:"btn btn-transparent-bold"%></p>
       </div>
-    <% end %>
-    <div class="" style="overflow:scroll;">
-      <div class="mb-5" style="font-size: 12px ">
-        <table class="table table-hover" style="background-color: white">
-          <thead>
-            <tr>
-              <th scope="col">Date</th>
-              <th scope="col">Appartement</th>
-              <th scope="col">Type</th>
-              <th scope="col">Fournisseurs</th>
-              <th scope="col" class="text-right">MT TTC</th>
-              <% if @building.company.corporate_tax == true %>
-                <th scope="col" class="text-right">TVA</th>
+      <% @liasses.each do |liasse| %>
+        <%= link_to liasse.year.strftime("%Y"), liass_path(liasse), class: "btn btn-transparent-bold mb-2" %>
+      <% end %>
+      <!-- Appartment -->
+      <h5 class="border-top mt-5 pt-3"><strong>Les Appartements</strong></h5>
+      <div class="mt-2 mb-4">
+        <p><%= link_to "Ajouter un appartement", new_building_apartment_path(@building), class:"btn btn-transparent-bold"%></p>
+      </div>
+      <% counter = 1 %>
+      <!-- ------------------------- -->
+      <div class="row mb-4">
+        <% @apartments.each do |apartment| %>
+          <div class="p-3 col-12 col-md-6">
+            <div class="p-4 content border mb-3", style="box-shadow: 0 0 5px rgba(0,0,0,0.1); background-color: white">
+              <div class="d-flex align-items-center m-4 justify-content-center">
+                <p class="m-0 p-0" style="color: #D8A727; font-family: Simply Rounded; font-size: 22px; letter-spacing: 1px">Appartement <%= counter %></p>
+                <%= link_to "", edit_apartment_path(apartment)  , class:"fas fa-edit ml-2", style:"font-size:12px"  %> /
+                <%= link_to "", apartment_path(apartment), method: :delete, data: { confirm: "Confirmez la suppression de l'appartement : #{apartment.name}?" }, class:"fas fa-trash", style:"font-size:12px" %>
+              </div>
+              <%= link_to apartment_path(apartment), style:"text-decoration:none; color: rgb(100, 100, 100)" do %>
+                <p class=" mt-0 mb-3" style="" ><i class="fas fa-house-user mr-3" style="color: #D8A727"></i><%= apartment.name %></p>
+                <p>Numéro du compteur d'eau : <%= apartment.water %></p>
+                <!-- <p class="mb-1">Statut : <%#= apartment.statut %></p> -->
+                <div class="d-flex mt-3 justify-content-end">
+                  <%= link_to "Voir détails", apartment_path(apartment) , class:"btn btn-yellow-mustard"  %>
+                </div>
               <% end %>
-              <th scope="col">Déductible</th>
-              <th scope="col">Justificatif</th>
-              <th scope="col"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <% @expenses.each do |expense| %>
+            </div>
+          </div>
+          <% counter += 1 %>
+        <% end %>
+      </div>
+      <!-- Expenes -->
+      <h5 class="border-top pt-3"><strong>Les Dépenses</strong></h5>
+      <div class="mt-2 mb-4">
+        <p><%= link_to "Ajouter une dépense", new_building_expense_path(@building), class:"btn btn-transparent-bold"%></p>
+      </div>
+      <!-- recherche date -->
+      <%= form_for :search, defaults: { required: false }, url:building_path(@building), method: "GET", html: { class: '' } do |f| %>
+        <div class="mb-3 d-flex align-items-center">
+          <%= f.select :date,  [Date.today.year, Date.today.year - 1,Date.today.year - 2, Date.today.year - 3 ], html: { style:"border: solid"} %>
+          <%= f.submit "Choisir", class: "btn btn-yellow-mustard-small ml-2" %>
+        </div>
+      <% end %>
+      <div class="" style="overflow:scroll;">
+        <div class="mb-5" style="font-size: 12px ">
+          <table class="table table-hover" style="background-color: white">
+            <thead>
               <tr>
-                <td><%= expense.date.strftime("%d/%m/%Y") %></td>
-                <td><%= expense.apartment_name %></td>
-                <td><%= expense.expense_type %></td>
-                <td><%= expense.supplier %></td>
-                <td class="text-right"><%= '%.2f' % expense.amount_ttc %></td>
+                <th scope="col">Date</th>
+                <th scope="col">Appartement</th>
+                <th scope="col">Type</th>
+                <th scope="col">Fournisseurs</th>
+                <th scope="col" class="text-right">MT TTC</th>
                 <% if @building.company.corporate_tax == true %>
-                  <td class="text-right"><%= '%.2f' % expense.amount_vat %></td>
+                  <th scope="col" class="text-right">TVA</th>
                 <% end %>
-                <td class="text-center"><%= expense.deductible ? "Oui" : "Non" %></td>
-                <td>
-                  <%= link_to "Ouvrir", "https://res.cloudinary.com/myhouze/image/upload/#{expense.photo.filename}", :target => "_blank",class: "btn btn-transparent py-0", style: "font-size:12px" %>
-                </td>
-                <td>
-                  <%= link_to "", edit_expense_path(expense), class:"fas fa-edit mr-2" %>
-                  <%= link_to "",expense_path(expense), method: :delete, data: { confirm: "Confirmez la suppression de la saisie?" }, class:"fas fa-trash ml" %>
-                </td>
+                <th scope="col">Déductible</th>
+                <th scope="col">Justificatif</th>
+                <th scope="col"></th>
               </tr>
-            <% end %>
-            <tr style="font-weight: bolder">
-              <td>TOTAL</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td class="text-right"><%= '%.2f' % @sum_ttc %></td>
-              <% if @building.company.corporate_tax == true %>
-                <td class="text-right"><%=  '%.2f' % @sum_vat %></td>
+            </thead>
+            <tbody>
+              <% @expenses.each do |expense| %>
+                <tr>
+                  <td><%= expense.date.strftime("%d/%m/%Y") %></td>
+                  <td><%= expense.apartment_name %></td>
+                  <td><%= expense.expense_type %></td>
+                  <td><%= expense.supplier %></td>
+                  <td class="text-right"><%= '%.2f' % expense.amount_ttc %></td>
+                  <% if @building.company.corporate_tax == true %>
+                    <td class="text-right"><%= '%.2f' % expense.amount_vat %></td>
+                  <% end %>
+                  <td class="text-center"><%= expense.deductible ? "Oui" : "Non" %></td>
+                  <td>
+                    <%= link_to "Ouvrir", "https://res.cloudinary.com/myhouze/image/upload/#{expense.photo.filename}", :target => "_blank",class: "btn btn-transparent py-0", style: "font-size:12px" %>
+                  </td>
+                  <td>
+                    <%= link_to "", edit_expense_path(expense), class:"fas fa-edit mr-2" %>
+                    <%= link_to "",expense_path(expense), method: :delete, data: { confirm: "Confirmez la suppression de la saisie?" }, class:"fas fa-trash ml" %>
+                  </td>
+                </tr>
               <% end %>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-          </tbody>
-        </table>
-        <br>
+              <tr style="font-weight: bolder">
+                <td>TOTAL</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="text-right"><%= '%.2f' % @sum_ttc %></td>
+                <% if @building.company.corporate_tax == true %>
+                  <td class="text-right"><%=  '%.2f' % @sum_vat %></td>
+                <% end %>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+          <br>
+        </div>
       </div>
     </div>
-  </div>
+  <% else %>
+    <h3 class="text-center my-5" style="color:red">Vous n'avez pas accès à cette page</h3>
+  <% end %>
 <% else %>
-  <h3 class="text-center my-5" style="color:red">Vous n'avez pas accès à cette page</h3>
+  <h3 class="text-center my-5" style="color:red">Cet immeuble a été supprimé</h3>
 <% end %>
