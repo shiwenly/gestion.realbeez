@@ -1,6 +1,6 @@
 <% unless @tenant.apartment.building.statut == "deleted" || @tenant.apartment.building.company.statut == "deleted" || @tenant.apartment.statut == "deleted" || @tenant.statut == "deleted" %>
   <% associe = @tenant.apartment.building.company.associe.downcase.split(",").map(&:strip) %>
-  <% if associe.include?(current_user.email) || @tenant.email == current_user.email || @tenant.apartment.building.company.user == current_user || @tenant.user == current_user %>
+  <% if associe.include?(current_user.email) || @tenant.email == current_user.email || @tenant.apartment.building.company.user == current_user || @tenant.user == current_user || current_user.admin == true  %>
     <div class="container mt-5">
       <h3 class="text-center mt-5" style="color: #D8A727; font-family: Simply Rounded; letter-spacing: 1px">Loyer et consommation d'eau</h3>
       <h5 class="text-center">de <%= @tenant.first_name %> <%= @tenant.last_name %></h5>

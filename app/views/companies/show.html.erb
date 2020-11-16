@@ -1,6 +1,6 @@
 <% unless @company.statut == "deleted" %>
   <% associe = @company.associe.downcase.split(",").map(&:strip) %>
-  <% if associe.include?(current_user.email) || @company.user == current_user %>
+  <% if associe.include?(current_user.email) || @company.user == current_user || current_user.admin == true %>
     <div class="container my-5">
       <h3 class="text-center mt-5" style="color: #D8A727; font-family: Simply Rounded; letter-spacing: 1px">Liste de vos immeubles </h3>
       <h5 class="text-center mb-4">de la société <%= @company.name %></h5>
