@@ -5,7 +5,7 @@
       <h3 class="text-center mt-5" style="color: #D8A727; font-family: Simply Rounded; letter-spacing: 1px">Loyer et consommation d'eau</h3>
       <h5 class="text-center">de <%= @tenant.first_name %> <%= @tenant.last_name %></h5>
       <!-- Information tenant -->
-      <% if associe.include?(current_user.email) || @tenant.apartment.building.company.user == current_user || @tenant.user == current_user %>
+      <% if associe.include?(current_user.email) || @tenant.apartment.building.company.user == current_user || @tenant.user == current_user || current_user.admin == true %>
         <p class="mt-5">
           <%= link_to "Page d'accueil", root_path, style:"text-decoration:none; color:rgb(100, 100, 100)"  %> >
           <%= link_to "Sociétés", companies_path, style:"text-decoration:none; color:rgb(100, 100, 100)" %> >
@@ -53,7 +53,7 @@
         <h5 class="border-top pt-3"><strong>Paiement du loyer</strong></h5>
         <div class="mt-2 mb-4">
           <% associe = @tenant.apartment.building.company.associe.split(",").map(&:strip) %>
-          <% if associe.include?(current_user.email) || @tenant.apartment.building.company.user == current_user || @tenant.user == current_user %>
+          <% if associe.include?(current_user.email) || @tenant.apartment.building.company.user == current_user || @tenant.user == current_user || current_user.admin == true %>
             <%= link_to "Déclarer le paiement du loyer", new_tenant_rent_path(@tenant), class:"btn btn-transparent-bold" %>
           <% end %>
         </div>
