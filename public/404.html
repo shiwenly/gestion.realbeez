@@ -1,67 +1,50 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>The page you were looking for doesn't exist (404)</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <style>
-  .rails-default-error-page {
-    background-color: #EFEFEF;
-    color: #2E2F30;
-    text-align: center;
-    font-family: arial, sans-serif;
-    margin: 0;
-  }
+  <head>
+    <title>The page you were looking for doesn't exist (404)</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <style>
+      @import url("https://fonts.googleapis.com/css?family=DM+Sans:400,700|Montserrat:400,700&display=swap");
 
-  .rails-default-error-page div.dialog {
-    width: 95%;
-    max-width: 33em;
-    margin: 4em auto 0;
-  }
+      .btn-yellow-mustard-big {
+        border: 2px solid transparent ;
+        padding: 4px 8px;
+        border-radius: 4px;
+        background-color: #D8A727;
+        font-weight: bold;
+        transition: all .15s ease-in-out;
+        color: white;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        padding-left: 20px;
+        padding-right: 20px;
+        text-decoration: none;
+        i {
+          padding-right: 4px;
+        }
+      }
 
-  .rails-default-error-page div.dialog > div {
-    border: 1px solid #CCC;
-    border-right-color: #999;
-    border-left-color: #999;
-    border-bottom-color: #BBB;
-    border-top: #B00100 solid 4px;
-    border-top-left-radius: 9px;
-    border-top-right-radius: 9px;
-    background-color: white;
-    padding: 7px 12% 0;
-    box-shadow: 0 3px 8px rgba(50, 50, 50, 0.17);
-  }
+      .btn-yellow-mustard-big:hover {
+      background-color:#d69d00;
+      color:white;
+      }
+    </style>
+  </head>
 
-  .rails-default-error-page h1 {
-    font-size: 100%;
-    color: #730E15;
-    line-height: 1.5em;
-  }
+  <body class="rails-default-error-page">
+    <a href="/" style='text-decoration: none'>
+      <img src="/images/logo_rb.png" alt="", style="height: 26px; padding-left: 9px; padding-top: 9px; padding-bottom: 14px">
+      <img src="/images/Realbeez_logo.png" alt="", style="height: 26px; padding-left: 4px; padding-top: 9px; padding-bottom: 14px">
+    </a>
 
-  .rails-default-error-page div.dialog > p {
-    margin: 0 0 1em;
-    padding: 1em;
-    background-color: #F7F7F7;
-    border: 1px solid #CCC;
-    border-right-color: #999;
-    border-left-color: #999;
-    border-bottom-color: #999;
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
-    border-top-color: #DADADA;
-    color: #666;
-    box-shadow: 0 3px 8px rgba(50, 50, 50, 0.17);
-  }
-  </style>
-</head>
-
-<body class="rails-default-error-page">
-  <!-- This file lives in public/404.html -->
-  <div class="dialog">
-    <div>
-      <h1>The page you were looking for doesn't exist.</h1>
-      <p>You may have mistyped the address or the page may have moved.</p>
+    <!-- This file lives in public/404.html -->
+    <div class="" style="height: 80vh; text-align: center;padding-top: 60px; background-color: #F8F9FA">
+      <div>
+        <h1 style="font-family: Montserrat; font-size: 80px; color: #FFC65A; margin-bottom: 30px">404</h1>
+        <h2 style="font-family: Montserrat">Oups! La page que vous recherchez semble introuvable.</h2>
+        <p style="font-family: DM Sans; margin-bottom: 30px">Vous avez peut etre clique sur un lien qui renvoie vers une page qui n'existe plus ou qui est temporairement indisponible.</p>
+        <a class="btn-yellow-mustard-big" style="font-family: DM Sans" href="/">Retour page d'accueil</a>
+      </div>
     </div>
-    <p>If you are the application owner check the logs for more information.</p>
-  </div>
-</body>
+  </body>
 </html>
