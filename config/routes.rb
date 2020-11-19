@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   get '/mentions_legales', to: 'pages#mentions_legales', as: :mentions_legales
   get '/nous_decouvrir', to: 'pages#nous_decouvrir', as: :nous_decouvrir
+  get '/tutoriel', to: 'pages#tutoriel', as: :turoriel
 
   resources :companies, only: [:show, :new, :create, :index, :edit, :destroy, :update ]
 
