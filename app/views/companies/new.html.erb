@@ -8,7 +8,7 @@
           <%= f.input :address %>
           <%= f.input :corporate_tax, as: :radio_buttons, collection: [[true, "Oui"], [false, "Non"]], label_method: :second, value_method: :first, label: "Soumis à l'IS" %>
           <%= f.input :vat, as: :radio_buttons, collection: [[true, "Oui"], [false, "Non"]], label_method: :second, value_method: :first, label: "Soumis à la TVA" %>
-          <%= f.input :associe, label: "Ajoutez les emails des associés séparés d'une , afin de leurs donner accès" %>
+          <%= f.input :associe, label: "Ajoutez les emails de vos associés séparés d'une , afin de leurs donner accès" %>
           <%= f.submit "Créer", class: "btn btn-yellow-mustard mb-2" %>
           <%= link_to "Annuler", root_path, class:"btn btn-danger mb-2" %>
         <% end %>
