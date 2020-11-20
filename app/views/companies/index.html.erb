@@ -42,37 +42,5 @@
     <% end %>
   <% end %>
   <!-- ONLY FOR ADMIN -->
-  <% if current_user.admin == true%>
-    <div class="border-top mt-3"></div>
-    <h3 class="text-center mt-4 mb-4" style="color: #D8A727; font-family: Simply Rounded; letter-spacing: 1px">Toutes les sociétés (only for admin)</h3>
-    <% @companies.each do |company| %>
-      <div class="row">
-        <div class="p-3 col-12 col-md-6 offset-md-3">
-          <div class="p-4 content border mb-4", style="box-shadow: 0 0 5px rgba(0,0,0,0.1); background-color: white">
-            <div class="d-flex align-items-center mb-4 justify-content-center">
-              <p class="m-0 p-0" style="color: #D8A727; font-family: Simply Rounded; font-size: 22px; letter-spacing: 1px">Société <%= company.id %></p>
-              <%= link_to "", edit_company_path(company), class:"fas fa-edit ml-2", style:"font-size:12px"  %> /
-              <%= link_to "", company_path(company), method: :delete, data: { confirm: "Confirmez la suppression de la société #{company.name}?" }, class:"fas fa-trash", style:"font-size:12px" %>
-            </div>
-            <%= link_to company_path(company), style:"text-decoration:none; color: rgb(100, 100, 100)" do %>
-              <p class=" mt-0 mb-3" style="" ><i class="fas fa-city mr-3" style="color: #D8A727"></i><%= company.name %></p>
-              <p class=" mt-0 mb-3" style="" ><i class="fas fa-map-marker-alt mr-3" style="color: #D8A727"></i><%= company.address %></p>
-              <p class="mb-1">Société soumis à l'IS : <%= company.corporate_tax ? "Oui" : "Non" %></p>
-              <p>Société soumis à la TVA : <%= company.vat ? "Oui" : "Non" %></p>
-              <% if company.associe != nil && company.associe != "" %>
-                <p class="mb-1">Les associés :  </p>
-                <% company.associe.split(",").each do |a| %>
-                  <span class="px-2" style="color:#D8A727 ; border-radius:20px; border: solid 1px #D8A727; font-size: 14px">
-                    <%= a %></span>
-                <% end %>
-              <% end %>
-            <% end %>
-            <div class="d-flex mt-3 justify-content-end">
-              <%= link_to "Voir détails", company_path(company), class:"btn btn-yellow-mustard"  %>
-            </div>
-          </div>
-        </div>
-      </div>
-    <% end %>
-  <% end %>
+  <%#= render "adminIndex" %>
 </div>

@@ -1,0 +1,63 @@
+.profile-friends {
+  margin-bottom: 10vh;
+    > .navigations {
+        margin: 10vh 0;
+        h3 {
+            width: 100%;
+            margin: 0;
+            padding: 7px 0;
+            text-align: center;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 20px
+        }
+        h3.active {
+            background-color: #fdd741;
+        }
+        border-radius: 7px;
+        background: #eee;
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        font-size: 20px
+    }
+}
+
+#buddies-index-searchbar {
+  margin: 5vh 0;
+  > #form-search {
+    form {
+      font-family: $headers-font;
+        > div {
+          display: flex;
+          justify-content: center;
+          > input {
+              color: $green;
+              font-size: 18px;
+              --height: 2.5rem;
+              height: var(--height);
+              text-align: center;
+
+              border-radius: 100vh;
+              margin: 0px;
+              text-align: center;
+              width: 19em;
+          }
+        }
+      }
+    }
+}
+
+#profile-index-buddy {
+  > h4 {
+    color: $error;
+    font-style: italic;
+  }
+}
+
+#friends-toPlace {
+  > h4 {
+    color: $error;
+    font-style: italic;
+  }
+}

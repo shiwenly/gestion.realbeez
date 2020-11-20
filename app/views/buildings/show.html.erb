@@ -64,7 +64,7 @@
           <% counter += 1 %>
         <% end %>
       </div>
-      <!-- Expenes -->
+      <!-- Expenses -->
       <h5 class="border-top pt-3"><strong>Les Dépenses</strong></h5>
       <div class="mt-2 mb-4">
         <p><%= link_to "Ajouter une dépense", new_building_expense_path(@building), class:"btn btn-transparent-bold"%></p>
@@ -72,7 +72,7 @@
       <!-- recherche date -->
       <%= form_for :search, defaults: { required: false }, url:building_path(@building), method: "GET", html: { class: '' } do |f| %>
         <div class="mb-3 d-flex align-items-center">
-          <%= f.select :date,  [Date.today.year, Date.today.year - 1,Date.today.year - 2, Date.today.year - 3 ], html: { style:"border: solid"} %>
+          <%= f.select :date,  [(Date.today.year+2), (Date.today.year+1), Date.today.year, Date.today.year - 1,Date.today.year - 2, Date.today.year - 3 ], :selected =>Date.today.year, html: { style:"border: solid"} %>
           <%= f.submit "Choisir", class: "btn btn-yellow-mustard-small ml-2" %>
         </div>
       <% end %>

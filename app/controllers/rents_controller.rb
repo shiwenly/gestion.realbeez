@@ -19,7 +19,7 @@ class RentsController < ApplicationController
     @rent.user_id = current_user.id
     @rent.statut = "active"
     if @rent.save
-      redirect_to tenant_path(@tenant)
+      redirect_to apartment_path(@tenant.apartment)
     else
       render :new
     end
@@ -32,7 +32,7 @@ class RentsController < ApplicationController
   def update
     authorize @rent
     if @rent.update(rent_params)
-      redirect_to tenant_path(@rent.tenant)
+      redirect_to apartment_path(@rent.tenant.apartment)
     else
       render :edit
     end

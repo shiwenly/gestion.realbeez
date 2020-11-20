@@ -5,6 +5,9 @@ class ApartmentsController < ApplicationController
   def show
     authorize @apartment
     @tenants = policy_scope(Tenant.where("statut = ? AND apartment_id = ?", "active", @apartment.id ).order(created_at: :desc))
+    @tenants_actuel = policy_scope(Tenant.where("statut = ? AND apartment_id = ? AND current_tenant = ?", "active", @apartment.id, true ).order(created_at: :desc))
+    @tenants_passé = policy_scope(Tenant.where("statut = ? AND apartment_id = ? AND current_tenant = ?", "active", @apartment.id, false ).order(created_at: :desc))
+    @waters = policy_scope(Water.where("statut = ?", "active").order(submission_date: :desc).limit(10))
 
     unless @tenants == []
       @apartment_sum_rent_ask = 0

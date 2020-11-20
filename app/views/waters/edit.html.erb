@@ -4,11 +4,11 @@
     <div class="col-12 col-md-6 col-lg-6">
       <div class="center">
         <%= simple_form_for [@tenant, @water] do |f| %>
-          <%= f.input :submission_date, start_year: Date.today.year, label: "Date de la déclaration", :order => [:day, :month, :year] %>
+          <%= f.input :submission_date, label: "Date de la déclaration", :order => [:day, :month, :year] %>
           <%= f.input :quantity, label: "Quantité" %>
           <%= f.input :photo, label: false %>
           <%= f.input :photo_cache, as: :hidden %>
-          <%= f.submit "Modifier", class: "btn mb-2" %>
+          <%= f.submit "Modifier", class: "btn btn-yellow-mustard  mb-2" %>
           <%= link_to "Annuler", root_path, class:"btn btn-danger mb-2" %>
         <% end %>
       </div>

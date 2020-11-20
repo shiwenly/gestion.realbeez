@@ -19,7 +19,7 @@ class WatersController < ApplicationController
     @water.user_id = current_user.id
     @water.statut = "active"
     if @water.save
-      redirect_to tenant_path(@tenant)
+      redirect_to apartment_path(@tenant.apartment)
     else
       render :new
     end
@@ -32,7 +32,7 @@ class WatersController < ApplicationController
   def update
     authorize @water
     if @water.update(water_params)
-      redirect_to tenant_path(@water.tenant)
+      redirect_to apartment_path(@water.tenant.apartment)
     else
       render :edit
     end
