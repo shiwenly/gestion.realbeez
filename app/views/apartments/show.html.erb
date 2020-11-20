@@ -38,7 +38,7 @@
           <h3 id="passé" style="font-size: 16px">Locataire(s) passé(s)</h3>
         </div>
         <div id="friends-toPlace" class="">
-          <% if @tenants != []  %>
+          <% if @tenants_actuel != []  %>
             <% @tenants_actuel.each do |tenant| %>
               <div class="row">
                 <div class="p-3 col-12 col-md-6 offset-md-3">
@@ -71,9 +71,9 @@
                       <% end %>
                     <% end %>
                     <!-- <p>Statut : <%#= tenant.statut %> </p> -->
-                    <div class="d-flex mt-3 justify-content-end">
-                      <%= link_to "Voir détails", tenant_path(tenant), class:"btn btn-yellow-mustard"  %>
-                    </div>
+                    <!-- <div class="d-flex mt-3 justify-content-end"> -->
+                    <%#= link_to "Voir détails", tenant_path(tenant), class:"btn btn-yellow-mustard"  %>
+                    <!-- </div> -->
                   </div>
                 </div>
               </div>
