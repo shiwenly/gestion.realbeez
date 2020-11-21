@@ -42,7 +42,7 @@ class RentsController < ApplicationController
     authorize @rent
     @rent.statut = "deleted"
     @rent.save
-    redirect_to apartment_path(@tenant.apartment)
+    redirect_to apartment_path(@rent.tenant.apartment)
   end
 
   private

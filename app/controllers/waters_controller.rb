@@ -42,7 +42,7 @@ class WatersController < ApplicationController
     authorize @water
     @water.statut = "deleted"
     @water.save
-    redirect_to apartment_path(@tenant.apartment)
+    redirect_to apartment_path(@water.tenant.apartment)
   end
 
   private
