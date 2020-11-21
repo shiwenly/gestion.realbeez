@@ -19,7 +19,11 @@
           <div class="border p-3"  style="border-radius: 5px; background-color: white; opacity: 0.9; padding: 14px 30px">
             <h3 class="text-center mt-4 border-bottom pb-4 mx-5" style="color: #D8A727; font-family: Simply Rounded; font-size: 24px; letter-spacing: 1px">Je suis un locataire</h3>
             <div class="d-flex justify-content-center">
-              <%= link_to "Voir mon dossier", tenant_path(@tenant), class:"btn btn-transparent-bold  mt-4 mb-4 stretched-link"  %>
+              <% if @tenant == nil %>
+                <h4 class="text-center m-4" style="width: 100%; color:#DA334A; font-style: italic;">"Aucun dossier locataire créé actuellement"</h4>
+              <% else %>
+                <%= link_to "Voir mon dossier", tenant_path(@tenant), class:"btn btn-transparent-bold  mt-4 mb-4 stretched-link"  %>
+              <% end %>
             </div>
           </div>
         </div>

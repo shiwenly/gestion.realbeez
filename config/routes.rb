@@ -6,25 +6,25 @@ Rails.application.routes.draw do
   get '/nous_decouvrir', to: 'pages#nous_decouvrir', as: :nous_decouvrir
   get '/tutoriel', to: 'pages#tutoriel', as: :turoriel
 
-  resources :companies, only: [:show, :new, :create, :index, :edit, :destroy, :update ]
+  resources :companies, only: [:new, :create, :index, :edit, :destroy, :update ]
 
   resources :companies do
-    resources :buildings, only: [:new, :create]
+    resources :buildings, only: [:new, :create, :index]
   end
-  resources :buildings, only: [:show, :edit, :destroy, :update ]
+  resources :buildings, only: [:edit, :destroy, :update ]
 
   resources :buildings do
-    resources :apartments, only: [:new, :create]
+    resources :apartments, only: [:new, :create, :index]
   end
-  resources :apartments, only: [:show, :edit, :destroy, :update ]
+  resources :apartments, only: [:edit, :destroy, :update ]
 
   resources :buildings do
     resources :expenses, only: [:new, :create, :index]
   end
-  resources :expenses, only: [:show, :edit, :destroy, :update ]
+  resources :expenses, only: [:edit, :destroy, :update ]
 
   resources :apartments do
-    resources :tenants, only: [:new, :create]
+    resources :tenants, only: [:new, :create, :index]
   end
   resources :tenants, only: [:show, :edit, :destroy, :update ]
 

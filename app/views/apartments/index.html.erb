@@ -1,0 +1,87 @@
+<% unless @building.statut == "deleted" || @building.company.statut == "deleted" %>
+  <% associe = @building.company.associe.downcase.split(",").map(&:strip) %>
+  <% if associe.include?(current_user.email) || @building.company.user == current_user || @building.user == current_user || current_user.admin == true %>
+    <div class="container my-5">
+      <h3 class="text-center mt-5" style="color: #D8A727; font-family: Simply Rounded; letter-spacing: 1px">Appartements de l'immeuble</h3>
+      <h5 class="text-center mb-4">situés au <%= @building.address %></h5>
+      <p class="mt-5">
+        <%= link_to "Page d'accueil", root_path, style:"text-decoration:none; color:rgb(100, 100, 100)"  %> >
+        <%= link_to "Sociétés", companies_path, style:"text-decoration:none; color:rgb(100, 100, 100)" %> >
+        <%= link_to "Immeubles", company_buildings_path(@building.company), style:"text-decoration:none; color:rgb(100, 100, 100)" %> >
+        <%= link_to "Appartements", building_apartments_path(@building), style:"text-decoration:none; color:rgb(100, 100, 100)"  %>
+      </p>
+      <!-- Navigation laptop-->
+      <div class="profile-friends hide-on-small my-5" style="" >
+        <div class="search navigations" style="border-radius: 7px">
+          <h3 class="active"  style="font-size: 16px; border-radius: 7px 0 0 7px"><%= link_to "Appartements", building_apartments_path(@building), style:"color: rgb(100, 100, 100); text-decoration: none"%></h3>
+          <h3 style="font-size: 16px"><%= link_to "Dépenses", building_expenses_path(@building), style:"color: rgb(100, 100, 100); text-decoration: none"%></h3>
+          <h3 class="" style="font-size: 16px; white-space: nowrap">Charges locatives</h3>
+          <h3 style="font-size: 16px"><%= link_to "Liasses fiscales", building_liasses_path(@building), style:"color: rgb(100, 100, 100); text-decoration: none"%></h3>
+        </div>
+      </div>
+      <!-- Navigation mobile -->
+      <div class="profile-friends hide-on-large mt-5">
+        <div class="search navigations" style="overflow:scroll; border-radius: 7px 7px 0 0">
+          <h3 class="active"  style="font-size: 16px; border-radius: ; border-radius: 7px 0 0 0"><%= link_to "Appartements", building_apartments_path(@building), style:"color: rgb(100, 100, 100); text-decoration: none"%></h3>
+          <h3 style="font-size: 16px"><%= link_to "Dépenses", building_expenses_path(@building), style:"color: rgb(100, 100, 100); text-decoration: none"%></h3>
+        </div>
+      </div>
+      <div class="profile-friends hide-on-large mb-5" style="" >
+        <div class="search navigations" style="overflow:scroll; border-radius: 0 0 7px 7px">
+          <h3 class="" style="font-size: 16px; white-space: nowrap">Charges locatives</h3>
+          <h3 style="font-size: 16px"><%= link_to "Liasses fiscales", building_liasses_path(@building), style:"color: rgb(100, 100, 100); text-decoration: none"%></h3>
+        </div>
+      </div>
+      <% unless @apartments == [] %>
+        <div class="row">
+          <div class="p-3 col-12 col-md-6 offset-md-3 my-4">
+            <div class="p-4 content border mb-4", style="box-shadow: 0 0 5px rgba(0,0,0,0.1); background-color: white">
+              <p style="font-weight: bolder">Chiffres <%= Date.today.year %> : Immeuble <%= @building.address %></p>
+              <p class="mb-1">Loyers charges comprises encaissés : <%= '%.0f' % (@building_sum_rent_paid + @building_sum_service_charge_paid) %> € </p>
+              <p><em>Loyers hors charges encaissés : </em><%= '%.0f' % @building_sum_rent_paid  %> €</p>
+              <p class="border-bottom mx-4"> </p>
+              <p class="mb-1">Loyers charges comprises manquant : <%= '%.0f' % @building_solde %> €</p>
+              <p class="mb-1">Loyers charges comprises attendus : <%= '%.0f' % @building_loyer_annuel  %> €</p>
+              <% if @building_loyer_annuel != 0 && @building_loyer_annuel != nil  %>
+                <p>% atteint : <%= '%.2f' % ((@building_sum_rent_paid + @building_sum_service_charge_paid) / @building_loyer_annuel * 100)  %> %</p>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+      <!-- Appartment -->
+      <h5 class="border-top pb-2 pt-4"><strong>Les Appartements</strong></h5>
+      <div class="mt-2 mb-4">
+        <p><%= link_to "Ajouter un appartement", new_building_apartment_path(@building), class:"btn btn-transparent-bold"%></p>
+      </div>
+      <% counter = 1 %>
+      <!-- ------------------------- -->
+      <div class="row mb-4">
+        <% @apartments.each do |apartment| %>
+          <div class="p-3 col-12 col-md-6">
+            <div class="p-4 content border mb-3", style="box-shadow: 0 0 5px rgba(0,0,0,0.1); background-color: white">
+              <div class="d-flex align-items-center m-4 justify-content-center">
+                <p class="m-0 p-0" style="color: #D8A727; font-family: Simply Rounded; font-size: 22px; letter-spacing: 1px">Appartement <%= counter %></p>
+                <%= link_to "", edit_apartment_path(apartment)  , class:"fas fa-edit ml-2", style:"font-size:12px"  %> /
+                <%= link_to "", apartment_path(apartment), method: :delete, data: { confirm: "Confirmez la suppression de l'appartement : #{apartment.name}?" }, class:"fas fa-trash", style:"font-size:12px" %>
+              </div>
+              <%= link_to apartment_path(apartment), style:"text-decoration:none; color: rgb(100, 100, 100)" do %>
+                <p class=" mt-0 mb-3" style="" ><i class="fas fa-house-user mr-3" style="color: #D8A727"></i><%= apartment.name %></p>
+                <p>Numéro du compteur d'eau : <%= apartment.water %></p>
+                <!-- <p class="mb-1">Statut : <%#= apartment.statut %></p> -->
+                <div class="d-flex mt-3 justify-content-end">
+                  <%= link_to "Voir détails", apartment_tenants_path(apartment) , class:"btn btn-yellow-mustard"  %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+          <% counter += 1 %>
+        <% end %>
+      </div>
+    </div>
+  <% else %>
+    <h3 class="text-center my-5" style="color:red">Vous n'avez pas accès à cette page</h3>
+  <% end %>
+<% else %>
+  <h3 class="text-center my-5" style="color:red">Cet immeuble a été supprimé</h3>
+<% end %>

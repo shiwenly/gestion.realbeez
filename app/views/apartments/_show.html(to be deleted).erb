@@ -1,0 +1,487 @@
+<!-- Javascript to reload the page otherwise data get saved from last navigation -->
+<script type='text/javascript'>
+  (function()
+  {
+    if( window.localStorage )
+    {
+      if( !localStorage.getItem('firstLoad') )
+      {
+        localStorage['firstLoad'] = true;
+        window.location.reload();
+      }
+      else
+        localStorage.removeItem('firstLoad');
+    }
+  })();
+</script>
+<% unless @apartment.building.statut == "deleted" || @apartment.building.company.statut == "deleted" || @apartment.statut == "deleted" %>
+  <% associe = @apartment.building.company.associe.downcase.split(",").map(&:strip) %>
+  <% if associe.include?(current_user.email) || @apartment.building.company.user == current_user || @apartment.user == current_user || current_user.admin == true %>
+    <div class="container mt-5">
+      <h3 class="text-center mt-5" style="color: #D8A727; font-family: Simply Rounded; letter-spacing: 1px">Détails du locataire</h3>
+      <h5 class="text-center">de l'appartement : <%= @apartment.name %></h5>
+      <h5 class="text-center mb-4">situé au <%= @apartment.building.address %></h5>
+      <p class="mt-5">
+        <%= link_to "Page d'accueil", root_path, style:"text-decoration:none; color:rgb(100, 100, 100)"  %> >
+        <%= link_to "Sociétés", companies_path, style:"text-decoration:none; color:rgb(100, 100, 100)" %> >
+        <%= link_to "Immeubles", company_path(@apartment.building.company), style:"text-decoration:none; color:rgb(100, 100, 100)" %> >
+        <%= link_to "Appartments", building_path(@apartment.building), style:"text-decoration:none; color:rgb(100, 100, 100)"  %> >
+        <%= link_to "Locataire", apartment_path(@apartment), style:"text-decoration:none; color:rgb(100, 100, 100)"   %>
+      </p>
+      <!-- Navigation laptop-->
+      <div class="profile-friends hide-on-small my-5" style="" >
+        <div class="search navigations" style="border-radius: 7px">
+          <h3 class="active"  style="font-size: 16px; border-radius: 7px 0 0 7px"><%= link_to "Appartements", building_apartments_path(@apartment.building), style:"color: rgb(100, 100, 100); text-decoration: none"%></h3>
+          <h3 style="font-size: 16px"><%= link_to "Dépenses", building_expenses_path(@apartment.building), style:"color: rgb(100, 100, 100); text-decoration: none"%></h3>
+          <h3 class="" style="font-size: 16px; white-space: nowrap">Charges locatives</h3>
+          <h3 style="font-size: 16px"><%= link_to "Liasses fiscales", building_liasses_path(@apartment.building), style:"color: rgb(100, 100, 100); text-decoration: none"%></h3>
+        </div>
+      </div>
+      <!-- Navigation mobile -->
+      <div class="profile-friends hide-on-large mt-5">
+        <div class="search navigations" style="overflow:scroll; border-radius: 7px 7px 0 0">
+          <h3 class="active " style="font-size: 16px; border-radius: 7px 0 0 0">Appartements</h3>
+          <h3 style="font-size: 16px"><%= link_to "Dépenses", building_expenses_path(@apartment.building), style:"color: rgb(100, 100, 100); text-decoration: none"%></h3>
+        </div>
+      </div>
+      <div class="profile-friends hide-on-large mb-5" style="" >
+        <div class="search navigations" style="overflow:scroll; border-radius: 0 0 7px 7px">
+          <h3 class="" style="font-size: 16px; white-space: nowrap">Charges locatives</h3>
+          <h3 style="font-size: 16px"><%= link_to "Liasses fiscales", building_liasses_path(@apartment.building), style:"color: rgb(100, 100, 100); text-decoration: none"%></h3>
+        </div>
+      </div>
+      <% unless @tenants == [] %>
+        <div class="row">
+          <div class="p-3 col-12 col-md-6 offset-md-3 my-4">
+            <div class="p-4 content border mb-4", style="box-shadow: 0 0 5px rgba(0,0,0,0.1); background-color: white">
+              <p style="font-weight: bolder">Chiffres <%= Date.today.year %> : Appartement <%= @apartment.name %></p>
+              <p class="mb-1">Loyers charges comprises encaissés : <%= '%.0f' % (@apartment_sum_rent_paid + @apartment_sum_service_charge_paid) %> €</p>
+              <p><em>Loyers hors charges encaissés :</em> <%= '%.0f' % @apartment_sum_rent_paid %> €</p>
+              <p class="border-bottom mx-4"> </p>
+              <p class="mb-1">Loyers charges comprises manquant : <%= '%.0f' % @apartment_solde %> €</p>
+              <p class="mb-1">Loyers charges comprises attendus : <%= '%.0f' % @loyer_annuel  %> €</p>
+              <p>% atteint : <%= '%.2f' % ((@apartment_sum_rent_paid + @apartment_sum_service_charge_paid) / @loyer_annuel * 100)  %> %</p>
+            </div>
+          </div>
+        </div>
+      <% end %>
+      <h5 class="border-top pb-2 pt-4"><strong>Les Locataires</strong></h5>
+      <div class="mt-2 mb-4">
+        <p><%= link_to "Ajouter un locataire", new_apartment_tenant_path(@apartment), class:"btn btn-transparent-bold"%></p>
+      </div>
+      <% counter = 1 %>
+      <div class="profile-friends">
+        <div class="search navigations my-5" style="border-radius: 7px">
+          <h3 id="actuel" class="active" style="font-size: 16px">Locataire actuel</h3>
+          <h3 id="passé" style="font-size: 16px">Locataire(s) passé(s)</h3>
+        </div>
+        <div id="friends-toPlace" class="">
+          <% if @tenants_actuel != []  %>
+            <% @tenants_actuel.each do |tenant| %>
+              <div class="row">
+                <div class="p-3 col-12 col-md-6 offset-md-3">
+                  <div class="p-4 content border mb-4", style="box-shadow: 0 0 5px rgba(0,0,0,0.1); background-color: white">
+                    <div class="d-flex align-items-center mb-4 justify-content-center">
+                      <p class="m-0 p-0" style="color: #D8A727; font-family: Simply Rounded; font-size: 22px; letter-spacing: 1px"><%= tenant.first_name %> <%= tenant.last_name %> </p>
+                      <%= link_to "", edit_tenant_path(tenant)  , class:"fas fa-edit ml-2", style:"font-size:12px"  %> /
+                      <%= link_to "", tenant_path(tenant), method: :delete, data: { confirm: "Confirmez la suppression du locataire #{tenant.first_name} #{tenant.last_name}?" }, class:"fas fa-trash", style:"font-size:12px" %>
+                    </div>
+                    <%= link_to tenant_path(tenant), style:"text-decoration:none; color: rgb(100, 100, 100)" do %>
+                      <p>Locataire en place : <%= tenant.current_tenant ? "Oui" : "Non"%></p>
+                      <!-- <p class=" mt-0 mb-1" style="" ><i class="fas fa-user mr-3" style="color: #D8A727"></i><%#= tenant.first_name %> <%#= tenant.last_name %> </p> -->
+                      <p class=" mt-0 mb-1" style="" ><i class="fas fa-envelope mr-3" style="color: #D8A727"></i><%= tenant.email %></p>
+                      <p class=" mt-0 mb-3" style="" ><i class="fas fa-phone-square mr-3" style="color: #D8A727"></i><%= tenant.phone %></p>
+                      <p class="mb-1">Loyer : <%= tenant.rent %></p>
+                      <p class="mb-1">Charges : <%= tenant.service_charge %></p>
+                      <p>Dépôt de garantie : <%= tenant.deposit %></p>
+                      <!-- cloudinary -->
+                      <p class="mb-1">Contrat de bail :
+                        <%= link_to "Ouvrir", "https://res.cloudinary.com/myhouze/image/upload/#{tenant.contract.filename}", :target => "_blank",class: "btn btn-transparent mx-2" %>
+                        <%= link_to "Télécharger", "https://res.cloudinary.com/myhouze/image/upload/fl_attachment/#{tenant.contract.filename}", :target => "_blank",class: "btn btn-transparent" %>
+                      </p>
+                      <p>Etat des lieux :
+                        <%= link_to "Ouvrir", "https://res.cloudinary.com/myhouze/image/upload/#{tenant.inventory.filename}", :target => "_blank",class: "btn btn-transparent mx-2" %>
+                        <%= link_to "Télécharger", "https://res.cloudinary.com/myhouze/image/upload/fl_attachment/#{tenant.inventory.filename}", :target => "_blank",class: "btn btn-transparent" %>
+                      </p>
+                      <p class="mb-1">Date d'entrée : <%= tenant.move_in_date %></p>
+                      <% if tenant.current_tenant == false  %>
+                        <p>Date de sortie : <%= tenant.move_out_date %></p>
+                      <% end %>
+                    <% end %>
+                    <!-- <p>Statut : <%#= tenant.statut %> </p> -->
+                    <!-- <div class="d-flex mt-3 justify-content-end"> -->
+                    <%#= link_to "Voir détails", tenant_path(tenant), class:"btn btn-yellow-mustard"  %>
+                    <!-- </div> -->
+                  </div>
+                </div>
+              </div>
+              <!-- LOYER -->
+              <div class="mt-4">
+                <h5 class="border-top pt-3"><strong>Paiement du loyer</strong></h5>
+                <div class="mt-2 mb-4">
+                  <% associe = tenant.apartment.building.company.associe.split(",").map(&:strip) %>
+                  <% if associe.include?(current_user.email) || tenant.apartment.building.company.user == current_user || tenant.user == current_user || current_user.admin == true %>
+                    <%= link_to "Déclarer le paiement du loyer", new_tenant_rent_path(tenant), class:"btn btn-transparent-bold" %>
+                  <% end %>
+                </div>
+                <!-- recherche date -->
+                <%= form_for :search, defaults: { required: false }, url:apartment_path(tenant.apartment), method: "GET", html: { class: '' } do |f| %>
+                  <div class="mb-3 d-flex align-items-center">
+                    <%= f.select :date,  [(Date.today.year+2), (Date.today.year+1), Date.today.year, Date.today.year - 1,Date.today.year - 2, Date.today.year - 3 ], :selected =>Date.today.year, html: { style:"border: solid"} %>
+                    <%= f.submit "Choisir", class: "btn btn-yellow-mustard-small ml-2" %>
+                  </div>
+                <% end %>
+                <!-- Tableau  -->
+                <div class="" style="overflow:scroll;">
+                  <div class="mb-5" style="font-size: 12px ">
+                    <table class="table table-hover" style="background-color: white">
+                      <thead>
+                        <tr>
+                          <th scope="col">Date encaissement</th>
+                          <th scope="col">Mois</th>
+                          <th scope="col">Loyer appelé</th>
+                          <th scope="col">Charges appelées</th>
+                          <th scope="col">Loyer versé</th>
+                          <th scope="col">Charges versées</th>
+                          <th scope="col">Solde</th>
+                          <th scope="col"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% if params[:search] == nil %>
+                          <% @rents_unorder = Rent.search_by_date(Date.today.year) %>
+                          <% @rents_order = @rents_unorder.select{|a| a.statut == "active" && a.tenant.id == tenant.id }.sort_by { |b| b.period } %>
+                          <%# @rents_order = tenant.rents.select{|a| a.statut == "active"}.sort_by { |b| b.period } %>
+                        <% else %>
+                          <% @rents_unorder = Rent.search_by_date(params[:search][:date].to_i) %>
+                          <% @rents_order = @rents_unorder.select{|a| a.statut == "active" && a.tenant.id == tenant.id }.sort_by { |b| b.period } %>
+                        <% end %>
+                        <% @rents_order.each do |rent| %>
+                          <tr>
+                            <% if rent.date_payment != nil %>
+                              <td><%= rent.date_payment.strftime("%d/%m/%Y") %></td>
+                            <% else %>
+                              <td><%= link_to "A compléter", edit_rent_path(rent) %></td>
+                            <% end %>
+                            <td><%= rent.period.strftime("%b %Y") %></td>
+                            <td><%= rent.rent_ask %></td>
+                            <td><%= rent.service_charge_ask %></td>
+                            <td><%= rent.rent_paid %></td>
+                            <td><%= rent.service_charge_paid %></td>
+                            <td><%= rent.rent_ask + rent.service_charge_ask - rent.service_charge_paid - rent.rent_paid %></td>
+                            <% if associe.include?(current_user.email) || tenant.apartment.building.company.user == current_user || tenant.user == current_user %>
+                              <td>
+                                <%= link_to "", edit_rent_path(rent), class:"fas fa-edit mr-2" %>
+                                <%= link_to "",rent_path(rent), method: :delete, data: { confirm: "Confirmez la suppression de la saisie?" }, class:"fas fa-trash" %>
+                              </td>
+                            <% end %>
+                          </tr>
+                        <% end %>
+                        <tr style="font-weight: bolder">
+                          <!-- calculation -->
+                          <% @sum_rent_ask = @rents_order.map{|a| a.rent_ask}.sum %>
+                          <% @sum_service_charge_ask = @rents_order.map{|a| a.service_charge_ask }.sum %>
+                          <% @sum_rent_paid = @rents_order.map{|a| a.rent_paid}.sum %>
+                          <% @sum_service_charge_paid = @rents_order.map{|a| a.service_charge_paid }.sum %>
+                          <% @solde = @sum_rent_ask + @sum_service_charge_ask - @sum_rent_paid - @sum_service_charge_paid %>
+                          <td>TOTAL</td>
+                          <td></td>
+                          <td><%= @sum_rent_ask %></td>
+                          <td><%= @sum_service_charge_ask %></td>
+                          <td><%= @sum_rent_paid %></td>
+                          <td><%= @sum_service_charge_paid %></td>
+                          <td><%= @solde %></td>
+                          <td></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <br>
+                  </div>
+                </div>
+              </div>
+              <!-- EAU -->
+              <div clas="my-5">
+                <h5 class="border-top pt-3"><strong>Consommation d'eau</strong></h5>
+                <div class="mt-2 mb-4">
+                  <%= link_to "Déclarer ma consommation d'eau", new_tenant_water_path(tenant), class:"btn btn-transparent-bold" %>
+                </div>
+                <p class="">Numéro du compteur : <%= tenant.apartment.water %> </p>
+                <div class="" style="overflow:scroll;">
+                  <div class="mb-5" style="font-size: 12px ">
+                    <table class="table table-hover" style="background-color: white">
+                      <thead>
+                        <tr>
+                          <th scope="col">Date</th>
+                          <th scope="col">Quantité</th>
+                          <th scope="col">Justificatif</th>
+                          <th scope="col"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% @waters_order = tenant.waters.select{|a| a.statut == "active"}.sort_by { |b| b.submission_date } %>
+                        <% @waters_order.each do |water| %>
+                          <tr>
+                            <td><%= water.submission_date.strftime("%d/%m/%Y") %></td>
+                            <td><%= water.quantity %></td>
+                            <td>
+                              <%= link_to "Ouvrir", "https://res.cloudinary.com/myhouze/image/upload/#{water.photo.filename}", :target => "_blank",class: "btn btn-transparent py-0", style: "font-size:12px" %>
+                            </td>
+                            <td>
+                              <% if associe.include?(current_user.email) || tenant.apartment.building.company.user == current_user || @tenant.user == current_user %>
+                                <%= link_to "", edit_water_path(water), class:"fas fa-edit mr-2" %>
+                                <%= link_to "", water_path(water), method: :delete, data: { confirm: "Confirmez la suppression de la saisie?" }, class:"fas fa-trash" %>
+                              <% end %>
+                            </td>
+                          </tr>
+                        <% end %>
+                      </tbody>
+                    </table>
+                    <br>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          <% else %>
+            <h4 class="text-center my-5 py-5" style="width: 100%; color:#DA334A; font-style: italic;">"Aucun locataire actuellement"</h4>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <script>
+      const addClassSelected = (target) => {
+      // take parent class -> get children -> remove classes for all children
+      // console.log(target)
+      const children = target.parentElement.children;
+      const childAmount = target.parentElement.childElementCount;
+      for (let i=0; i<childAmount; i++) {
+        children[i].classList.remove("active");
+      }
+      // add class
+      target.classList.add("active");
+      };
+      
+       this.addEventListener("click", (e) => {
+        console.log(e)
+        const whereToShow = document.querySelector("#friends-toPlace");
+        const id = e.target.id;
+        console.log(id)
+        if (id === "actuel") {
+          addClassSelected(e.target);
+          whereToShow.innerHTML = "";
+          whereToShow.insertAdjacentHTML("beforeend", `
+            <% if @tenants_actuel != []  %>
+              <% @tenants_actuel.each do |tenant| %>
+                <div class="row">
+                  <div class="p-3 col-12 col-md-6 offset-md-3">
+                    <div class="p-4 content border mb-4", style="box-shadow: 0 0 5px rgba(0,0,0,0.1); background-color: white">
+                      <div class="d-flex align-items-center mb-4 justify-content-center">
+                        <p class="m-0 p-0" style="color: #D8A727; font-family: Simply Rounded; font-size: 22px; letter-spacing: 1px"><%= tenant.first_name %> <%= tenant.last_name %> </p>
+                        <%= link_to "", edit_tenant_path(tenant)  , class:"fas fa-edit ml-2", style:"font-size:12px"  %> /
+                        <%= link_to "", tenant_path(tenant), method: :delete, data: { confirm: "Confirmez la suppression du locataire #{tenant.first_name} #{tenant.last_name}?" }, class:"fas fa-trash", style:"font-size:12px" %>
+                      </div>
+                      <%= link_to tenant_path(tenant), style:"text-decoration:none; color: rgb(100, 100, 100)" do %>
+                        <p>Locataire en place : <%= tenant.current_tenant ? "Oui" : "Non"%></p>
+                        <!-- <p class=" mt-0 mb-1" style="" ><i class="fas fa-user mr-3" style="color: #D8A727"></i><%#= tenant.first_name %> <%#= tenant.last_name %> </p> -->
+                        <p class=" mt-0 mb-1" style="" ><i class="fas fa-envelope mr-3" style="color: #D8A727"></i><%= tenant.email %></p>
+                        <p class=" mt-0 mb-3" style="" ><i class="fas fa-phone-square mr-3" style="color: #D8A727"></i><%= tenant.phone %></p>
+                        <p class="mb-1">Loyer : <%= tenant.rent %></p>
+                        <p class="mb-1">Charges : <%= tenant.service_charge %></p>
+                        <p>Dépôt de garantie : <%= tenant.deposit %></p>
+                        <!-- cloudinary -->
+                        <p class="mb-1">Contrat de bail :
+                          <%= link_to "Ouvrir", "https://res.cloudinary.com/myhouze/image/upload/#{tenant.contract.filename}", :target => "_blank",class: "btn btn-transparent mx-2" %>
+                          <%= link_to "Télécharger", "https://res.cloudinary.com/myhouze/image/upload/fl_attachment/#{tenant.contract.filename}", :target => "_blank",class: "btn btn-transparent" %>
+                        </p>
+                        <p>Etat des lieux :
+                          <%= link_to "Ouvrir", "https://res.cloudinary.com/myhouze/image/upload/#{tenant.inventory.filename}", :target => "_blank",class: "btn btn-transparent mx-2" %>
+                          <%= link_to "Télécharger", "https://res.cloudinary.com/myhouze/image/upload/fl_attachment/#{tenant.inventory.filename}", :target => "_blank",class: "btn btn-transparent" %>
+                        </p>
+                        <p class="mb-1">Date d'entrée : <%= tenant.move_in_date %></p>
+                        <% if tenant.current_tenant == false  %>
+                          <p>Date de sortie : <%= tenant.move_out_date %></p>
+                        <% end %>
+                      <% end %>
+                      <!-- <p>Statut : <%#= tenant.statut %> </p> -->
+                    </div>
+                  </div>
+                </div>
+                <!-- LOYER -->
+                <div class="mt-4">
+                  <h5 class="border-top pt-3"><strong>Paiement du loyer</strong></h5>
+                  <div class="mt-2 mb-4">
+                    <% associe = tenant.apartment.building.company.associe.split(",").map(&:strip) %>
+                    <% if associe.include?(current_user.email) || tenant.apartment.building.company.user == current_user || tenant.user == current_user || current_user.admin == true %>
+                      <%= link_to "Déclarer le paiement du loyer", new_tenant_rent_path(tenant), class:"btn btn-transparent-bold" %>
+                    <% end %>
+                  </div>
+                  <!-- recherche date -->
+                  <%= form_for :search, defaults: { required: false }, url:apartment_path(tenant.apartment), method: "GET", html: { class: '' } do |f| %>
+                    <div class="mb-3 d-flex align-items-center">
+                      <%= f.select :date,  [Date.today.year, Date.today.year - 1,Date.today.year - 2, Date.today.year - 3 ], html: { style:"border: solid"} %>
+                      <%= f.submit "Choisir", class: "btn btn-yellow-mustard-small ml-2" %>
+                    </div>
+                  <% end %>
+                  <!-- Tableau  -->
+                  <div class="" style="overflow:scroll;">
+                    <div class="mb-5" style="font-size: 12px ">
+                      <table class="table table-hover" style="background-color: white">
+                        <thead>
+                          <tr>
+                            <th scope="col">Date encaissement</th>
+                            <th scope="col">Mois</th>
+                            <th scope="col">Loyer appelé</th>
+                            <th scope="col">Charges appelées</th>
+                            <th scope="col">Loyer versé</th>
+                            <th scope="col">Charges versées</th>
+                            <th scope="col">Solde</th>
+                            <th scope="col"></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <% if params[:search] == nil %>
+                            <% @rents_unorder = Rent.search_by_date(Date.today.year) %>
+                            <% @rents_order = @rents_unorder.select{|a| a.statut == "active" && a.tenant.id == tenant.id }.sort_by { |b| b.period } %>
+                            <%# @rents_order = tenant.rents.select{|a| a.statut == "active"}.sort_by { |b| b.period } %>
+                          <% else %>
+                            <% @rents_unorder = Rent.search_by_date(params[:search][:date].to_i) %>
+                            <% @rents_order = @rents_unorder.select{|a| a.statut == "active" && a.tenant.id == tenant.id }.sort_by { |b| b.period } %>
+                          <% end %>
+                          <% @rents_order.each do |rent| %>
+                            <tr>
+                              <% if rent.date_payment != nil %>
+                                <td><%= rent.date_payment.strftime("%d/%m/%Y") %></td>
+                              <% else %>
+                                <td><%= link_to "A compléter", edit_rent_path(rent) %></td>
+                              <% end %>
+                              <td><%= rent.period.strftime("%b %Y") %></td>
+                              <td><%= rent.rent_ask %></td>
+                              <td><%= rent.service_charge_ask %></td>
+                              <td><%= rent.rent_paid %></td>
+                              <td><%= rent.service_charge_paid %></td>
+                              <td><%= rent.rent_ask + rent.service_charge_ask - rent.service_charge_paid - rent.rent_paid %></td>
+                              <% if associe.include?(current_user.email) || tenant.apartment.building.company.user == current_user || tenant.user == current_user %>
+                                <td>
+                                  <%= link_to "", edit_rent_path(rent), class:"fas fa-edit mr-2" %>
+                                  <%= link_to "",rent_path(rent), method: :delete, data: { confirm: "Confirmez la suppression de la saisie?" }, class:"fas fa-trash" %>
+                                </td>
+                              <% end %>
+                            </tr>
+                          <% end %>
+                          <tr style="font-weight: bolder">
+                            <!-- calculation -->
+                            <% @sum_rent_ask = @rents_order.map{|a| a.rent_ask}.sum %>
+                            <% @sum_service_charge_ask = @rents_order.map{|a| a.service_charge_ask }.sum %>
+                            <% @sum_rent_paid = @rents_order.map{|a| a.rent_paid}.sum %>
+                            <% @sum_service_charge_paid = @rents_order.map{|a| a.service_charge_paid }.sum %>
+                            <% @solde = @sum_rent_ask + @sum_service_charge_ask - @sum_rent_paid - @sum_service_charge_paid %>
+                            <td>TOTAL</td>
+                            <td></td>
+                            <td><%= @sum_rent_ask %></td>
+                            <td><%= @sum_service_charge_ask %></td>
+                            <td><%= @sum_rent_paid %></td>
+                            <td><%= @sum_service_charge_paid %></td>
+                            <td><%= @solde %></td>
+                            <td></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <br>
+                    </div>
+                  </div>
+                </div>
+                <!-- EAU -->
+                <div clas="my-5">
+                  <h5 class="border-top pt-3"><strong>Consommation d'eau</strong></h5>
+                  <div class="mt-2 mb-4">
+                    <%= link_to "Déclarer ma consommation d'eau", new_tenant_water_path(tenant), class:"btn btn-transparent-bold" %>
+                  </div>
+                  <p class="">Numéro du compteur : <%= tenant.apartment.water %> </p>
+                  <div class="" style="overflow:scroll;">
+                    <div class="mb-5" style="font-size: 12px ">
+                      <table class="table table-hover" style="background-color: white">
+                        <thead>
+                          <tr>
+                            <th scope="col">Date</th>
+                            <th scope="col">Quantité</th>
+                            <th scope="col">Justificatif</th>
+                            <th scope="col"></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <% @waters_order = tenant.waters.select{|a| a.statut == "active"}.sort_by { |b| b.submission_date } %>
+                          <% @waters_order.each do |water| %>
+                            <tr>
+                              <td><%= water.submission_date.strftime("%d/%m/%Y") %></td>
+                              <td><%= water.quantity %></td>
+                              <td>
+                                <%= link_to "Ouvrir", "https://res.cloudinary.com/myhouze/image/upload/#{water.photo.filename}", :target => "_blank",class: "btn btn-transparent py-0", style: "font-size:12px" %>
+                              </td>
+                              <td>
+                                <% if associe.include?(current_user.email) || tenant.apartment.building.company.user == current_user || @tenant.user == current_user %>
+                                  <%= link_to "", edit_water_path(water), class:"fas fa-edit mr-2" %>
+                                  <%= link_to "", water_path(water), method: :delete, data: { confirm: "Confirmez la suppression de la saisie?" }, class:"fas fa-trash" %>
+                                <% end %>
+                              </td>
+                            </tr>
+                          <% end %>
+                        </tbody>
+                      </table>
+                      <br>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            <% else %>
+              <h4 class="text-center  my-5 py-5" style="width: 100%; color:#DA334A; font-style: italic;">"Aucun locataire actuellement"</h4>
+            <% end %>
+          `);
+        }
+        else if (id === "passé") {
+          addClassSelected(e.target);
+          whereToShow.innerHTML = "";
+          whereToShow.insertAdjacentHTML("beforeend", `
+            <% if @tenants_passé != []  %>
+              <% @tenants_passé.each do |tenant| %>
+                <div class="row">
+                  <div class="p-3 col-12 col-md-6 offset-md-3">
+                    <div class="p-4 content border mb-4", style="box-shadow: 0 0 5px rgba(0,0,0,0.1); background-color: white">
+                      <div class="d-flex align-items-center mb-4 justify-content-center">
+                        <p class="m-0 p-0" style="color: #D8A727; font-family: Simply Rounded; font-size: 22px; letter-spacing: 1px"><%= tenant.first_name %> <%= tenant.last_name %> </p>
+                        <%= link_to "", edit_tenant_path(tenant)  , class:"fas fa-edit ml-2", style:"font-size:12px"  %> /
+                        <%= link_to "", tenant_path(tenant), method: :delete, data: { confirm: "Confirmez la suppression du locataire #{tenant.first_name} #{tenant.last_name}?" }, class:"fas fa-trash", style:"font-size:12px" %>
+                      </div>
+                      <%= link_to tenant_path(tenant), style:"text-decoration:none; color: rgb(100, 100, 100)" do %>
+                        <p>Locataire en place : <%= tenant.current_tenant ? "Oui" : "Non"%></p>
+                        <!-- <p class=" mt-0 mb-1" style="" ><i class="fas fa-user mr-3" style="color: #D8A727"></i><%#= tenant.first_name %> <%#= tenant.last_name %> </p> -->
+                        <p class=" mt-0 mb-1" style="" ><i class="fas fa-envelope mr-3" style="color: #D8A727"></i><%= tenant.email %></p>
+                        <p class=" mt-0 mb-3" style="" ><i class="fas fa-phone-square mr-3" style="color: #D8A727"></i><%= tenant.phone %></p>
+                        <p class="mb-1">Loyer : <%= tenant.rent %></p>
+                        <p class="mb-1">Charges : <%= tenant.service_charge %></p>
+                        <p>Dépôt de garantie : <%= tenant.deposit %></p>
+                        <p class="mb-1">Date d'entrée : <%= tenant.move_in_date %></p>
+                        <% if tenant.current_tenant == false  %>
+                          <p>Date de sortie : <%= tenant.move_out_date %></p>
+                        <% end %>
+                      <% end %>
+                      <!-- <p>Statut : <%#= tenant.statut %> </p> -->
+                      <div class="d-flex mt-3 justify-content-end">
+                        <%= link_to "Voir détails", tenant_path(tenant), class:"btn btn-yellow-mustard"  %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <% counter += 1 %>
+              <% end %>
+            <% else %>
+              <h4 class="text-center my-5 py-5" style="width: 100%; color:#DA334A; font-style: italic;">"Aucun locataire actuellement"</h4>
+            <% end %>
+          `);
+        };
+      });
+    </script>
+  <% else %>
+    <h3 class="text-center my-5" style="color:red">Vous n'avez pas accès à cette page</h3>
+  <% end %>
+<% else %>
+  <h3 class="text-center my-5" style="color:red">Cet appartement a été supprimé</h3>
+<% end %>

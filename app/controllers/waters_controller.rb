@@ -19,7 +19,12 @@ class WatersController < ApplicationController
     @water.user_id = current_user.id
     @water.statut = "active"
     if @water.save
-      redirect_to apartment_path(@tenant.apartment)
+      associe = @water.tenant.apartment.building.company.associe.downcase.split(",").map(&:strip)
+      if associe.include?(current_user.email) || @water.tenant.apartment.building.company.user == current_user || @water.tenant.apartment.user == current_user || current_user.admin == true
+        redirect_to apartment_tenants_path(@water.tenant.apartment)
+      else
+        redirect_to tenant_path(@water.tenant)
+      end
     else
       render :new
     end
@@ -32,7 +37,13 @@ class WatersController < ApplicationController
   def update
     authorize @water
     if @water.update(water_params)
-      redirect_to apartment_path(@water.tenant.apartment)
+      associe = @water.tenant.apartment.building.company.associe.downcase.split(",").map(&:strip)
+      if associe.include?(current_user.email) || @water.tenant.apartment.building.company.user == current_user || @water.tenant.apartment.user == current_user || current_user.admin == true
+        redirect_to apartment_tenants_path(@water.tenant.apartment)
+      else
+        redirect_to tenant_path(@water.tenant)
+      end
+      # redirect_to apartment_tenants_path(@water.tenant.apartment)
     else
       render :edit
     end
@@ -42,7 +53,12 @@ class WatersController < ApplicationController
     authorize @water
     @water.statut = "deleted"
     @water.save
-    redirect_to apartment_path(@water.tenant.apartment)
+    associe = @water.tenant.apartment.building.company.associe.downcase.split(",").map(&:strip)
+    if associe.include?(current_user.email) || @water.tenant.apartment.building.company.user == current_user || @water.tenant.apartment.user == current_user || current_user.admin == true
+      redirect_to apartment_tenants_path(@water.tenant.apartment)
+    else
+      redirect_to tenant_path(@water.tenant)
+    end
   end
 
   private

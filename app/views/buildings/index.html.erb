@@ -1,0 +1,61 @@
+<% unless @company.statut == "deleted" %>
+  <% associe = @company.associe.downcase.split(",").map(&:strip) %>
+  <% if associe.include?(current_user.email) || @company.user == current_user || current_user.admin == true %>
+    <div class="container my-5">
+      <h3 class="text-center mt-5" style="color: #D8A727; font-family: Simply Rounded; letter-spacing: 1px">Liste de vos immeubles </h3>
+      <h5 class="text-center mb-4">de la société <%= @company.name %></h5>
+      <p class="mt-5">
+        <%= link_to "Page d'accueil", root_path, style:"text-decoration:none; color:rgb(100, 100, 100)"  %> >
+        <%= link_to "Sociétés", companies_path, style:"text-decoration:none; color:rgb(100, 100, 100)" %> >
+        <%= link_to "Immeubles", company_buildings_path(@company), style:"text-decoration:none; color:rgb(100, 100, 100)" %></p>
+      <% unless @buildings == [] %>
+        <div class="row">
+          <div class="p-3 col-12 col-md-6 offset-md-3 my-4">
+            <div class="p-4 content border mb-4", style="box-shadow: 0 0 5px rgba(0,0,0,0.1); background-color: white">
+              <p style="font-weight: bolder; color: #D8A727">Chiffres <%= Date.today.year %> : Société <%= @company.name %></p>
+              <p class="mb-1">Loyers charges comprises encaissés : <%= '%.0f' % (@company_building_sum_rent_paid + @company_building_sum_service_charge_paid) %> € </p>
+              <p class="mb-3"><em>Loyers hors charges encaissés : <%= '%.0f' % @company_building_sum_rent_paid %> €</em></p>
+              <p class="border-bottom mx-4"> </p>
+              <p class="mb-1">Loyers charges comprises manquant : <%= '%.0f' % @company_building_solde %> €</p>
+              <p class="mb-1">Loyers charges comprises attendus : <%= '%.0f' % @company_building_loyer_annuel  %> €</p>
+              <% if @company_building_loyer_annuel != 0 && @company_building_loyer_annuel != nil  %>
+                <p>% atteint : <%= '%.2f' % ((@company_building_sum_rent_paid + @company_building_sum_service_charge_paid) / @company_building_loyer_annuel * 100)  %> %</p>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+      <h5 class="border-top pt-3"><strong>Les Immeubles</strong></h5>
+      <div class="mt-2 mb-4">
+        <p><%= link_to "Ajouter un batiment", new_company_building_path(@company), class:"btn btn-transparent-bold"%></p>
+      </div>
+      <% counter = 1 %>
+      <div class="row">
+        <% @buildings.each do |building| %>
+          <div class="p-3 col-12 col-md-6">
+            <div class="p-4 content border mb-4", style="box-shadow: 0 0 5px rgba(0,0,0,0.1); background-color: white">
+              <div class="d-flex align-items-center mb-4 justify-content-center">
+                <p class="m-0 p-0" style="color: #D8A727; font-family: Simply Rounded; font-size: 22px; letter-spacing: 1px">Immeuble <%= counter %></p>
+                <%= link_to "", edit_building_path(building) , class:"fas fa-edit ml-2", style:"font-size:12px"  %> /
+                <%= link_to "", building_path(building), method: :delete, data: { confirm: "Confirmez la suppression du batiment situé au #{building.address}?" }, class:"fas fa-trash", style:"font-size:12px" %>
+              </div>
+              <%= link_to building_path(building), style:"text-decoration:none; color: rgb(100, 100, 100)" do %>
+                <p class=" mt-0 mb-3" style="" ><i class="fas fa-map-marker-alt mr-3" style="color: #D8A727"></i><%= building.address%></p>
+                <p class=" mt-0 mb-3" style="" ><i class="fas fa-house-user mr-3" style="color: #D8A727"></i><%= building.number_of_flat %> appartement(s)</p>
+                <!-- <p>Statut : <%#= building.statut %> </p> -->
+              <% end %>
+              <div class="d-flex mt-3 justify-content-end">
+                <%= link_to "Voir détails", building_apartments_path(building), class:"btn btn-yellow-mustard"  %>
+              </div>
+            </div>
+          </div>
+          <% counter += 1 %>
+        <% end %>
+      </div>
+    </div>
+  <% else %>
+    <h3 class="text-center my-5" style="color:red">Vous n'avez pas accès à cette page</h3>
+  <% end %>
+<% else %>
+  <h3 class="text-center my-5" style="color:red">La société a été supprimée</h3>
+<% end %>

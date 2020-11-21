@@ -86,7 +86,7 @@ class ExpensesController < ApplicationController
     @expense.user_id = current_user.id
     @expense.statut = "active"
     if @expense.save
-      redirect_to building_path(@building)
+      redirect_to building_expenses_path(@building)
     else
       render :new
     end
@@ -105,7 +105,7 @@ class ExpensesController < ApplicationController
   def update
     authorize @expense
     if @expense.update(expense_params)
-      redirect_to building_path(@expense.building)
+      redirect_to building_expenses_path(@expense.building)
     else
       render :edit
     end
@@ -115,7 +115,7 @@ class ExpensesController < ApplicationController
     authorize @expense
     @expense.statut = "deleted"
     @expense.save
-    redirect_to building_path(@expense.building)
+    redirect_to building_expenses_path(@expense.building)
   end
 
   private

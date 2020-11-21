@@ -18,16 +18,38 @@
   <% associe = @apartment.building.company.associe.downcase.split(",").map(&:strip) %>
   <% if associe.include?(current_user.email) || @apartment.building.company.user == current_user || @apartment.user == current_user || current_user.admin == true %>
     <div class="container mt-5">
-      <h3 class="text-center mt-5" style="color: #D8A727; font-family: Simply Rounded; letter-spacing: 1px">Détails du locataire</h3>
+      <h3 class="text-center mt-5" style="color: #D8A727; font-family: Simply Rounded; letter-spacing: 1px">Détails des locataires</h3>
       <h5 class="text-center">de l'appartement : <%= @apartment.name %></h5>
       <h5 class="text-center mb-4">situé au <%= @apartment.building.address %></h5>
       <p class="mt-5">
         <%= link_to "Page d'accueil", root_path, style:"text-decoration:none; color:rgb(100, 100, 100)"  %> >
         <%= link_to "Sociétés", companies_path, style:"text-decoration:none; color:rgb(100, 100, 100)" %> >
-        <%= link_to "Immeubles", company_path(@apartment.building.company), style:"text-decoration:none; color:rgb(100, 100, 100)" %> >
-        <%= link_to "Appartments", building_path(@apartment.building), style:"text-decoration:none; color:rgb(100, 100, 100)"  %> >
-        <%= link_to "Locataire", apartment_path(@apartment), style:"text-decoration:none; color:rgb(100, 100, 100)"   %>
+        <%= link_to "Immeubles", company_buildings_path(@apartment.building.company), style:"text-decoration:none; color:rgb(100, 100, 100)" %> >
+        <%= link_to "Appartments", building_apartments_path(@apartment.building), style:"text-decoration:none; color:rgb(100, 100, 100)"  %> >
+        <%= link_to "Locataire", apartment_tenants_path(@apartment), style:"text-decoration:none; color:rgb(100, 100, 100)"   %>
       </p>
+      <!-- Navigation laptop-->
+      <div class="profile-friends hide-on-small my-5" style="" >
+        <div class="search navigations" style="border-radius: 7px">
+          <h3 class="active"  style="font-size: 16px; border-radius: 7px 0 0 7px"><%= link_to "Appartements", building_path(@apartment.building), style:"color: rgb(100, 100, 100); text-decoration: none"%></h3>
+          <h3 style="font-size: 16px"><%= link_to "Dépenses", building_expenses_path(@apartment.building), style:"color: rgb(100, 100, 100); text-decoration: none"%></h3>
+          <h3 class="" style="font-size: 16px; white-space: nowrap">Charges locatives</h3>
+          <h3 style="font-size: 16px"><%= link_to "Liasses fiscales", building_liasses_path(@apartment.building), style:"color: rgb(100, 100, 100); text-decoration: none"%></h3>
+        </div>
+      </div>
+      <!-- Navigation mobile -->
+      <div class="profile-friends hide-on-large mt-5">
+        <div class="search navigations" style="overflow:scroll; border-radius: 7px 7px 0 0">
+          <h3 class="active " style="font-size: 16px; border-radius: 7px 0 0 0">Appartements</h3>
+          <h3 style="font-size: 16px"><%= link_to "Dépenses", building_expenses_path(@apartment.building), style:"color: rgb(100, 100, 100); text-decoration: none"%></h3>
+        </div>
+      </div>
+      <div class="profile-friends hide-on-large mb-5" style="" >
+        <div class="search navigations" style="overflow:scroll; border-radius: 0 0 7px 7px">
+          <h3 class="" style="font-size: 16px; white-space: nowrap">Charges locatives</h3>
+          <h3 style="font-size: 16px"><%= link_to "Liasses fiscales", building_liasses_path(@apartment.building), style:"color: rgb(100, 100, 100); text-decoration: none"%></h3>
+        </div>
+      </div>
       <% unless @tenants == [] %>
         <div class="row">
           <div class="p-3 col-12 col-md-6 offset-md-3 my-4">
@@ -149,7 +171,7 @@
                             <td><%= rent.rent_ask + rent.service_charge_ask - rent.service_charge_paid - rent.rent_paid %></td>
                             <% if associe.include?(current_user.email) || tenant.apartment.building.company.user == current_user || tenant.user == current_user %>
                               <td>
-                                <%= link_to "", edit_rent_path(rent), class:"fas fa-edit mr-2" %>
+                                <%= link_to "", edit_rent_path(rent), class:"fas fa-edit mr-1" %>/
                                 <%= link_to "",rent_path(rent), method: :delete, data: { confirm: "Confirmez la suppression de la saisie?" }, class:"fas fa-trash" %>
                               </td>
                             <% end %>
@@ -206,7 +228,7 @@
                             </td>
                             <td>
                               <% if associe.include?(current_user.email) || tenant.apartment.building.company.user == current_user || @tenant.user == current_user %>
-                                <%= link_to "", edit_water_path(water), class:"fas fa-edit mr-2" %>
+                                <%= link_to "", edit_water_path(water), class:"fas fa-edit mr-1" %>/
                                 <%= link_to "", water_path(water), method: :delete, data: { confirm: "Confirmez la suppression de la saisie?" }, class:"fas fa-trash" %>
                               <% end %>
                             </td>

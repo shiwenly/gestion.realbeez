@@ -9,9 +9,9 @@
         <p class="mt-5">
           <%= link_to "Page d'accueil", root_path, style:"text-decoration:none; color:rgb(100, 100, 100)"  %> >
           <%= link_to "Sociétés", companies_path, style:"text-decoration:none; color:rgb(100, 100, 100)" %> >
-          <%= link_to "Immeubles", company_path(@tenant.apartment.building.company), style:"text-decoration:none; color:rgb(100, 100, 100)" %> >
-          <%= link_to "Appartments", building_path(@tenant.apartment.building), style:"text-decoration:none; color:rgb(100, 100, 100)"  %> >
-          <%= link_to "Locataire", apartment_path(@tenant.apartment), style:"text-decoration:none; color:rgb(100, 100, 100)"   %> >
+          <%= link_to "Immeubles", company_buildings_path(@tenant.apartment.building.company), style:"text-decoration:none; color:rgb(100, 100, 100)" %> >
+          <%= link_to "Appartments", building_apartments_path(@tenant.apartment.building), style:"text-decoration:none; color:rgb(100, 100, 100)"  %> >
+          <%= link_to "Locataire", apartment_tenants_path(@tenant.apartment), style:"text-decoration:none; color:rgb(100, 100, 100)"   %> >
           <%= link_to "Loyer et eau", tenant_path(@tenant), style:"text-decoration:none; color:rgb(100, 100, 100)"  %>
         </p>
       <% end %>
@@ -20,10 +20,10 @@
           <div class="p-4 content border mb-4", style="box-shadow: 0 0 5px rgba(0,0,0,0.1); background-color: white">
             <div class="d-flex align-items-center mb-4 justify-content-center">
               <p class="m-0 p-0" style="color: #D8A727; font-family: Simply Rounded; font-size: 22px; letter-spacing: 1px"><%= @tenant.first_name %> <%= @tenant.last_name %></p>
-              <% if associe.include?(current_user.email) || @tenant.apartment.building.company.user == current_user || @tenant.user == current_user %>
-                <%= link_to "", edit_tenant_path(@tenant)   , class:"fas fa-edit ml-2", style:"font-size:12px"  %> /
-                <%= link_to "", tenant_path(@tenant), method: :delete, data: { confirm: "Confirmez la suppression du locataire #{@tenant.first_name} #{@tenant.last_name}?" }, class:"fas fa-trash", style:"font-size:12px" %>
-              <% end %>
+              <%# if associe.include?(current_user.email) || @tenant.apartment.building.company.user == current_user || @tenant.user == current_user %>
+              <%#= link_to "", edit_tenant_path(@tenant)   , class:"fas fa-edit ml-2", style:"font-size:12px"  %>
+              <%#= link_to "", tenant_path(@tenant), method: :delete, data: { confirm: "Confirmez la suppression du locataire #{@tenant.first_name} #{@tenant.last_name}?" }, class:"fas fa-trash", style:"font-size:12px" %>
+              <%# end %>
             </div>
             <p class=" mt-0 mb-1" style="" ><i class="fas fa-house-user mr-3" style="color: #D8A727"></i><%= @tenant.apartment.name %>, <%= @tenant.apartment.building.address %> </p>
             <p class=" mt-0 mb-1" style="" ><i class="fas fa-envelope mr-3" style="color: #D8A727"></i><%= @tenant.email %></p>
@@ -77,7 +77,7 @@
                   <th scope="col">Loyer versé</th>
                   <th scope="col">Charges versées</th>
                   <th scope="col">Solde</th>
-                  <th scope="col"></th>
+                  <!-- <th scope="col"></th> -->
                 </tr>
               </thead>
               <tbody>
@@ -94,12 +94,12 @@
                     <td><%= rent.rent_paid %></td>
                     <td><%= rent.service_charge_paid %></td>
                     <td><%= rent.rent_ask + rent.service_charge_ask - rent.service_charge_paid - rent.rent_paid %></td>
-                    <% if associe.include?(current_user.email) || @tenant.apartment.building.company.user == current_user || @tenant.user == current_user %>
-                      <td>
-                        <%= link_to "", edit_rent_path(rent), class:"fas fa-edit mr-2" %>
-                        <%= link_to "",rent_path(rent), method: :delete, data: { confirm: "Confirmez la suppression de la saisie?" }, class:"fas fa-trash" %>
-                      </td>
-                    <% end %>
+                    <%# if associe.include?(current_user.email) || @tenant.apartment.building.company.user == current_user || @tenant.user == current_user %>
+                    <!-- <td> -->
+                    <%#= link_to "", edit_rent_path(rent), class:"fas fa-edit mr-2" %>
+                    <%#= link_to "",rent_path(rent), method: :delete, data: { confirm: "Confirmez la suppression de la saisie?" }, class:"fas fa-trash" %>
+                    <!-- </td> -->
+                    <%# end %>
                   </tr>
                 <% end %>
                 <tr style="font-weight: bolder">
@@ -110,7 +110,7 @@
                   <td><%= @sum_rent_paid %></td>
                   <td><%= @sum_service_charge_paid %></td>
                   <td><%= @solde %></td>
-                  <td></td>
+                  <!-- <td></td> -->
                 </tr>
               </tbody>
             </table>
@@ -145,10 +145,10 @@
                       <%= link_to "Ouvrir", "https://res.cloudinary.com/myhouze/image/upload/#{water.photo.filename}", :target => "_blank",class: "btn btn-transparent py-0", style: "font-size:12px" %>
                     </td>
                     <td>
-                      <% if associe.include?(current_user.email) || @tenant.apartment.building.company.user == current_user || @tenant.user == current_user %>
-                        <%= link_to "", edit_water_path(water), class:"fas fa-edit mr-2" %>
-                        <%= link_to "", water_path(water), method: :delete, data: { confirm: "Confirmez la suppression de la saisie?" }, class:"fas fa-trash" %>
-                      <% end %>
+                      <%# if associe.include?(current_user.email) || @tenant.apartment.building.company.user == current_user || @tenant.user == current_user %>
+                      <%= link_to "", edit_water_path(water), class:"fas fa-edit mr-1" %>/
+                      <%= link_to "", water_path(water), method: :delete, data: { confirm: "Confirmez la suppression de la saisie?" }, class:"fas fa-trash" %>
+                      <%# end %>
                     </td>
                   </tr>
                 <% end %>

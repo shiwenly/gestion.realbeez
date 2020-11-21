@@ -4,7 +4,6 @@ class LiassesController < ApplicationController
   before_action :set_liasse, only: [:edit, :show, :update, :destroy]
 
   def index
-
     @building = Building.find(params[:building_id])
     @liasses = policy_scope(Liasse.where("statut = ? AND building_id = ?", "active", @building.id).order(year: :asc))
     @apartments = policy_scope(Apartment.where("statut = ? AND building_id = ?", "active", @building.id).order(created_at: :asc))
@@ -173,7 +172,7 @@ class LiassesController < ApplicationController
     @liasse.statut = "active"
     @liasse.year2 = @liasse.year.strftime("%Y").to_i
     if @liasse.save
-      redirect_to building_path(@building)
+      redirect_to building_liasses_path(@building)
     else
       render :new
     end
@@ -190,7 +189,7 @@ class LiassesController < ApplicationController
   def update
     authorize @liasse
     if @liasse.update(liasse_params)
-      redirect_to building_path(@liasse.building)
+      redirect_to building_liasses_path(@liasse.building)
     else
       render :edit
     end
@@ -200,7 +199,7 @@ class LiassesController < ApplicationController
     authorize @liasse
     @liasse.statut = "deleted"
     @liasse.save
-    redirect_to building_path(@liasse.building)
+    redirect_to building_liasses_path(@liasse.building)
   end
 
   private
