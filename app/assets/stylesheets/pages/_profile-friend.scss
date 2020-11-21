@@ -1,7 +1,7 @@
 .profile-friends {
-  margin-bottom: 10vh;
+
     > .navigations {
-        margin: 10vh 0;
+
         h3 {
             width: 100%;
             margin: 0;
@@ -9,17 +9,15 @@
             text-align: center;
             border-radius: 7px;
             cursor: pointer;
-            font-size: 20px
         }
         h3.active {
             background-color: #fdd741;
         }
-        border-radius: 7px;
+        // border-radius: 7px;
         background: #eee;
         display: flex;
         justify-content: space-evenly;
         align-items: center;
-        font-size: 20px
     }
 }
 

@@ -43,13 +43,13 @@
           </div>
         </div>
       <% end %>
-      <h5 class="border-top pt-3"><strong>Les Locataires</strong></h5>
+      <h5 class="border-top pb-2 pt-4"><strong>Les Locataires</strong></h5>
       <div class="mt-2 mb-4">
         <p><%= link_to "Ajouter un locataire", new_apartment_tenant_path(@apartment), class:"btn btn-transparent-bold"%></p>
       </div>
       <% counter = 1 %>
       <div class="profile-friends">
-        <div class="search navigations">
+        <div class="search navigations my-5" style="border-radius: 7px">
           <h3 id="actuel" class="active" style="font-size: 16px">Locataire actuel</h3>
           <h3 id="passé" style="font-size: 16px">Locataire(s) passé(s)</h3>
         </div>

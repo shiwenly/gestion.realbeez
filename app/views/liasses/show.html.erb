@@ -8,8 +8,7 @@
         <%= link_to "Page d'accueil", root_path, style:"text-decoration:none; color:rgb(100, 100, 100)"  %> >
         <%= link_to "Sociétés", companies_path, style:"text-decoration:none; color:rgb(100, 100, 100)" %> >
         <%= link_to "Immeubles", company_path(@liasse.building.company), style:"text-decoration:none; color:rgb(100, 100, 100)" %> >
-        <%= link_to "Appartements", building_path(@liasse.building), style:"text-decoration:none; color:rgb(100, 100, 100)" %> >
-        <%= link_to "Liasses", liass_path(@liasse), style:"text-decoration:none; color:rgb(100, 100, 100)"  %>
+        <%= link_to "Liasses fiscales", building_liasses_path(@building), style:"text-decoration:none; color:rgb(100, 100, 100)" %>
       </p>
       <div class="col-12 col-md-8 offset-md-2">
         <table class="table table-hover my-5" style="background-color: white; font-size : 12px; font-style: lighter">

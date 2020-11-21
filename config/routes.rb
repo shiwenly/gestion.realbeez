@@ -19,7 +19,7 @@ Rails.application.routes.draw do
   resources :apartments, only: [:show, :edit, :destroy, :update ]
 
   resources :buildings do
-    resources :expenses, only: [:new, :create]
+    resources :expenses, only: [:new, :create, :index]
   end
   resources :expenses, only: [:show, :edit, :destroy, :update ]
 
@@ -39,7 +39,7 @@ Rails.application.routes.draw do
   resources :rents, only: [:edit, :destroy, :update]
 
   resources :buildings do
-    resources :liasses, only: [:new, :create]
+    resources :liasses, only: [:new, :create, :index]
   end
   resources :liasses, only: [:show, :edit, :destroy, :update ]
 

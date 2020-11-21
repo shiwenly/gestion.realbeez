@@ -1,5 +1,9 @@
 class ExpensePolicy < ApplicationPolicy
 
+  def index?
+    true
+  end
+
   def show?
     true
   end
