@@ -117,7 +117,7 @@
               </div>
               <!-- LOYER -->
               <div class="mt-4">
-                <h5 class="border-top pt-3"><strong>Paiement du loyer</strong></h5>
+                <h5 class="border-top pb-2 pt-4"><strong>Paiement du loyer</strong></h5>
                 <div class="mt-2 mb-4">
                   <% associe = tenant.apartment.building.company.associe.split(",").map(&:strip) %>
                   <% if associe.include?(current_user.email) || tenant.apartment.building.company.user == current_user || tenant.user == current_user || current_user.admin == true %>
@@ -201,7 +201,7 @@
               </div>
               <!-- EAU -->
               <div clas="my-5">
-                <h5 class="border-top pt-3"><strong>Consommation d'eau</strong></h5>
+                <h5 class="border-top pb-2 pt-4"><strong>Consommation d'eau</strong></h5>
                 <div class="mt-2 mb-4">
                   <%= link_to "Déclarer ma consommation d'eau", new_tenant_water_path(tenant), class:"btn btn-transparent-bold" %>
                 </div>
@@ -259,7 +259,7 @@
       // add class
       target.classList.add("active");
       };
-      
+
        this.addEventListener("click", (e) => {
         console.log(e)
         const whereToShow = document.querySelector("#friends-toPlace");
@@ -307,7 +307,7 @@
                 </div>
                 <!-- LOYER -->
                 <div class="mt-4">
-                  <h5 class="border-top pt-3"><strong>Paiement du loyer</strong></h5>
+                  <h5 class="border-top pb-2 pt-4"><strong>Paiement du loyer</strong></h5>
                   <div class="mt-2 mb-4">
                     <% associe = tenant.apartment.building.company.associe.split(",").map(&:strip) %>
                     <% if associe.include?(current_user.email) || tenant.apartment.building.company.user == current_user || tenant.user == current_user || current_user.admin == true %>
@@ -391,7 +391,7 @@
                 </div>
                 <!-- EAU -->
                 <div clas="my-5">
-                  <h5 class="border-top pt-3"><strong>Consommation d'eau</strong></h5>
+                  <h5 class="border-top pb-2 pt-4"><strong>Consommation d'eau</strong></h5>
                   <div class="mt-2 mb-4">
                     <%= link_to "Déclarer ma consommation d'eau", new_tenant_water_path(tenant), class:"btn btn-transparent-bold" %>
                   </div>
