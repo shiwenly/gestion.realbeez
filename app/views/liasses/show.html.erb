@@ -11,12 +11,6 @@
       </p>
       <div class="mt-2 mb-4 border-top pt-3"></div>
       <%= render 'shared/icon_liasse' %>
-      <div class="profile-friends hide-on-large mb-5" style="" >
-        <div class="search navigations" style="overflow:scroll; border-radius: 0 0 7px 7px">
-          <h3 style="font-size: 16px"><%= link_to "Charges locatives", "", style:"color: rgb(100, 100, 100); text-decoration: none"%></h3>
-          <h3 class="active" style="font-size: 16px; border-radius: 0 0 7px 0"><%= link_to "Liasses fiscales", building_liasses_path(@building), style:"color: rgb(100, 100, 100); text-decoration: none"%></h3>
-        </div>
-      </div>
       <% unless @apartments == [] %>
         <div class="row">
           <div class="p-3 col-12 col-md-6 offset-md-3 my-4">
