@@ -2,36 +2,15 @@
   <% associe = @building.company.associe.downcase.split(",").map(&:strip) %>
   <% if associe.include?(current_user.email) || @building.company.user == current_user || @building.user == current_user || current_user.admin == true %>
     <div class="container my-5">
-      <h3 class="text-center mt-5" style="color: #D8A727; font-family: Simply Rounded; letter-spacing: 1px">Liasses fiscales de l'immeuble</h3>
+      <h3 class="text-center mt-5" style="color: #D8A727; font-family: Simply Rounded; letter-spacing: 1px">Revenus fonciers de l'immeuble</h3>
       <h5 class="text-center mb-4">situés au <%= @building.address %></h5>
       <p class="mt-5">
         <%= link_to "Page d'accueil", root_path, style:"text-decoration:none; color:rgb(100, 100, 100)"  %> >
         <%= link_to "Sociétés", companies_path, style:"text-decoration:none; color:rgb(100, 100, 100)" %> >
-        <%= link_to "Immeubles", company_path(@building.company), style:"text-decoration:none; color:rgb(100, 100, 100)" %> >
-        <%= link_to "Liasses fiscales", building_liasses_path(@building), style:"text-decoration:none; color:rgb(100, 100, 100)" %>
+        <%= link_to "Immeubles", company_buildings_path(@building.company), style:"text-decoration:none; color:rgb(100, 100, 100)" %>
       </p>
-      <!-- Navigation laptop-->
-      <div class="profile-friends hide-on-small my-5" style="" >
-        <div class="search navigations" style="border-radius: 7px">
-          <h3 style="font-size: 16px"><%= link_to "Appartements", building_apartments_path(@building), style:"color: rgb(100, 100, 100); text-decoration: none"%></h3>
-          <h3 style="font-size: 16px"><%= link_to "Dépenses", building_expenses_path(@building), style:"color: rgb(100, 100, 100); text-decoration: none"%></h3>
-          <h3 style="font-size: 16px; white-space: nowrap">Charges locatives</h3>
-          <h3 class="active" style="font-size: 16px; border-radius: 0 7px 7px 0"><%= link_to "Liasses fiscales", building_liasses_path(@building), style:"color: rgb(100, 100, 100); text-decoration: none"%></h3>
-        </div>
-      </div>
-      <!-- Navigation mobile -->
-      <div class="profile-friends hide-on-large mt-5">
-        <div class="search navigations" style="overflow:scroll; border-radius: 7px 7px 0 0">
-          <h3 style="font-size: 16px"><%= link_to "Appartements", building_apartments_path(@building), style:"color: rgb(100, 100, 100); text-decoration: none"%></h3>
-          <h3 style="font-size: 16px"><%= link_to "Dépenses", building_expenses_path(@building), style:"color: rgb(100, 100, 100); text-decoration: none"%></h3>
-        </div>
-      </div>
-      <div class="profile-friends hide-on-large mb-5" style="" >
-        <div class="search navigations" style="overflow:scroll; border-radius: 0 0 7px 7px">
-          <h3 style="font-size: 16px"><%= link_to "Charges locatives", "", style:"color: rgb(100, 100, 100); text-decoration: none"%></h3>
-          <h3 class="active" style="font-size: 16px; border-radius: 0 0 7px 0"><%= link_to "Liasses fiscales", building_liasses_path(@building), style:"color: rgb(100, 100, 100); text-decoration: none"%></h3>
-        </div>
-      </div>
+      <div class="mt-2 mb-4 border-top pt-3"></div>
+      <%= render 'shared/icon_liasse' %>
       <% unless @apartments == [] %>
         <div class="row">
           <div class="p-3 col-12 col-md-6 offset-md-3 my-4">
@@ -50,9 +29,9 @@
         </div>
       <% end %>
       <!-- Liasse fiscale -->
-      <h5 class="border-top pb-2 pt-4"><strong>Les liasses fiscales</strong></h5>
+      <h5 class="border-top pb-2 pt-4"><strong>Revenus fonciers</strong></h5>
       <div class="mt-2 mb-4">
-        <p><%= link_to "Créer une liasse fiscale", new_building_liass_path(@building), class:"btn btn-transparent-bold"%></p>
+        <p><%= link_to "Calcul des revenus", new_building_liass_path(@building), class:"btn btn-transparent-bold"%></p>
       </div>
       <% @liasses.each do |liasse| %>
         <%= link_to liasse.year.strftime("%Y"), liass_path(liasse), class: "btn btn-transparent-bold mb-5" %>

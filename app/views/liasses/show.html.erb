@@ -2,31 +2,15 @@
   <% associe = @building.company.associe.downcase.split(",").map(&:strip) %>
   <% if associe.include?(current_user.email) || @building.company.user == current_user || @liasse.user == current_user %>
     <div class="container my-5">
-      <h3 class="text-center mt-5" style="color: #D8A727; font-family: Simply Rounded; letter-spacing: 1px">Liasse fiscal <%= @liasse.year.strftime("%Y") %></h3>
+      <h3 class="text-center mt-5" style="color: #D8A727; font-family: Simply Rounded; letter-spacing: 1px">Revenus fonciers <%= @liasse.year.strftime("%Y") %></h3>
       <h5 class="text-center mb-4">Immeuble <%= @building.address %></h5>
       <p class="mt-5">
         <%= link_to "Page d'accueil", root_path, style:"text-decoration:none; color:rgb(100, 100, 100)"  %> >
         <%= link_to "Sociétés", companies_path, style:"text-decoration:none; color:rgb(100, 100, 100)" %> >
-        <%= link_to "Immeubles", company_path(@liasse.building.company), style:"text-decoration:none; color:rgb(100, 100, 100)" %> >
-        <%= link_to "Liasses fiscales", building_liasses_path(@building), style:"text-decoration:none; color:rgb(100, 100, 100)" %> >
-        <%= link_to "Liasse fiscale " + @liasse.year.strftime("%Y"), liass_path(@liasse), style:"text-decoration:none; color:rgb(100, 100, 100)" %>
+        <%= link_to "Immeubles", company_buildings_path(@building.company), style:"text-decoration:none; color:rgb(100, 100, 100)" %>
       </p>
-      <!-- Navigation laptop-->
-      <div class="profile-friends hide-on-small my-5" style="" >
-        <div class="search navigations" style="border-radius: 7px">
-          <h3 style="font-size: 16px"><%= link_to "Appartements", building_apartments_path(@building), style:"color: rgb(100, 100, 100); text-decoration: none"%></h3>
-          <h3 style="font-size: 16px"><%= link_to "Dépenses", building_expenses_path(@building), style:"color: rgb(100, 100, 100); text-decoration: none"%></h3>
-          <h3 style="font-size: 16px; white-space: nowrap">Charges locatives</h3>
-          <h3 class="active" style="font-size: 16px; border-radius: 0 7px 7px 0"><%= link_to "Liasses fiscales", building_liasses_path(@building), style:"color: rgb(100, 100, 100); text-decoration: none"%></h3>
-        </div>
-      </div>
-      <!-- Navigation mobile -->
-      <div class="profile-friends hide-on-large mt-5">
-        <div class="search navigations" style="overflow:scroll; border-radius: 7px 7px 0 0">
-          <h3 style="font-size: 16px"><%= link_to "Appartements", building_apartments_path(@building), style:"color: rgb(100, 100, 100); text-decoration: none"%></h3>
-          <h3 style="font-size: 16px"><%= link_to "Dépenses", building_expenses_path(@building), style:"color: rgb(100, 100, 100); text-decoration: none"%></h3>
-        </div>
-      </div>
+      <div class="mt-2 mb-4 border-top pt-3"></div>
+      <%= render 'shared/icon_liasse' %>
       <div class="profile-friends hide-on-large mb-5" style="" >
         <div class="search navigations" style="overflow:scroll; border-radius: 0 0 7px 7px">
           <h3 style="font-size: 16px"><%= link_to "Charges locatives", "", style:"color: rgb(100, 100, 100); text-decoration: none"%></h3>

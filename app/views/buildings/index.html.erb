@@ -8,6 +8,7 @@
         <%= link_to "Page d'accueil", root_path, style:"text-decoration:none; color:rgb(100, 100, 100)"  %> >
         <%= link_to "Sociétés", companies_path, style:"text-decoration:none; color:rgb(100, 100, 100)" %> >
         <%= link_to "Immeubles", company_buildings_path(@company), style:"text-decoration:none; color:rgb(100, 100, 100)" %></p>
+      <div class="mt-2 mb-4 border-top pt-3"></div>
       <% unless @buildings == [] %>
         <div class="row">
           <div class="p-3 col-12 col-md-6 offset-md-3 my-4">
