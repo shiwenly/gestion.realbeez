@@ -2,8 +2,8 @@
   <% associe = @building.company.associe.downcase.split(",").map(&:strip) %>
   <% if associe.include?(current_user.email) || @building.company.user == current_user || @building.user == current_user || current_user.admin == true %>
     <div class="container my-5">
-      <h3 class="text-center mt-5" style="color: #D8A727; font-family: Simply Rounded; letter-spacing: 1px">Dépenses de l'immeuble</h3>
-      <h5 class="text-center mb-4">situés au <%= @building.address %></h5>
+      <h3 class="text-center mt-5" style="color: #D8A727; font-family: Simply Rounded; letter-spacing: 1px">Vos dépenses</h3>
+      <h5 class="text-center mb-4"><%= @building.address %></h5>
       <p class="mt-5">
         <%= link_to "Page d'accueil", root_path, style:"text-decoration:none; color:rgb(100, 100, 100)"  %> >
         <%= link_to "Sociétés", companies_path, style:"text-decoration:none; color:rgb(100, 100, 100)" %> >
@@ -29,7 +29,7 @@
         </div>
       <% end %>
       <!-- Expenses -->
-      <h5 class="border-top pb-2 pt-4"><strong>Les Dépenses</strong></h5>
+      <h5 class="border-top pt-3"></h5>
       <div class="mt-2 mb-4">
         <p><%= link_to "Ajouter une dépense", new_building_expense_path(@building), class:"btn btn-transparent-bold"%></p>
       </div>
