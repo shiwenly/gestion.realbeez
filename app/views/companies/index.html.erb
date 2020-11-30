@@ -1,46 +1,60 @@
-<div class="container my-5">
-  <h3 class="text-center mt-5 mb-4" style="color: #D8A727; font-family: Simply Rounded; letter-spacing: 1px">Liste de vos sociétés</h3>
-  <p class="mt-5">
-    <%= link_to "Page d'accueil", root_path, style:"text-decoration:none; color:rgb(100, 100, 100)"  %> >
-    <%= link_to "Sociétés", companies_path, style:"text-decoration:none; color:rgb(100, 100, 100)"  %>
-  </p>
-  <div class="mt-2 mb-4 border-top pt-3">
-    <p><%= link_to "Ajouter une société", new_company_path, class:"btn btn-transparent-bold"%></p>
-  </div>
-  <% counter = 1 %>
-  <% @companies.each do |company| %>
-    <% associe = company.associe.downcase.split(",").map(&:strip) %>
-    <% if associe.include?(current_user.email) || company.user == current_user %>
-      <div class="row">
-        <div class="p-3 col-12 col-md-6 offset-md-3">
-          <div class="p-4 content border mb-4", style="box-shadow: 0 0 5px rgba(0,0,0,0.1); background-color: white">
-            <div class="d-flex align-items-center mb-4 justify-content-center">
-              <p class="m-0 p-0" style="color: #D8A727; font-family: Simply Rounded; font-size: 22px; letter-spacing: 1px">Société <%= counter %></p>
-              <%= link_to "", edit_company_path(company), class:"fas fa-edit ml-2", style:"font-size:12px"  %> /
-              <%= link_to "", company_path(company), method: :delete, data: { confirm: "Confirmez la suppression de la société #{company.name}?" }, class:"fas fa-trash", style:"font-size:12px" %>
-            </div>
-            <%= link_to company_path(company), style:"text-decoration:none; color: rgb(100, 100, 100)" do %>
-              <p class=" mt-0 mb-3" style="" ><i class="fas fa-city mr-3" style="color: #D8A727"></i><%= company.name %></p>
-              <p class=" mt-0 mb-3" style="" ><i class="fas fa-map-marker-alt mr-3" style="color: #D8A727"></i><%= company.address %></p>
-              <p class="mb-1">Société soumis à l'IS : <%= company.corporate_tax ? "Oui" : "Non" %></p>
-              <p>Société soumis à la TVA : <%= company.vat ? "Oui" : "Non" %></p>
-              <% if company.associe != nil && company.associe != "" %>
-                <p class="mb-1">Les associés :  </p>
-                <% company.associe.split(",").each do |a| %>
-                  <span class="px-2" style="color:#D8A727 ; border-radius:20px; border: solid 1px #D8A727; font-size: 14px">
-                    <%= a %></span>
-                <% end %>
+<div class="container-fluid">
+  <div class="row">
+    <%= render 'shared/vertical_navbar' %>
+    <div class="col-12 col-md-10" style="overflow: scroll">
+      <div class="container my-5">
+        <h3 class="text-center mt-5 mb-4" style="color: #D8A727; font-family: Simply Rounded; letter-spacing: 1px">Vos sociétés</h3>
+        <p class="mt-5">
+          <%= link_to "Page d'accueil", root_path, style:"text-decoration:none; color:rgb(100, 100, 100)"  %> >
+          <%= link_to "Sociétés", companies_path, style:"text-decoration:none; color:rgb(100, 100, 100)"  %>
+        </p>
+        <div class="mt-2 mb-4 border-top pt-3">
+          <p><%= link_to "Ajouter une société", new_company_path, class:"btn btn-transparent-bold"%></p>
+        </div>
+        <% counter = 1 %>
+        <div class="row justify-content-center">
+          <% @companies.each do |company| %>
+            <% if company.statut == "active" %>
+              <% if company.associe != nil %>
+                <% associe = company.associe.downcase.split(",").map(&:strip) %>
+              <% else %>
+                <% associe = [] %>
+                <%  %>
+              <% end %>
+              <% if associe.include?(current_user.email) || company.user == current_user %>
+                <div class="col-12 col-md-6">
+                  <div class="p-4 content border mb-4", style="box-shadow: 0 0 5px rgba(0,0,0,0.1); background-color: white">
+                    <div class="d-flex align-items-center mb-4 justify-content-center">
+                      <p class="m-0 p-0" style="color: #D8A727; font-family: Simply Rounded; font-size: 22px; letter-spacing: 1px"><%= company.name %></p>
+                      <%= link_to "", edit_company_path(company), class:"fas fa-edit ml-2", style:"font-size:12px"  %> /
+                      <%= link_to "", company_path(company), method: :delete, data: { confirm: "Confirmez la suppression de la société #{company.name}?" }, class:"fas fa-trash", style:"font-size:12px" %>
+                    </div>
+                    <%= link_to company_path(company), style:"text-decoration:none; color: rgb(100, 100, 100)" do %>
+                      <!-- <p class=" mt-0 mb-3" style="" ><i class="fas fa-city mr-3" style="color: #D8A727"></i><%#= company.name %></p> -->
+                      <p class=" mt-0 mb-3" style="" ><i class="fas fa-map-marker-alt mr-3" style="color: #D8A727"></i><%= company.address %></p>
+                      <p class="mb-1">Société soumis à l'IS : <%= company.corporate_tax ? "Oui" : "Non" %></p>
+                      <p>Société soumis à la TVA : <%= company.vat ? "Oui" : "Non" %></p>
+                      <% if company.associe != nil && company.associe != "" %>
+                        <p class="mb-1">Les associés :  </p>
+                        <% company.associe.split(",").each do |a| %>
+                          <span class="px-2" style="color:#D8A727 ; border-radius:20px; border: solid 1px #D8A727; font-size: 14px">
+                            <%= a %></span>
+                        <% end %>
+                      <% end %>
+                    <% end %>
+                    <div class="d-flex mt-3 justify-content-end">
+                      <%= link_to "Voir détails", company_buildings_path(company), class:"btn btn-yellow-mustard"  %>
+                    </div>
+                  </div>
+                </div>
+                <% counter += 1 %>
               <% end %>
             <% end %>
-            <div class="d-flex mt-3 justify-content-end">
-              <%= link_to "Voir détails", company_buildings_path(company), class:"btn btn-yellow-mustard"  %>
-            </div>
-          </div>
+          <% end %>
         </div>
+        <!-- ONLY FOR ADMIN -->
+        <%#= render "adminIndex" %>
       </div>
-      <% counter += 1 %>
-    <% end %>
-  <% end %>
-  <!-- ONLY FOR ADMIN -->
-  <%#= render "adminIndex" %>
+    </div>
+  </div>
 </div>

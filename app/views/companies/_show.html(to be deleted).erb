@@ -27,7 +27,7 @@
       <% end %>
       <h5 class="border-top pt-3"><strong>Les Immeubles</strong></h5>
       <div class="mt-2 mb-4">
-        <p><%= link_to "Ajouter un batiment", new_company_building_path(@company), class:"btn btn-transparent-bold"%></p>
+        <p><%= link_to "Ajouter un immeuble", new_company_building_path(@company), class:"btn btn-transparent-bold"%></p>
       </div>
       <% counter = 1 %>
       <div class="row">
@@ -37,7 +37,7 @@
               <div class="d-flex align-items-center mb-4 justify-content-center">
                 <p class="m-0 p-0" style="color: #D8A727; font-family: Simply Rounded; font-size: 22px; letter-spacing: 1px">Immeuble <%= counter %></p>
                 <%= link_to "", edit_building_path(building) , class:"fas fa-edit ml-2", style:"font-size:12px"  %> /
-                <%= link_to "", building_path(building), method: :delete, data: { confirm: "Confirmez la suppression du batiment situé au #{building.address}?" }, class:"fas fa-trash", style:"font-size:12px" %>
+                <%= link_to "", building_path(building), method: :delete, data: { confirm: "Confirmez la suppression de l'immeuble situé au #{building.address}?" }, class:"fas fa-trash", style:"font-size:12px" %>
               </div>
               <%= link_to building_path(building), style:"text-decoration:none; color: rgb(100, 100, 100)" do %>
                 <p class=" mt-0 mb-3" style="" ><i class="fas fa-map-marker-alt mr-3" style="color: #D8A727"></i><%= building.address%></p>
