@@ -177,7 +177,7 @@ class BuildingsController < ApplicationController
   end
 
   def create_société_nom_propre
-    @company = Company.new(name: "n/a - nom propre", user_id: current_user.id, statut: "active")
+    @company = Company.new(name: "n/a - nom propre", user_id: current_user.id, statut: "active", associe: "")
     @company.save
   end
 
