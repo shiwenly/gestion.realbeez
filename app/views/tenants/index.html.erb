@@ -139,10 +139,10 @@
           <% counter = 1 %>
           <% if @tenants_actuel != []  %>
             <div class="row justify-content-center">
-              <% @tenants.each do |tenant| %>
+              <% @tenants.each_with_index do |tenant, index| %>
                 <% unless tenant.apartment.building.statut == "deleted" || tenant.apartment.building.company.statut == "deleted" || tenant.apartment.statut == "deleted" %>
                   <% associe = tenant.apartment.building.company.associe.downcase.split(",").map(&:strip) %>
-                  <% if associe.include?(current_user.email) || tenant.apartment.building.company.user == current_user || tenant.apartment.user == current_user || current_user.admin == true %>
+                  <% if associe.include?(current_user.email) || tenant.apartment.building.company.user == current_user || tenant.apartment.user == current_user %>
                     <div class="p-3 col-12 col-md-6">
                       <div class="p-4 content border mb-4", style="box-shadow: 0 0 5px rgba(0,0,0,0.1); background-color: white">
                         <div class="d-flex align-items-center mb-4 justify-content-center">
@@ -154,23 +154,32 @@
                           <p>Locataire en place : <%= tenant.current_tenant ? "Oui" : "Non"%></p>
                           <!-- <p class=" mt-0 mb-1" style="" ><i class="fas fa-user mr-3" style="color: #D8A727"></i><%#= tenant.first_name %> <%#= tenant.last_name %> </p> -->
                           <p class=" mt-0 mb-1" style="" ><i class="fas fa-envelope mr-3" style="color: #D8A727"></i><%= tenant.email %></p>
-                          <p class=" mt-0 mb-3" style="" ><i class="fas fa-phone-square mr-3" style="color: #D8A727"></i><%= tenant.phone %></p>
-                          <p class="mb-1">Loyer : <%= tenant.rent %></p>
-                          <p class="mb-1">Charges : <%= tenant.service_charge %></p>
-                          <p>Dépôt de garantie : <%= tenant.deposit %></p>
-                          <!-- cloudinary -->
-                          <p class="mb-1">Contrat de bail :
-                            <%= link_to "Ouvrir", "https://res.cloudinary.com/myhouze/image/upload/#{tenant.contract.filename}", :target => "_blank",class: "btn btn-transparent mx-2" %>
-                            <%= link_to "Télécharger", "https://res.cloudinary.com/myhouze/image/upload/fl_attachment/#{tenant.contract.filename}", :target => "_blank",class: "btn btn-transparent" %>
-                          </p>
-                          <p>Etat des lieux :
-                            <%= link_to "Ouvrir", "https://res.cloudinary.com/myhouze/image/upload/#{tenant.inventory.filename}", :target => "_blank",class: "btn btn-transparent mx-2" %>
-                            <%= link_to "Télécharger", "https://res.cloudinary.com/myhouze/image/upload/fl_attachment/#{tenant.inventory.filename}", :target => "_blank",class: "btn btn-transparent" %>
-                          </p>
-                          <p class="mb-1">Date d'entrée : <%= tenant.move_in_date %></p>
-                          <% if tenant.current_tenant == false  %>
-                            <p>Date de sortie : <%= tenant.move_out_date %></p>
-                          <% end %>
+                          <p class=" mt-0 mb-2" style="" ><i class="fas fa-phone-square mr-3" style="color: #D8A727"></i><%= tenant.phone %></p>
+                          <!-- Collapse -->
+                          <a class="mt-0" data-toggle="collapse" href="#collapseExample<%= index+1 %>" role="button" aria-expanded="false" aria-controls="collapseExample<%= index+1 %>" style="text-decoration: none">
+                            <i class="btn btn-transparent fas fa-angle-double-down" style="font-size: 14px"></i>
+                            <span class="m-0 ml-1" style="color: rgb(100,100,100">Plus d'information</span>
+                          </a>
+                          <div class="collapse" id="collapseExample<%= index+1 %>">
+                            <div class="card card-body">
+                              <p class="mb-1">Loyer : <%= tenant.rent %></p>
+                              <p class="mb-1">Charges : <%= tenant.service_charge %></p>
+                              <p>Dépôt de garantie : <%= tenant.deposit %></p>
+                              <!-- cloudinary -->
+                              <p class="mb-1">Contrat de bail :
+                                <%= link_to "Ouvrir", "https://res.cloudinary.com/myhouze/image/upload/#{tenant.contract.filename}", :target => "_blank",class: "btn btn-transparent mx-2" %>
+                                <%= link_to "Télécharger", "https://res.cloudinary.com/myhouze/image/upload/fl_attachment/#{tenant.contract.filename}", :target => "_blank",class: "btn btn-transparent" %>
+                              </p>
+                              <p>Etat des lieux :
+                                <%= link_to "Ouvrir", "https://res.cloudinary.com/myhouze/image/upload/#{tenant.inventory.filename}", :target => "_blank",class: "btn btn-transparent mx-2" %>
+                                <%= link_to "Télécharger", "https://res.cloudinary.com/myhouze/image/upload/fl_attachment/#{tenant.inventory.filename}", :target => "_blank",class: "btn btn-transparent" %>
+                              </p>
+                              <p class="mb-1">Date d'entrée : <%= tenant.move_in_date %></p>
+                              <% if tenant.current_tenant == false  %>
+                                <p>Date de sortie : <%= tenant.move_out_date %></p>
+                              <% end %>
+                            </div>
+                          </div>
                         <% end %>
                         <!-- <p>Statut : <%#= tenant.statut %> </p> -->
                         <div class="d-flex mt-3 justify-content-end">

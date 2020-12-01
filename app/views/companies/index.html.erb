@@ -14,7 +14,7 @@
         </div>
         <% counter = 1 %>
         <div class="row justify-content-center">
-          <% @companies.each do |company| %>
+          <% @companies.each_with_index do |company, index| %>
             <% if company.statut == "active" %>
               <% associe = company.associe.downcase.split(",").map(&:strip) %>
               <% if associe.include?(current_user.email) || company.user == current_user %>
@@ -25,25 +25,30 @@
                       <%= link_to "", edit_company_path(company), class:"fas fa-edit ml-2", style:"font-size:12px"  %> /
                       <%= link_to "", company_path(company), method: :delete, data: { confirm: "Confirmez la suppression de la société #{company.name}?" }, class:"fas fa-trash", style:"font-size:12px" %>
                     </div>
-                    <%= link_to company_path(company), style:"text-decoration:none; color: rgb(100, 100, 100)" do %>
-                      <!-- <p class=" mt-0 mb-3" style="" ><i class="fas fa-city mr-3" style="color: #D8A727"></i><%#= company.name %></p> -->
-                      <p class=" mt-0 mb-3" style="" ><i class="fas fa-map-marker-alt mr-3" style="color: #D8A727"></i><%= company.address %></p>
-                      <p class="mb-1">Société soumis à l'IS : <%= company.corporate_tax ? "Oui" : "Non" %></p>
-                      <p>Société soumis à la TVA : <%= company.vat ? "Oui" : "Non" %></p>
-                      <% if company.associe != nil && company.associe != "" %>
-                        <p class="mb-1">Les associés :  </p>
-                        <% company.associe.split(",").each do |a| %>
-                          <span class="px-2" style="color:#D8A727 ; border-radius:20px; border: solid 1px #D8A727; font-size: 14px">
-                            <%= a %></span>
+                    <!-- <p class=" mt-0 mb-3" style="" ><i class="fas fa-city mr-3" style="color: #D8A727"></i><%#= company.name %></p> -->
+                    <p class=" mt-0 mb-3" style="" ><i class="fas fa-map-marker-alt mr-3" style="color: #D8A727"></i><%= company.address %></p>
+                    <!-- Collapse -->
+                    <a class="" data-toggle="collapse" href="#collapseExample<%= index+1 %>" role="button" aria-expanded="false" aria-controls="collapseExample<%= index+1 %>" style="text-decoration: none">
+                      <i class="btn btn-transparent fas fa-angle-double-down" style="font-size: 14px"></i>
+                      <span class="m-0 ml-1" style="color: rgb(100,100,100">Plus d'information</span>
+                    </a>
+                    <div class="collapse" id="collapseExample<%= index+1 %>">
+                      <div class="card card-body">
+                        <p class="mb-1">Société soumis à l'IS : <%= company.corporate_tax ? "Oui" : "Non" %></p>
+                        <p>Société soumis à la TVA : <%= company.vat ? "Oui" : "Non" %></p>
+                        <% if company.associe != nil && company.associe != "" %>
+                          <p class="mb-1">Les associés :  </p>
+                          <% company.associe.split(",").each do |a| %>
+                            <li class="px-2" style="font-size: 14px"><%= a %></li>
+                          <% end %>
                         <% end %>
-                      <% end %>
-                    <% end %>
+                      </div>
+                    </div>
                     <div class="d-flex mt-3 justify-content-end">
                       <%= link_to "Voir détails", company_buildings_path(company), class:"btn btn-yellow-mustard"  %>
                     </div>
                   </div>
                 </div>
-                <% counter += 1 %>
               <% end %>
             <% end %>
           <% end %>

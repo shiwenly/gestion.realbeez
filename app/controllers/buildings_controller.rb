@@ -65,6 +65,21 @@ class BuildingsController < ApplicationController
       end
     else
       authorize @buildings = policy_scope(Building.where("statut = ?", "active" ).order(created_at: :asc))
+      @companies_active = Company.where("statut = ?", "active" ).order(created_at: :asc)
+      @companies = ["Tous"]
+      @companies_active.each do |c|
+        associe = c.associe.downcase.split(",").map(&:strip)
+        if associe.include?(current_user.email) || c.user == current_user
+          @companies << c.name
+        end
+      end
+      if params[:search] == nil
+        authorize @buildings = policy_scope(Building.where("statut = ?", "active" ).order(created_at: :asc))
+      elsif params[:search][:company] == "Tous"
+        authorize @buildings = policy_scope(Building.where("statut = ?", "active" ).order(created_at: :asc))
+      else
+        authorize @buildings = Building.search_by_company(params[:search][:company])
+      end
     end
   end
 
@@ -164,7 +179,10 @@ class BuildingsController < ApplicationController
   end
 
   def new
-    if Company.where("name = ?", "n/a - nom propre") == []
+    @companies_user = Company.where("user_id = ? AND statut = ?", current_user.id, "active" ).order(created_at: :asc)
+    # @companies = @companies_active.select { |c| c.user_id == current_user || c.associe }
+    # create company détenu en nom propre if doesnt exist
+    if @companies_user.one? { |c| c.name == "n/a - détention en nom propre"} == false
       create_société_nom_propre
     end
     if params[:company_id] != nil
@@ -172,12 +190,19 @@ class BuildingsController < ApplicationController
       @company = Company.find(params[:company_id])
     else
       authorize @building = Building.new
-      @companies = Company.where("user_id = ? AND statut = ?", current_user, "active" ).order(created_at: :asc)
+      @companies_active = Company.where("statut = ?", "active" ).order(created_at: :asc)
+      @companies = []
+      @companies_active.each do |c|
+        associe = c.associe.downcase.split(",").map(&:strip)
+        if associe.include?(current_user.email) || c.user == current_user
+          @companies << c
+        end
+      end
     end
   end
 
   def create_société_nom_propre
-    @company = Company.new(name: "n/a - nom propre", user_id: current_user.id, statut: "active", associe: "")
+    @company = Company.new(name: "n/a - détention en nom propre", user_id: current_user.id, statut: "active", associe: "")
     @company.save
   end
 
@@ -191,8 +216,9 @@ class BuildingsController < ApplicationController
     @building.company = @company
     @building.user_id = current_user.id
     @building.statut = "active"
+    @building.company_name = Company.find(@building.company_id).name
     if @building.save
-      redirect_to company_buildings_path(@company)
+      redirect_to buildings_path
     else
       render :new
     end
@@ -204,8 +230,9 @@ class BuildingsController < ApplicationController
 
   def update
     authorize @building
+    @building.company_name = Company.find(@building.company_id).name
     if @building.update(building_params)
-      redirect_to company_buildings_path(@building.company)
+      redirect_to buildings_path
     else
       render :edit
     end
@@ -215,13 +242,14 @@ class BuildingsController < ApplicationController
     authorize @building
     @building.statut = "deleted"
     @building.save
-    redirect_to company_buildings_path(@building.company)
+    redirect_to buildings_path
   end
 
   private
 
   def building_params
     params.require(:building).permit(
+      :name,
       :address,
       :number_of_flat
     )
