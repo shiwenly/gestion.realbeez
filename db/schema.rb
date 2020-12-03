@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_01_160008) do
+ActiveRecord::Schema.define(version: 2020_12_03_174518) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,11 +40,12 @@ ActiveRecord::Schema.define(version: 2020_12_01_160008) do
     t.string "name"
     t.string "water"
     t.string "statut"
-    t.bigint "building_id"
     t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["building_id"], name: "index_apartments_on_building_id"
+    t.bigint "company_id"
+    t.integer "building_id"
+    t.index ["company_id"], name: "index_apartments_on_company_id"
     t.index ["user_id"], name: "index_apartments_on_user_id"
   end
 
@@ -176,7 +177,7 @@ ActiveRecord::Schema.define(version: 2020_12_01_160008) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "apartments", "buildings"
+  add_foreign_key "apartments", "companies"
   add_foreign_key "apartments", "users"
   add_foreign_key "buildings", "companies"
   add_foreign_key "buildings", "users"

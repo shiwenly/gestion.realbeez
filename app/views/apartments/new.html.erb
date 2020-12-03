@@ -3,7 +3,13 @@
   <div class="row justify-content-center">
     <div class="col-12 col-md-6 col-lg-6">
       <div class="center">
-        <%= simple_form_for [@building, @apartment] do |f| %>
+        <%= simple_form_for [@apartment] do |f| %>
+          <%= f.input :company_id, collection: @companies, label: "Selectionner une société", include_blank: false, include_hidden: false %>
+          <% if @buildings != [] %>
+            <%= f.input :building_id, collection: @buildings, label: "Selectionner un immeuble", include_blank: "n/a - aucun immeuble", include_hidden: false %>
+          <% else %>
+            <p>Aucun</p>
+          <% end %>
           <%= f.input :name, label: "Nom de l'appartement" %>
           <%= f.input :water, label: "Numéro du compteur d'eau" %>
           <%= f.submit "Créer", class: "btn btn-yellow-mustard mb-2" %>

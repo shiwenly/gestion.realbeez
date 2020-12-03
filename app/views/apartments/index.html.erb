@@ -81,14 +81,14 @@
           <!-- Appartment -->
           <h5 class="border-top pt-3"></h5>
           <div class="mt-2 mb-4">
-            <p><%#= link_to "Ajouter un appartement", new_building_apartment_path(@building), class:"btn btn-transparent-bold"%></p>
+            <p><%= link_to "Ajouter un appartement", new_apartment_path, class:"btn btn-transparent-bold"%></p>
           </div>
           <!-- ------------------------- -->
           <div class="row justify-content-center mb-4">
             <% @apartments.each do |apartment| %>
-              <% unless apartment.statut != "active" || apartment.building.statut != "active" || apartment.building.company.statut != "active" %>
-                <% associe = apartment.building.company.associe.downcase.split(",").map(&:strip) %>
-                <% if associe.include?(current_user.email) || apartment.building.company.user == current_user || apartment.building.user == current_user %>
+              <% unless apartment.statut != "active" || apartment.company.statut != "active" %>
+                <% associe = apartment.company.associe.downcase.split(",").map(&:strip) %>
+                <% if associe.include?(current_user.email) || apartment.company.user == current_user || apartment.user == current_user %>
                   <div class="p-3 col-12 col-md-6">
                     <div class="p-4 content border mb-3", style="box-shadow: 0 0 5px rgba(0,0,0,0.1); background-color: white">
                       <div class="d-flex align-items-center mb-4 justify-content-center">

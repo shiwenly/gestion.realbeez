@@ -3,7 +3,6 @@ class ApartmentsController < ApplicationController
   before_action :set_apartment, only: [:edit, :show, :update, :destroy]
 
   def index
-
     # Appartments
     if params[:building_id] != nil
       @building = Building.find(params[:building_id])
@@ -101,18 +100,49 @@ class ApartmentsController < ApplicationController
   end
 
   def new
-    authorize @apartment = Apartment.new
-    @building = Building.find(params[:building_id])
+    @companies_user = Company.where("user_id = ? AND statut = ?", current_user.id, "active" ).order(created_at: :asc)
+    # create company détenu en nom propre if doesnt exist
+    if @companies_user.one? { |c| c.name == "n/a - détention en nom propre"} == false
+      create_société_nom_propre
+    end
+    if params[:building_id] != nil
+      authorize @apartment = Apartment.new
+    else
+      authorize @apartment = Apartment.new
+      # List of companies of the user and where user is an associate
+      @companies_active = Company.where("statut = ?", "active" ).order(created_at: :asc)
+      @companies = []
+      @companies_active.each do |c|
+        associe = c.associe.downcase.split(",").map(&:strip)
+        if associe.include?(current_user.email) || c.user == current_user
+          @companies << c
+        end
+      end
+      @buildings = []
+      @companies.each do |c|
+        c.buildings.each do |b|
+          if b.statut == "active"
+            @buildings << b
+          end
+        end
+      end
+    end
+  end
+
+  def create_société_nom_propre
+    @company = Company.new(name: "n/a - détention en nom propre", user_id: current_user.id, statut: "active", associe: "")
+    @company.save
   end
 
   def create
     authorize @apartment = Apartment.new(apartment_params)
-    @building = Building.find(params[:building_id])
-    @apartment.building = @building
+    # @building = Building.find(params[:building_id])
+    @apartment.company = Company.find(params[:apartment][:company_id])
+    @apartment.building_id = params[:apartment][:building_id]
     @apartment.user_id = current_user.id
     @apartment.statut = "active"
     if @apartment.save
-      redirect_to building_apartments_path(@apartment.building)
+      redirect_to apartments_path
     else
       render :new
     end
@@ -120,12 +150,29 @@ class ApartmentsController < ApplicationController
 
   def edit
     authorize @apartment
+    # List of companies of the user and where user is an associate
+    @companies_active = Company.where("statut = ?", "active" ).order(created_at: :asc)
+    @companies = []
+    @companies_active.each do |c|
+      associe = c.associe.downcase.split(",").map(&:strip)
+      if associe.include?(current_user.email) || c.user == current_user
+        @companies << c
+      end
+    end
+    @buildings = []
+    @companies.each do |c|
+      c.buildings.each do |b|
+        if b.statut == "active"
+          @buildings << b
+        end
+      end
+    end
   end
 
   def update
     authorize @apartment
     if @apartment.update(apartment_params)
-      redirect_to building_apartments_path(@apartment.building)
+      redirect_to apartments_path
     else
       render :edit
     end
@@ -135,7 +182,7 @@ class ApartmentsController < ApplicationController
     authorize @apartment
     @apartment.statut = "deleted"
     @apartment.save
-    redirect_to building_apartments_path(@apartment.building)
+    redirect_to apartments_path
   end
 
   private
@@ -143,7 +190,9 @@ class ApartmentsController < ApplicationController
   def apartment_params
     params.require(:apartment).permit(
       :name,
-      :water
+      :water,
+      :building_id,
+      :company_id
     )
   end
 

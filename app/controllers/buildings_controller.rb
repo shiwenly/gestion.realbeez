@@ -66,7 +66,7 @@ class BuildingsController < ApplicationController
     else
       authorize @buildings = policy_scope(Building.where("statut = ?", "active" ).order(created_at: :asc))
       @companies_active = Company.where("statut = ?", "active" ).order(created_at: :asc)
-      @companies = ["Tous"]
+      @companies = ["Toutes les sociétés"]
       @companies_active.each do |c|
         associe = c.associe.downcase.split(",").map(&:strip)
         if associe.include?(current_user.email) || c.user == current_user
@@ -75,7 +75,7 @@ class BuildingsController < ApplicationController
       end
       if params[:search] == nil
         authorize @buildings = policy_scope(Building.where("statut = ?", "active" ).order(created_at: :asc))
-      elsif params[:search][:company] == "Tous"
+      elsif params[:search][:company] == "Toutes les sociétés"
         authorize @buildings = policy_scope(Building.where("statut = ?", "active" ).order(created_at: :asc))
       else
         authorize @buildings = Building.search_by_company(params[:search][:company])
@@ -226,11 +226,19 @@ class BuildingsController < ApplicationController
 
   def edit
     authorize @building
+    @companies_active = Company.where("statut = ?", "active" ).order(created_at: :asc)
+    @companies = []
+    @companies_active.each do |c|
+      associe = c.associe.downcase.split(",").map(&:strip)
+      if associe.include?(current_user.email) || c.user == current_user
+        @companies << c
+      end
+    end
   end
 
   def update
     authorize @building
-    @building.company_name = Company.find(@building.company_id).name
+    @building.company_name = Company.find(params[:building][:company_id]).name
     if @building.update(building_params)
       redirect_to buildings_path
     else
@@ -251,7 +259,8 @@ class BuildingsController < ApplicationController
     params.require(:building).permit(
       :name,
       :address,
-      :number_of_flat
+      :number_of_flat,
+      :company_id
     )
   end
 
