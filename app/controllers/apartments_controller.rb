@@ -64,6 +64,23 @@ class ApartmentsController < ApplicationController
       @liasses = policy_scope(Liasse.where("statut = ? AND building_id = ?", "active", @building.id).order(year: :asc))
     else
       authorize @apartments = policy_scope(Apartment.where("statut = ?", "active").order(created_at: :asc))
+      # List of companies of the user and where user is an associate
+      @companies_active = Company.where("statut = ?", "active" ).order(created_at: :asc)
+      @companies = []
+      @companies_active.each do |c|
+        associe = c.associe.downcase.split(",").map(&:strip)
+        if associe.include?(current_user.email) || c.user == current_user
+          @companies << c
+        end
+      end
+      @buildings = Building.where("statut = ? AND user = ?", "active", current_user ).order(created_at: :asc)
+      # @companies.each do |c|
+      #   c.buildings.each do |b|
+      #     if b.statut == "active"
+      #       @buildings << b
+      #     end
+      #   end
+      # end
     end
   end
 
@@ -102,9 +119,9 @@ class ApartmentsController < ApplicationController
   def new
     @companies_user = Company.where("user_id = ? AND statut = ?", current_user.id, "active" ).order(created_at: :asc)
     # create company détenu en nom propre if doesnt exist
-    if @companies_user.one? { |c| c.name == "n/a - détention en nom propre"} == false
-      create_société_nom_propre
-    end
+    # if @companies_user.one? { |c| c.name == "n/a - détention en nom propre"} == false
+    #   create_société_nom_propre
+    # end
     if params[:building_id] != nil
       authorize @apartment = Apartment.new
     else
@@ -118,10 +135,19 @@ class ApartmentsController < ApplicationController
           @companies << c
         end
       end
+      # List of buildings where the user is an associate of the company or the user created the buildings
+      @buildings_active = Building.where("statut = ?", "active" ).order(created_at: :asc)
       @buildings = []
       @companies.each do |c|
-        c.buildings.each do |b|
-          if b.statut == "active"
+        @buildings_active.each do |b|
+          if b.company_name == c.name
+            @buildings << b
+          end
+        end
+      end
+      @buildings_active.each do |b|
+        if b.user == current_user
+          if @buildings.include?(b) == false
             @buildings << b
           end
         end
@@ -129,10 +155,10 @@ class ApartmentsController < ApplicationController
     end
   end
 
-  def create_société_nom_propre
-    @company = Company.new(name: "n/a - détention en nom propre", user_id: current_user.id, statut: "active", associe: "")
-    @company.save
-  end
+  # def create_société_nom_propre
+  #   @company = Company.new(name: "n/a - détention en nom propre", user_id: current_user.id, statut: "active", associe: "")
+  #   @company.save
+  # end
 
   def create
     authorize @apartment = Apartment.new(apartment_params)
@@ -162,7 +188,7 @@ class ApartmentsController < ApplicationController
     @buildings = []
     @companies.each do |c|
       c.buildings.each do |b|
-        if b.statut == "active"
+        if b.statut == "active" || b.user == current_user
           @buildings << b
         end
       end
@@ -180,6 +206,7 @@ class ApartmentsController < ApplicationController
 
   def destroy
     authorize @apartment
+    @apartment.name = @apartment.name+" deleted #{@apartment.id}"
     @apartment.statut = "deleted"
     @apartment.save
     redirect_to apartments_path

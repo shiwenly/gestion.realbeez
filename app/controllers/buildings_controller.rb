@@ -2,6 +2,7 @@ class BuildingsController < ApplicationController
   skip_before_action :authenticate_user!, only: []
   before_action :set_building, only: [:edit, :show, :update, :destroy]
 
+
   def index
     if params[:company_id] != nil
       @company = Company.find(params[:company_id])
@@ -66,7 +67,7 @@ class BuildingsController < ApplicationController
     else
       authorize @buildings = policy_scope(Building.where("statut = ?", "active" ).order(created_at: :asc))
       @companies_active = Company.where("statut = ?", "active" ).order(created_at: :asc)
-      @companies = ["Toutes les sociétés"]
+      @companies = ["Toutes les sociétés", "n/a - détention en nom propre"]
       @companies_active.each do |c|
         associe = c.associe.downcase.split(",").map(&:strip)
         if associe.include?(current_user.email) || c.user == current_user
@@ -74,9 +75,66 @@ class BuildingsController < ApplicationController
         end
       end
       if params[:search] == nil
-        authorize @buildings = policy_scope(Building.where("statut = ?", "active" ).order(created_at: :asc))
+        # authorize @buildings = policy_scope(Building.where("statut = ?", "active" ).order(created_at: :asc))
+        # @companies_active = Company.where("statut = ?", "active" ).order(created_at: :asc)
+        @companies_list = []
+        @companies_active.each do |c|
+          associe = c.associe.downcase.split(",").map(&:strip)
+          if associe.include?(current_user.email) || c.user == current_user
+            @companies_list << c
+          end
+        end
+        # List of buildings where the user is an associate of the company or the user created the buildings
+        @buildings_active = Building.where("statut = ?", "active" ).order(created_at: :asc)
+        @buildings = []
+        @companies_list.each do |c|
+          @buildings_active.each do |b|
+            if b.company_name == c.name
+              @buildings << b
+            end
+          end
+        end
+        @buildings_active.each do |b|
+          if b.user == current_user
+            if @buildings.include?(b) == false
+              @buildings << b
+            end
+          end
+        end
       elsif params[:search][:company] == "Toutes les sociétés"
-        authorize @buildings = policy_scope(Building.where("statut = ?", "active" ).order(created_at: :asc))
+        @companies_list = []
+        @companies_active.each do |c|
+          associe = c.associe.downcase.split(",").map(&:strip)
+          if associe.include?(current_user.email) || c.user == current_user
+            @companies_list << c
+          end
+        end
+        # List of buildings where the user is an associate of the company or the user created the buildings
+        @buildings_active = Building.where("statut = ?", "active" ).order(created_at: :asc)
+        @buildings = []
+        @companies_list.each do |c|
+          @buildings_active.each do |b|
+            if b.company_name == c.name
+              @buildings << b
+            end
+          end
+        end
+        @buildings_active.each do |b|
+          if b.user == current_user
+            if @buildings.include?(b) == false
+              @buildings << b
+            end
+          end
+        end
+      elsif params[:search][:company] == "n/a - détention en nom propre"
+        # @buildings = policy_scope(Building.where("statut = ?", "active" )).select{|a| a.statut == "active" && a.company_id == nil }.sort_by { |b| b.created_at }
+        @buildings_active = Building.where("statut = ?", "active" ).order(created_at: :asc)
+        @buildings = []
+        @buildings_active.each do |b|
+          if b.company_name == nil && b.user == current_user
+            @buildings << b
+          end
+        end
       else
         authorize @buildings = Building.search_by_company(params[:search][:company])
       end
@@ -182,9 +240,9 @@ class BuildingsController < ApplicationController
     @companies_user = Company.where("user_id = ? AND statut = ?", current_user.id, "active" ).order(created_at: :asc)
     # @companies = @companies_active.select { |c| c.user_id == current_user || c.associe }
     # create company détenu en nom propre if doesnt exist
-    if @companies_user.one? { |c| c.name == "n/a - détention en nom propre"} == false
-      create_société_nom_propre
-    end
+    # if @companies_user.one? { |c| c.name == "n/a - détention en nom propre"} == false
+    #   create_société_nom_propre
+    # end
     if params[:company_id] != nil
       authorize @building = Building.new
       @company = Company.find(params[:company_id])
@@ -201,22 +259,24 @@ class BuildingsController < ApplicationController
     end
   end
 
-  def create_société_nom_propre
-    @company = Company.new(name: "n/a - détention en nom propre", user_id: current_user.id, statut: "active", associe: "")
-    @company.save
-  end
+  # def create_société_nom_propre
+  #   @company = Company.new(name: "n/a - détention en nom propre", user_id: current_user.id, statut: "active", associe: "")
+  #   @company.save
+  # end
 
   def create
     authorize @building = Building.new(building_params)
-    if params[:company_id] != nil
-      @company = Company.find(params[:company_id])
-    else
-      @company = Company.find(params[:building][:company_id])
-    end
-    @building.company = @company
+    # if params[:company_id] != nil
+    #   @company = Company.find(params[:company_id])
+    # else
+    #   @company = Company.find(params[:building][:company_id])
+    # end
+    # @building.company = @company
     @building.user_id = current_user.id
     @building.statut = "active"
-    @building.company_name = Company.find(@building.company_id).name
+    unless @building.company_id == nil || @building.company_id == ""
+      @building.company_name = Company.find(@building.company_id).name
+    end
     if @building.save
       redirect_to buildings_path
     else
@@ -248,6 +308,7 @@ class BuildingsController < ApplicationController
 
   def destroy
     authorize @building
+    @building.name = @building.name+" deleted #{@building.id}"
     @building.statut = "deleted"
     @building.save
     redirect_to buildings_path

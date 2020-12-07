@@ -151,6 +151,7 @@ class CompaniesController < ApplicationController
 
   def destroy
     authorize @company
+    @company.name = @company.name+" deleted #{@company.id}"
     @company.statut = "deleted"
     @company.save
     redirect_to companies_path

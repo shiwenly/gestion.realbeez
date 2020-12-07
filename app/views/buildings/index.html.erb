@@ -74,13 +74,21 @@
         <%= form_for :search, defaults: { required: false }, url:buildings_path, method: "GET", html: { class: '' } do |f| %>
           <div class="hide-on-large">
             <div class="mt-5 mb-3 d-flex align-items-center">
-              <%= f.select :company, @companies ,html: { style:"border: solid; width:10vh"} %>
+              <% if params[:search] != nil %>
+                <%= f.select :company, @companies ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:company]  %>
+              <% else %>
+                <%= f.select :company, @companies ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false  %>
+              <% end %>
               <%= f.submit "Filtrer", class: "btn btn-yellow-mustard-small ml-1" %>
             </div>
           </div>
           <div class="hide-on-small ml-3">
             <div class="mt-5 mb-3 d-flex align-items-center">
-              <%= f.select :company, @companies ,html: { style:"border: solid; width:10vh"} %>
+              <% if params[:search] != nil %>
+                <%= f.select :company, @companies ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:company]  %>
+              <% else %>
+                <%= f.select :company, @companies ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false  %>
+              <% end %>
               <%= f.submit "Filtrer", class: "btn btn-yellow-mustard-small ml-2" %>
             </div>
           </div>
@@ -92,26 +100,25 @@
           </div>
           <div class="row justify-content-center">
             <% @buildings.each do |building| %>
-              <% unless building.statut != "active" || building.company.statut != "active" %>
-                <% associe = building.company.associe.downcase.split(",").map(&:strip) %>
-                <% if associe.include?(current_user.email) || building.company.user == current_user %>
-                  <div class="p-3 col-12 col-md-6">
-                    <div class="p-4 content border mb-3", style="box-shadow: 0 0 5px rgba(0,0,0,0.1); background-color: white">
-                      <div class="d-flex align-items-center mb-4 justify-content-center">
-                        <p class="m-0 p-0" style="color: #D8A727; font-family: Simply Rounded; font-size: 22px; letter-spacing: 1px"><%= building.name %></p>
-                        <%= link_to "", edit_building_path(building) , class:"fas fa-edit ml-2", style:"font-size:12px"  %> /
-                        <%= link_to "", building_path(building), method: :delete, data: { confirm: "Confirmez la suppression de l'immeuble situé au #{building.address}?" }, class:"fas fa-trash", style:"font-size:12px" %>
-                      </div>
-                      <%= link_to building_path(building), style:"text-decoration:none; color: rgb(100, 100, 100)" do %>
-                        <p class=" mt-0 mb-3" style="" ><i class="fas fa-map-marker-alt mr-3" style="color: #D8A727"></i><%= building.address%></p>
-                        <p class=" mt-0 mb-3" style="" ><i class="fas fa-house-user mr-3" style="color: #D8A727"></i><%= building.number_of_flat %> appartement(s)</p>
-                      <% end %>
-                      <div class="d-flex mt-3 justify-content-end">
-                        <%#= link_to "Voir détails", building_apartments_path(building), class:"btn btn-yellow-mustard"  %>
-                      </div>
+              <% unless building.statut != "active" %>
+                <%# associe = building.company.associe.downcase.split(",").map(&:strip) %>
+                <%# if associe.include?(current_user.email) || building.company.user == current_user %>
+                <div class="p-3 col-12 col-md-6">
+                  <div class="p-4 content border mb-3", style="box-shadow: 0 0 5px rgba(0,0,0,0.1); background-color: white">
+                    <div class="d-flex align-items-center mb-4 justify-content-center">
+                      <p class="m-0 p-0" style="color: #D8A727; font-family: Simply Rounded; font-size: 22px; letter-spacing: 1px"><%= building.name %></p>
+                      <%= link_to "", edit_building_path(building) , class:"fas fa-edit ml-2", style:"font-size:12px"  %> /
+                      <%= link_to "", building_path(building), method: :delete, data: { confirm: "Confirmez la suppression de l'immeuble situé au #{building.address}?" }, class:"fas fa-trash", style:"font-size:12px" %>
+                    </div>
+                    <%= link_to building_path(building), style:"text-decoration:none; color: rgb(100, 100, 100)" do %>
+                      <p class=" mt-0 mb-3" style="" ><i class="fas fa-map-marker-alt mr-3" style="color: #D8A727"></i><%= building.address%></p>
+                      <p class=" mt-0 mb-3" style="" ><i class="fas fa-house-user mr-3" style="color: #D8A727"></i><%= building.number_of_flat %> appartement(s)</p>
+                    <% end %>
+                    <div class="d-flex mt-3 justify-content-end">
+                      <%#= link_to "Voir détails", building_apartments_path(building), class:"btn btn-yellow-mustard"  %>
                     </div>
                   </div>
-                <% end %>
+                </div>
               <% end %>
             <% end %>
           </div>
