@@ -74,7 +74,7 @@ class BuildingsController < ApplicationController
           @companies << c.name
         end
       end
-      if params[:search] == nil
+      if params[:search] == nil || params[:search][:company] == "Toutes les sociétés"
         # authorize @buildings = policy_scope(Building.where("statut = ?", "active" ).order(created_at: :asc))
         # @companies_active = Company.where("statut = ?", "active" ).order(created_at: :asc)
         @companies_list = []
@@ -99,40 +99,6 @@ class BuildingsController < ApplicationController
             if @buildings.include?(b) == false
               @buildings << b
             end
-          end
-        end
-      elsif params[:search][:company] == "Toutes les sociétés"
-        @companies_list = []
-        @companies_active.each do |c|
-          associe = c.associe.downcase.split(",").map(&:strip)
-          if associe.include?(current_user.email) || c.user == current_user
-            @companies_list << c
-          end
-        end
-        # List of buildings where the user is an associate of the company or the user created the buildings
-        @buildings_active = Building.where("statut = ?", "active" ).order(created_at: :asc)
-        @buildings = []
-        @companies_list.each do |c|
-          @buildings_active.each do |b|
-            if b.company_name == c.name
-              @buildings << b
-            end
-          end
-        end
-        @buildings_active.each do |b|
-          if b.user == current_user
-            if @buildings.include?(b) == false
-              @buildings << b
-            end
-          end
-        end
-      elsif params[:search][:company] == "n/a - détention en nom propre"
-        # @buildings = policy_scope(Building.where("statut = ?", "active" )).select{|a| a.statut == "active" && a.company_id == nil }.sort_by { |b| b.created_at }
-        @buildings_active = Building.where("statut = ?", "active" ).order(created_at: :asc)
-        @buildings = []
-        @buildings_active.each do |b|
-          if b.company_name == nil && b.user == current_user
-            @buildings << b
           end
         end
       else
@@ -276,6 +242,8 @@ class BuildingsController < ApplicationController
     @building.statut = "active"
     unless @building.company_id == nil || @building.company_id == ""
       @building.company_name = Company.find(@building.company_id).name
+    else
+      @building.company_name = "n/a - détention en nom propre"
     end
     if @building.save
       redirect_to buildings_path
@@ -298,7 +266,11 @@ class BuildingsController < ApplicationController
 
   def update
     authorize @building
-    @building.company_name = Company.find(params[:building][:company_id]).name
+    unless params[:building][:company_id] == nil || params[:building][:company_id] == ""
+      @building.company_name = Company.find(params[:building][:company_id]).name
+    else
+      @building.company_name = "n/a - détention en nom propre"
+    end
     if @building.update(building_params)
       redirect_to buildings_path
     else

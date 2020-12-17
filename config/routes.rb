@@ -23,17 +23,17 @@ Rails.application.routes.draw do
   resources :apartments do
     resources :tenants, only: [:new, :create, :index]
   end
-  resources :tenants, only: [:show, :edit, :destroy, :update, :index]
+  resources :tenants, only: [:edit, :destroy, :update, :index]
 
   resources :tenants do
     resources :waters, only: [:new, :create]
   end
-  resources :waters, only: [:edit, :destroy, :update]
+  resources :waters, only: [:edit, :destroy, :update, :index, :new]
 
   resources :tenants do
     resources :rents, only: [:new, :create]
   end
-  resources :rents, only: [:edit, :destroy, :update]
+  resources :rents, only: [:edit, :destroy, :update, :index, :new, :create]
 
   resources :buildings do
     resources :liasses, only: [:new, :create, :index]

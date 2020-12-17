@@ -3,6 +3,25 @@
   <p class="my-0 py-2 pl-3"><%= link_to "Immeubles", buildings_path, style:"text-decoration: none; color: white" %></p>
   <p class="my-0 py-2 pl-3"><%= link_to "Appartements", apartments_path, style:"text-decoration: none; color: white" %></p>
   <p class="my-0 py-2 pl-3"><%= link_to "Locataires", tenants_path, style:"text-decoration: none; color: white" %></p>
+  <!-- Collapse for Finance -->
+  <div id="accordion" >
+    <div class="card" style="color: white; background-color: #764c29">
+      <div class="card-header py-0 pl-3" id="headingTwo">
+        <h5 class="mb-0">
+          <button class="btn btn-link collapsed pl-0" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" style="text-decoration: none; color:white">
+            <p class="my-0">Finance</p>
+          </button>
+        </h5>
+      </div>
+      <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion" style="background-color: #764c29;">
+        <div class="card-body py-2 pl-5">
+          <p class="my-2"><%= link_to "Loyers", rents_path, style:"text-decoration:none; color: white" %></p>
+          <p class="my-2"><%= link_to "Dépenses", "", style:"text-decoration:none; color: white" %></p>
+          <p class="my-2"><%= link_to "Revenus fonciers", "", style:"text-decoration:none; color: white" %></p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 <div class="hide-on-large col-12 col-md-2 border-right p-0 ">
   <a class="" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" style="text-decoration: none">
@@ -17,6 +36,24 @@
       <p class="border my-0 py-2 pl-4"><%= link_to "Immeubles", buildings_path, style:"text-decoration: none; color: white" %></p>
       <p class="border my-0 py-2 pl-4"><%= link_to "Appartements", apartments_path, style:"text-decoration: none; color: white" %></p>
       <p class="border my-0 py-2 pl-4"><%= link_to "Locataires", tenants_path, style:"text-decoration: none; color: white" %></p>
+      <div id="accordion" >
+        <div class="card" style="color: white; background-color: #764c29">
+          <div class="card-header py-0 pl-3" id="headingTwo">
+            <h5 class="mb-0">
+              <button class="btn btn-link collapsed pl-0" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" style="text-decoration: none; color:white">
+                <p class="my-0 pl-2">Finance</p>
+              </button>
+            </h5>
+          </div>
+          <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion" style="background-color: #764c29;">
+            <div class="card-body py-2 pl-5">
+              <p class="my-2"><%= link_to "Loyers", "", style:"text-decoration:none; color: white" %></p>
+              <p class="my-2"><%= link_to "Dépenses", "", style:"text-decoration:none; color: white" %></p>
+              <p class="my-2"><%= link_to "Revenus fonciers", "", style:"text-decoration:none; color: white" %></p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

@@ -5,6 +5,7 @@
       <div class="center">
         <%= simple_form_for [@apartment, @tenant] do |f| %>
           <%= f.input :current_tenant, label: "Locataire en place", collection: [["Oui", true], ["Non", false]], as: :radio_buttons, label_method: :first, value_method: :second %>
+          <%= f.input :apartment_id, collection: @apartments, label: "Selectionner un appartement", include_blank: false, include_hidden: false %>
           <%= f.input :first_name, label: "Prénom" %>
           <%= f.input :last_name, label: "Nom" %>
           <%= f.input :email, label: "Email" %>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_05_155047) do
+ActiveRecord::Schema.define(version: 2020_12_17_045438) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -137,11 +137,16 @@ ActiveRecord::Schema.define(version: 2020_12_05_155047) do
     t.date "move_out_date"
     t.string "statut"
     t.bigint "user_id"
-    t.bigint "apartment_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "current_tenant", default: true
-    t.index ["apartment_id"], name: "index_tenants_on_apartment_id"
+    t.integer "company_id"
+    t.string "company_name"
+    t.integer "building_id"
+    t.string "building_name"
+    t.integer "apartment_id"
+    t.string "apartment_name"
+    t.string "name"
     t.index ["user_id"], name: "index_tenants_on_user_id"
   end
 
@@ -186,7 +191,6 @@ ActiveRecord::Schema.define(version: 2020_12_05_155047) do
   add_foreign_key "liasses", "users"
   add_foreign_key "rents", "tenants"
   add_foreign_key "rents", "users"
-  add_foreign_key "tenants", "apartments"
   add_foreign_key "tenants", "users"
   add_foreign_key "waters", "tenants"
   add_foreign_key "waters", "users"
