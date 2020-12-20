@@ -3,17 +3,47 @@
   <div class="row justify-content-center">
     <div class="col-12 col-md-6 col-lg-6">
       <div class="center">
-        <%= simple_form_for [@tenant, @rent] do |f| %>
+        <%= simple_form_for [@rent] do |f| %>
+          <%= f.input :tenant_id, collection: @tenants, label: "Selectionner un locataire", include_blank: false, include_hidden: false, class:"field_input" %>
           <%= f.input :date_payment, label: "Date d'encaissement", :order => [:day, :month, :year] %>
           <%= f.input :period, label: "Période", :order => [:month, :year] %>
           <%= f.input :rent_ask, label: "Montant du loyer à payer" %>
           <%= f.input :service_charge_ask, label: "Montant des charges à payer" %>
           <%= f.input :rent_paid, label: "Montant du loyer encaissé" %>
           <%= f.input :service_charge_paid, label: "Montant des charges encaissé" %>
-          <%= f.submit "Modifier", class: "btn btn-yellow-mustard mb-2" %>
+          <%= f.submit "Modifier", class: "btn btn-yellow-mustard mb-2", data: { confirm: "Confirmez votre saisie ?"  } %>
           <%= link_to "Annuler", root_path, class:"btn btn-danger mb-2" %>
         <% end %>
       </div>
     </div>
   </div>
 </div>
+<script>
+  document.querySelector("#rent_tenant_id").addEventListener("change", (event) => {
+    const input = document.querySelector("#rent_tenant_id");
+    let urlPath = origin
+    let url = urlPath + "/rents.json"
+    const rent = document.querySelector("#rent_rent_ask");
+  
+    // GET REQUEST
+    fetch(url)
+     .then(response => response.json())
+      .then((data) => {
+        console.log(data)
+        const rent = document.querySelector("#rent_rent_ask");
+        const rentPaid = document.querySelector("#rent_rent_paid");
+        const serviceCharge = document.querySelector("#rent_service_charge_ask");
+        const serviceChargePaid = document.querySelector("#rent_service_charge_paid");
+        const input_data = input.options[input.selectedIndex].text;
+        data.forEach((item) => {
+          if (item.name == input_data) {
+            rent.value = item.rent
+            serviceCharge.value = item.service_charge
+            rentPaid.value = item.rent
+            serviceChargePaid.value = item.service_charge
+          }
+        });
+      }
+    );
+  });
+</script>
