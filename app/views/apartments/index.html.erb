@@ -74,37 +74,13 @@
         <div class="container my-5">
           <h3 class="text-center mt-5" style="color: #D8A727; font-family: Simply Rounded; letter-spacing: 1px">Vos appartements</h3>
           <%= form_for :search, defaults: { required: false }, url:apartments_path, method: "GET", html: { class: '' } do |f| %>
-            <div class="hide-on-large">
-              <div class="mt-5 mb-3 d-flex align-items-center">
-                <%# if params[:search] != nil %>
-                <%#= f.select :company, @companies ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:company]  %>
-                <%# else %>
-                <%#= f.select :company, @companies ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false  %>
-                <%# end %>
-                <% if params[:search] != nil %>
-                  <%= f.select :building, @buildings, html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:building]  %>
-                <% else %>
-                  <%= f.select :building, @buildings, html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false  %>
-                <% end %>
-                <%= f.submit "Filtrer", class: "btn btn-yellow-mustard-small ml-1" %>
-              </div>
-            </div>
-            <div class="hide-on-small">
-              <div class="mt-5 mb-3 d-flex align-items-center">
-                <%# if params[:search] != nil %>
-                <%#= f.select :company, @companies, html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:company] %>
-                <%# else %>
-                <%#= f.select :company, @companies ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, :onchange =>'this.form.submit()'  %>
-                <%# end %>
-                <div class="ml-2">
-                  <% if params[:search] != nil %>
-                    <%= f.select :building, @buildings ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:building]  %>
-                  <% else %>
-                    <%= f.select :building, @buildings ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false  %>
-                  <% end %>
-                </div>
-                <%= f.submit "Filtrer", class: "btn btn-yellow-mustard-small ml-2" %>
-              </div>
+            <div class="mt-5 mb-3 d-flex align-items-center">
+              <% if params[:search] != nil %>
+                <%= f.select :building, @buildings ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:building]  %>
+              <% else %>
+                <%= f.select :building, @buildings ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false  %>
+              <% end %>
+              <%= f.submit "Filtrer", class: "btn btn-yellow-mustard-small ml-2" %>
             </div>
           <% end %>
           <!-- Appartment -->
@@ -130,7 +106,7 @@
                       <p>Numéro du compteur d'eau : <%= apartment.water %></p>
                       <!-- <p class="mb-1">Statut : <%#= apartment.statut %></p> -->
                       <div class="d-flex mt-3 justify-content-end">
-                        <%= link_to "Voir détails", apartment_tenants_path(apartment) , class:"btn btn-yellow-mustard"  %>
+                        <%#= link_to "Voir détails", apartment_tenants_path(apartment) , class:"btn btn-yellow-mustard"  %>
                       </div>
                     <% end %>
                   </div>

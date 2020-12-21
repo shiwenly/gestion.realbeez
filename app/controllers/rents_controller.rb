@@ -4,6 +4,7 @@ class RentsController < ApplicationController
   before_action :set_rent, only: [:edit, :show, :update, :destroy]
 
   def index
+    @years = [Date.today.year-3, Date.today.year-2, Date.today.year-1, Date.today.year, Date.today.year+1, Date.today.year+2]
     # List of companies created by user or where user is an associate
     @companies_active = Company.where("statut = ?", "active" ).order(created_at: :asc)
     @companies_list = []
