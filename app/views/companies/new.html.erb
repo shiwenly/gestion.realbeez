@@ -4,7 +4,7 @@
     <div class="col-12 col-md-6 col-lg-6">
       <div class="center">
         <%= simple_form_for [@company] do |f| %>
-          <%= f.input :name, label: "Nom de la société (celui-ci doit être unique)"%>
+          <%= f.input :name, label: "Saisir un nom, identifiant, référence ou numéro unique *"%>
           <%= f.input :address %>
           <%= f.input :corporate_tax, as: :radio_buttons, collection: [[true, "Oui"], [false, "Non"]], label_method: :second, value_method: :first, label: "Soumis à l'IS" %>
           <%= f.input :vat, as: :radio_buttons, collection: [[true, "Oui"], [false, "Non"]], label_method: :second, value_method: :first, label: "Soumis à la TVA" %>
