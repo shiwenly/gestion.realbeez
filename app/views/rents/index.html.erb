@@ -9,7 +9,7 @@
             <% if params[:search] != nil %>
               <%= f.select :year,  @years,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:year]  %>
             <% else %>
-              <%= f.select :year,  @years,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false  %>
+              <%= f.select :year,  @years,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: Date.today.year  %>
             <% end %>
             <div class="ml-2">
               <% if params[:search] != nil %>
