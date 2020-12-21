@@ -1,0 +1,22 @@
+<!-- Vertical navbar for mobile -->
+<div class="hide-on-large">
+  <h5 class="border my-0 py-2 pl-2" style="font-size: 18px;background-color: #764c29; color:white; opacity: 50%">MENU</h5>
+  <li class="border my-0 py-2 nav-item d-flex align-items-center" style="background-color: #764c29"><%= link_to "Sociétés", companies_path, style:"text-decoration: none; color:white",class:"pl-4" %>
+  </li>
+  <li class="border my-0 py-2 nav-item d-flex align-items-center" style="background-color: #764c29"><%= link_to "Immeubles", buildings_path, style:"text-decoration: none; color:white",class:"pl-4" %>
+  </li>
+  <li class="border my-0 py-2 nav-item d-flex align-items-center" style="background-color: #764c29"><%= link_to "Appartements", apartments_path, style:"text-decoration: none; color:white",class:"pl-4" %>
+  </li>
+  <li class="border my-0 py-2 nav-item d-flex align-items-center" style="background-color: #764c29"><%= link_to "Locataires", tenants_path, style:"text-decoration: none; color:white",class:"pl-4" %>
+  </li>
+  <h5 class="border my-0 py-2 pl-4" style="font-size: 16px; background-color: #764c29; color:white; opacity: 80%">FINANCE</h5>
+  <li class="border my-0 py-2 nav-item d-flex align-items-center" style="background-color: #764c29"><%= link_to "Loyers", rents_path, style:"text-decoration:none; color:white", class:"pl-5" %>
+  </li>
+  <li class="border my-0 py-2 nav-item d-flex align-items-center" style="background-color: #764c29"><%= link_to "Dépenses", "", style:"text-decoration:none; color:white", class:"pl-5" %>
+  </li>
+  <li class="border my-0 py-2 nav-item d-flex align-items-center" style="background-color: #764c29"><%= link_to "Revenus fonciers", "", style:"text-decoration:none; color:white", class:"pl-5" %></li>
+  <li class="border my-0 py-2 nav-item d-flex align-items-center" style="background-color: #764c29"><%= link_to "Modifier mon profil", edit_user_registration_path, class: "dropdown-item pl-2", style:"color:white" %>
+  </li>
+  <li class="border my-0 py-2 nav-item d-flex align-items-center" style="background-color: #764c29"><%= link_to "Se deconnecter", destroy_user_session_path, method: :delete, class: "dropdown-item pl-2", style:"color:white" %>
+  </li>
+</div>
