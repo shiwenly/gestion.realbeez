@@ -15,40 +15,39 @@
     </div>
   </div>
 </div>
-<!-- <script>
-  let urlPath = origin
-  let url = urlPath + "/apartments.json"
-
-  // GET REQUEST
-  fetch(url)
-   .then(response => response.json())
-    .then((data) => {
-      console.log(data)
-      const input = document.querySelector("#apartment_company_id");
-      const output = document.querySelector("#apartment_building_id");
-      // console.log(output)
-      // let counter = 0;
-      input.addEventListener("mouseover", (event) => {
-        console.log(event)
+<script>
+  document.querySelector("#apartment_company_id").addEventListener("change", (event) => {
+    let urlPath = origin
+    let url = urlPath + "/apartments.json"
+  
+    // GET REQUEST
+    fetch(url)
+     .then(response => response.json())
+      .then((data) => {
+        console.log(data)
+        const input = document.querySelector("#apartment_company_id");
+        const output = document.querySelector("#apartment_building_id");
         const input_data = input.options[input.selectedIndex].text;
-        console.log(input_data)
-        // counter  =  Number((event.timeStamp).toFixed(0));
-        // Number of choice in the dropdown button
-        const count_options = output.options.length
-        let i;
-        for (i = 0; i < count_options; i++) {
-          output.options[i].text = "";
-        }
-
-        console.log(count_options)
-        output.options[0].insertAdjacentHTML('beforeend',
+  
+        output.innerHTML = ""
+        output.insertAdjacentHTML('beforeend',
           `
-          <div>
-
-          </div>
+            <option value="">n/a - aucun immeuble</option>
+  
           `
         );
-      });
-    }
-  );
-</script> -->
+        data.forEach((item)=>{
+          console.log(item.building_name)
+          if (item.company_name == input_data) {
+            output.insertAdjacentHTML('beforeend',
+              `
+                <option value="">${item.building_name}</option>
+  
+              `
+            );
+          }
+        })
+      }
+    );
+  });
+</script>

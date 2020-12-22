@@ -1,5 +1,5 @@
 class Expense < ApplicationRecord
-  belongs_to :building
+  #belongs_to :building
   belongs_to :user
 
   mount_uploader :photo, PhotoUploader

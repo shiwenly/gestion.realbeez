@@ -76,9 +76,9 @@
           <%= form_for :search, defaults: { required: false }, url:apartments_path, method: "GET", html: { class: '' } do |f| %>
             <div class="mt-5 mb-3 d-flex align-items-center">
               <% if params[:search] != nil %>
-                <%= f.select :building, @buildings ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:building]  %>
+                <%= f.select :building, @buildings_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:building]  %>
               <% else %>
-                <%= f.select :building, @buildings ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false  %>
+                <%= f.select :building, @buildings_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false  %>
               <% end %>
               <%= f.submit "Filtrer", class: "btn btn-yellow-mustard-small ml-2" %>
             </div>

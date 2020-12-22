@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_20_162110) do
+ActiveRecord::Schema.define(version: 2020_12_22_044752) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -87,10 +87,14 @@ ActiveRecord::Schema.define(version: 2020_12_20_162110) do
     t.boolean "deductible"
     t.string "statut"
     t.bigint "user_id"
-    t.bigint "building_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["building_id"], name: "index_expenses_on_building_id"
+    t.integer "company_id"
+    t.string "company_name"
+    t.integer "building_id"
+    t.string "building_name"
+    t.integer "apartment_id"
+    t.boolean "recuperable", default: true
     t.index ["user_id"], name: "index_expenses_on_user_id"
   end
 
@@ -186,7 +190,6 @@ ActiveRecord::Schema.define(version: 2020_12_20_162110) do
   add_foreign_key "apartments", "users"
   add_foreign_key "buildings", "users"
   add_foreign_key "companies", "users"
-  add_foreign_key "expenses", "buildings"
   add_foreign_key "expenses", "users"
   add_foreign_key "liasses", "buildings"
   add_foreign_key "liasses", "users"

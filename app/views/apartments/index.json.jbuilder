@@ -1,5 +1,4 @@
 json.array!  @buildings do |b|
-  json.building b
-  json.name b.name
-  json.company b.company_name
+  json.company_name b.company_name
+  json.building_name b.name
 end

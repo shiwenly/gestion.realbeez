@@ -68,7 +68,8 @@ class ApartmentsController < ApplicationController
       @companies_active = Company.where("statut = ?", "active" ).order(created_at: :asc)
       @companies = ["Toutes les sociétés", "n/a - détention en nom propre"]
       @companies_array = []
-      @buildings = ["Tous les immeubles", "n/a - aucun immeuble"]
+      @buildings_array = ["Tous les immeubles", "n/a - aucun immeuble"]
+      @buildings = []
       @companies_active.each do |c|
         associe = c.associe.downcase.split(",").map(&:strip)
         if associe.include?(current_user.email) || c.user == current_user
@@ -81,14 +82,16 @@ class ApartmentsController < ApplicationController
       @companies_array.each do |c|
         @buildings_active.each do |b|
           if b.company_name == c.name
-            @buildings << b.name
+            @buildings_array << b.name
+            @buildings << b
           end
         end
       end
       @buildings_active.each do |b|
         if b.user == current_user
-          if @buildings.include?(b.name) == false
-            @buildings << b.name
+          if @buildings_array.include?(b.name) == false
+            @buildings_array << b.name
+            @buildings << b
           end
         end
       end
@@ -208,19 +211,21 @@ class ApartmentsController < ApplicationController
       @buildings = []
       @companies.each do |c|
         @buildings_active.each do |b|
-          if b.company_name == c.name
-            @buildings << b
+          if @buildings.include?(b) == false
+            if b.company_name == "n/a - détention en nom propre"
+              @buildings << b
+            end
           end
         end
       end
       # List of buildings created by the user
-      @buildings_active.each do |b|
-        if b.user == current_user
-          if @buildings.include?(b) == false
-            @buildings << b
-          end
-        end
-      end
+      # @buildings_active.each do |b|
+      #   if b.user == current_user
+      #     if @buildings.include?(b) == false
+      #       @buildings << b
+      #     end
+      #   end
+      # end
     end
   end
 
