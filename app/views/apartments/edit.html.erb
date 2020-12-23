@@ -4,7 +4,7 @@
     <div class="col-12 col-md-6 col-lg-6">
       <div class="center">
         <%= simple_form_for [@apartment] do |f| %>
-          <%= f.input :company_id, collection: @companies, label: "Selectionner une société", include_blank: "n/a - aucun immeuble", include_hidden: false %>
+          <%= f.input :company_id, collection: @companies, label: "Selectionner une société", include_blank: "n/a - détention en nom propre", include_hidden: false %>
           <% if @buildings != [] %>
             <%= f.input :building_id, collection: @buildings, label: "Selectionner un immeuble", include_blank: "n/a - aucun immeuble", include_hidden: false %>
           <% else %>
