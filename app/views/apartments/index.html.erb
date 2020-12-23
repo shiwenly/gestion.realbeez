@@ -1,3 +1,4 @@
+</style>
 <div class="container-fluid">
   <div class="row">
     <%= render 'shared/vertical_navbar' %>
@@ -74,15 +75,41 @@
         <div class="container my-5">
           <h3 class="text-center mt-5" style="color: #D8A727; font-family: Simply Rounded; letter-spacing: 1px">Vos appartements</h3>
           <%= form_for :search, defaults: { required: false }, url:apartments_path, method: "GET", html: { class: '' } do |f| %>
-            <div class="mt-5 mb-3 d-flex align-items-center">
-              <% if params[:search] != nil %>
-                <%= f.select :company, @companies_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:company]  %>
-                <%= f.select :building, @buildings_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:building]  %>
-              <% else %>
-                <%= f.select :company, @companies_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false %>
-                <%= f.select :building, @buildings_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false  %>
-              <% end %>
-              <%= f.submit "Filtrer", class: "btn btn-yellow-mustard-small ml-2" %>
+            <!-- laptop version -->
+            <div class="hide-on-small">
+              <div class="mt-5 mb-3 d-flex align-items-center">
+                <% if params[:search] != nil %>
+                  <%= f.select :company, @companies_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:company]  %>
+                  <div class='ml-2'>
+                    <%= f.select :building, @buildings_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:building]  %>
+                  </div>
+                <% else %>
+                  <%= f.select :company, @companies_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false %>
+                  <div class='ml-2'>
+                    <%= f.select :building, @buildings_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false  %>
+                  </div>
+                <% end %>
+                <%= f.submit "Filtrer", class: "btn btn-yellow-mustard-small ml-2" %>
+              </div>
+            </div>
+            <!-- mobile version -->
+            <div class="hide-on-large">
+              <div class="mt-5 mb-3">
+                <% if params[:search] != nil %>
+                  <%= f.select :company, @companies_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:company]  %>
+                  <div class="mt-1">
+                    <%= f.select :building, @buildings_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:building], style:"width:80%"  %>
+                  </div>
+                <% else %>
+                  <%= f.select :company, @companies_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false %>
+                  <div class="mt-1">
+                    <%= f.select :building, @buildings_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false  %>
+                  </div>
+                <% end %>
+                <div class="mt-1">
+                  <%= f.submit "Filtrer", class: "btn btn-yellow-mustard-small" %>
+                </div>
+              </div>
             </div>
           <% end %>
           <!-- Appartment -->
