@@ -87,25 +87,25 @@
               <div class="mt-5 mb-3">
                 <% if params[:search] != nil %>
                   <div class="row">
-                    <div class="col-12 col-md-4 pr-0 mt-1">
+                    <div class="col-9 col-md pr-0 mt-1">
                       <%= f.select :company, @companies_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:company]  %>
                     </div>
-                    <div class="col-12 col-md-4 pr-0 mt-1">
+                    <div class="col-9 col-md pr-0 mt-1">
                       <%= f.select :building, @buildings_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:building]  %>
                     </div>
-                    <div class="col-12 col-md-2 pr-0 mt-1">
+                    <div class="col-9 col-md pr-0 mt-1">
                       <%= f.submit "Filtrer", class: "btn btn-yellow-mustard-small" %>
                     </div>
                   </div>
                 <% else %>
                   <div class="row">
-                    <div class="col-12 col-md-4 pr-0 mt-1">
+                    <div class="col-9 col-md pr-0 mt-1">
                       <%= f.select :company, @companies_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false  %>
                     </div>
-                    <div class="col-12 col-md-4 pr-0 mt-1">
+                    <div class="col-9 col-md pr-0 mt-1">
                       <%= f.select :building, @buildings_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false  %>
                     </div>
-                    <div class="col-12 col-md-2 pr-0 mt-1">
+                    <div class="col-9 col-md pr-0 mt-1">
                       <%= f.submit "Filtrer", class: "btn btn-yellow-mustard-small" %>
                     </div>
                   </div>
