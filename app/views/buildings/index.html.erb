@@ -72,7 +72,7 @@
             <%#= link_to "Sociétés", companies_path, style:"text-decoration:none; color:rgb(100, 100, 100)" %></p> -->
         <!-- recherche date -->
         <%= form_for :search, defaults: { required: false }, url:buildings_path, method: "GET", html: { class: '' } do |f| %>
-          <div class="hide-on-small ml-3">
+          <div class="row ml-3">
             <div class="mt-5 mb-3 d-flex align-items-center">
               <% if params[:search] != nil %>
                 <%= f.select :company, @companies ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:company]  %>
