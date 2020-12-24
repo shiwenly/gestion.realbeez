@@ -83,34 +83,32 @@
         <div class="container my-5">
           <h3 class="text-center mt-5" style="color: #D8A727; font-family: Simply Rounded; letter-spacing: 1px">Vos appartements</h3>
           <%= form_for :search, defaults: { required: false }, url:apartments_path, method: "GET", html: { class: '' } do |f| %>
-            <div>
-              <div class="mt-5 mb-3">
-                <% if params[:search] != nil %>
-                  <div class="row">
-                    <div class="col-9 col-md pr-0 mt-1">
-                      <%= f.select :company, @companies_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:company]  %>
-                    </div>
-                    <div class="col-9 col-md pr-0 mt-1">
-                      <%= f.select :building, @buildings_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:building]  %>
-                    </div>
-                    <div class="col-9 col-md pr-0 d-flex align-items-center mt-1">
-                      <%= f.submit "Filtrer", class: "btn btn-yellow-mustard-small" %>
-                    </div>
+            <div class="mt-5 mb-3">
+              <% if params[:search] != nil %>
+                <div class="row">
+                  <div class="col-9 col-md pr-0 mt-1">
+                    <%= f.select :company, @companies_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:company]  %>
                   </div>
-                <% else %>
-                  <div class="row">
-                    <div class="col-9 col-md pr-0 mt-1">
-                      <%= f.select :company, @companies_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false  %>
-                    </div>
-                    <div class="col-9 col-md pr-0 mt-1">
-                      <%= f.select :building, @buildings_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false  %>
-                    </div>
-                    <div class="col-9 col-md pr-0 d-flex align-items-center mt-1">
-                      <%= f.submit "Filtrer", class: "btn btn-yellow-mustard-small" %>
-                    </div>
+                  <div class="col-9 col-md pr-0 mt-1">
+                    <%= f.select :building, @buildings_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:building]  %>
                   </div>
-                <% end %>
-              </div>
+                  <div class="col-9 col-md pr-0 d-flex align-items-center mt-1">
+                    <%= f.submit "Filtrer", class: "btn btn-yellow-mustard-small" %>
+                  </div>
+                </div>
+              <% else %>
+                <div class="row">
+                  <div class="col-9 col-md pr-0 mt-1">
+                    <%= f.select :company, @companies_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false  %>
+                  </div>
+                  <div class="col-9 col-md pr-0 mt-1">
+                    <%= f.select :building, @buildings_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false  %>
+                  </div>
+                  <div class="col-9 col-md pr-0 d-flex align-items-center mt-1">
+                    <%= f.submit "Filtrer", class: "btn btn-yellow-mustard-small" %>
+                  </div>
+                </div>
+              <% end %>
             </div>
           <% end %>
           <!-- Appartment -->

@@ -4,18 +4,45 @@
     <div class="col-12 col-md-6 col-lg-6">
       <div class="center">
         <%= simple_form_for [@apartment] do |f| %>
-          <%= f.input :company_id, collection: @companies, label: "Selectionner une société", include_blank: "n/a - détention en nom propre", include_hidden: false %>
-          <% if @buildings != [] %>
-            <%= f.input :building_id, collection: @buildings, label: "Selectionner un immeuble", include_blank: "n/a - aucun immeuble", include_hidden: false %>
-          <% else %>
-            <p>Aucun</p>
-          <% end %>
+          <%= f.input :company_id, collection: @companies, label: "Selectionner une société", include_blank: "n/a - détention en nom propre", include_hidden: false, class:"field_input" %>
+          <%= f.input :building_id, collection: @buildings, label: "Selectionner un immeuble", include_blank: "n/a - aucun immeuble", include_hidden: false %>
           <%= f.input :name, label: "Saisir un nom, identifiant, référence ou numéro unique" %>
           <%= f.input :water, label: "Numéro du compteur d'eau" %>
-          <%= f.submit "Changer", class: "btn btn-yellow-mustard mb-2" %>
+          <%= f.submit "Modifier", class: "btn btn-yellow-mustard mb-2" %>
           <%= link_to "Annuler", root_path, class:"btn btn-danger mb-2" %>
         <% end %>
       </div>
     </div>
   </div>
 </div>
+<script>
+  document.querySelector("#apartment_company_id").addEventListener("change", (event) => {
+    let urlPath = origin
+    let url = urlPath + "/apartments.json"
+    // GET REQUEST
+    fetch(url)
+     .then(response => response.json())
+      .then((data) => {
+        const input = document.querySelector("#apartment_company_id");
+        const output = document.querySelector("#apartment_building_id");
+        // Get the information in the field company
+        const input_data = input.options[input.selectedIndex].text;
+        // Delete information in the filed building
+        output.innerHTML = ""
+        // Add n/a - aucun immeuble
+        output.insertAdjacentHTML('beforeend',
+          `<option value="">n/a - aucun immeuble</option>`
+        );
+        // Add all building where company is the same as input
+        data.forEach((item)=>{
+          console.log(item.building_name)
+          if (item.company_name == input_data) {
+            output.insertAdjacentHTML('beforeend',
+              `<option value="">${item.building_name}</option>`
+            );
+          }
+        })
+      }
+    );
+  });
+</script>

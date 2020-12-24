@@ -63,10 +63,13 @@ class ApartmentsController < ApplicationController
       # Liasse
       @liasses = policy_scope(Liasse.where("statut = ? AND building_id = ?", "active", @building.id).order(year: :asc))
     else
+      # Paramters for Filter
       if params[:search] == nil || params[:search][:company] == "Toutes les sociétés"
         # Companies and Buildings list for filter
         authorize @buildings = policy_scope(Building.where("statut = ?", "active" ).order(created_at: :asc))
         @companies_active = Company.where("statut = ?", "active" ).order(created_at: :asc)
+        @buildings_active = Building.where("statut = ?", "active" ).order(created_at: :asc)
+        @apartments_active = Apartment.where("statut = ?", "active" ).order(created_at: :asc)
         @companies_array = ["Toutes les sociétés", "n/a - détention en nom propre"]
         @companies = []
         @buildings_array = ["Tous les immeubles", "n/a - aucun immeuble"]
@@ -78,8 +81,6 @@ class ApartmentsController < ApplicationController
             @companies_array << c.name
           end
         end
-        @buildings_active = Building.where("statut = ?", "active" ).order(created_at: :asc)
-        @apartments_active = Apartment.where("statut = ?", "active" ).order(created_at: :asc)
         @companies.each do |c|
           @buildings_active.each do |b|
             if b.company_name == c.name
@@ -100,6 +101,8 @@ class ApartmentsController < ApplicationController
         # Companies and Buildings list for filter
         authorize @buildings = policy_scope(Building.where("statut = ?", "active" ).order(created_at: :asc))
         @companies_active = Company.where("statut = ?", "active" ).order(created_at: :asc)
+        @buildings_active = Building.where("statut = ?", "active" ).order(created_at: :asc)
+        @apartments_active = Apartment.where("statut = ?", "active" ).order(created_at: :asc)
         @companies_array = ["Toutes les sociétés", "n/a - détention en nom propre"]
         @companies = []
         @buildings_array = ["Tous les immeubles", "n/a - aucun immeuble"]
@@ -111,17 +114,14 @@ class ApartmentsController < ApplicationController
             @companies_array << c.name
           end
         end
-        @buildings_active = Building.where("statut = ?", "active" ).order(created_at: :asc)
-        @apartments_active = Apartment.where("statut = ?", "active" ).order(created_at: :asc)
         @buildings_active.each do |b|
           if b.company_name == params[:search][:company]
             @buildings_array << b.name
             @buildings << b
           end
         end
-
       end
-      # --------------------
+      # ------- Result of selection -------------
       if params[:search] == nil || (params[:search][:company] == "Toutes les sociétés" && params[:search][:building] == "Tous les immeubles")
         # List of companies created by user or where user is an associate
         @companies_list = []
@@ -176,33 +176,11 @@ class ApartmentsController < ApplicationController
           end
         end
       elsif params[:search][:company] != "Toutes les sociétés" && params[:search][:building] == "Tous les immeubles"
-        @buildings_active = Building.where("statut = ?", "active" ).order(created_at: :asc)
         @apartments_active = Apartment.where("statut = ?", "active" ).order(created_at: :asc)
-        @buildings_list = []
-        @apartments_list = []
-        # List of building of the company selected
-        @buildings_active.each do |b|
-          if b.company_name == params[:search][:company]
-            @buildings_list << b
-          end
-        end
-        # List of apartment of the company seleced
-        @apartments_active.each do |a|
-          if a.company_name == params[:search][:company]
-            @apartments_list << a
-          end
-        end
-        # List of appartements in buildings of company selected
-        @buildings_list.each do |b|
-          @apartments_active.each do |a|
-            if a.building_name == b.name
-              if @apartments_list.include?(a) == false
-                @apartments_list << a
-              end
-            end
-          end
-        end
-
+        @apartments_list = @apartments_active.select{ |a| a.company_name == params[:search][:company] }
+      elsif params[:search][:company] != "Toutes les sociétés" && params[:search][:building] == "n/a - aucun immeuble"
+        @apartments_active = Apartment.where("statut = ?", "active" ).order(created_at: :asc)
+        @apartments_list = @apartments_active.select{ |a| a.company_name == params[:search][:company] && a.building_name == "n/a - aucun immeuble" }
       else
         authorize @apartments_list = Apartment.search_by_building(params[:search][:building])
       end
@@ -304,20 +282,15 @@ class ApartmentsController < ApplicationController
         @companies << c
       end
     end
-    # List of buildings where the user is an associate of the company or the user created the buildings
+    # List of buildings of company chosen
     @buildings_active = Building.where("statut = ?", "active" ).order(created_at: :asc)
     @buildings = []
     @companies.each do |c|
       @buildings_active.each do |b|
-        if b.company_name == c.name
-          @buildings << b
-        end
-      end
-    end
-    @buildings_active.each do |b|
-      if b.user == current_user
         if @buildings.include?(b) == false
-          @buildings << b
+          if b.company_name == @apartment.company_name
+            @buildings << b
+          end
         end
       end
     end
