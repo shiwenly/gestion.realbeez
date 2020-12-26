@@ -1,3 +1,12 @@
+<style>
+  #search_company {
+    width: 100%;
+  }
+  
+  #search_building {
+    width: 100%;
+  }
+</style>
 <div class="container-fluid">
   <div class="row">
     <%= render 'shared/vertical_navbar' %>
@@ -127,13 +136,32 @@
         <div class="container mt-5">
           <h3 class="text-center mt-5" style="color: #D8A727; font-family: Simply Rounded; letter-spacing: 1px">Vos locataires </h3>
           <%= form_for :search, defaults: { required: false }, url:tenants_path, method: "GET", html: { class: '' } do |f| %>
-            <div class="mt-5 mb-3 d-flex align-items-center">
+            <div class="mt-5 mb-3">
               <% if params[:search] != nil %>
-                <%= f.select :building, @buildings ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:building]  %>
+                <div class="row">
+                  <div class="col-9 col-md pr-0 mt-1">
+                    <%= f.select :company, @companies_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:company]  %>
+                  </div>
+                  <div class="col-9 col-md pr-0 mt-1">
+                    <%= f.select :building, @buildings_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:building]  %>
+                  </div>
+                  <div class="col-9 col-md pr-0 d-flex align-items-center mt-1">
+                    <%= f.submit "Filtrer", class: "btn btn-yellow-mustard-small" %>
+                  </div>
+                </div>
               <% else %>
-                <%= f.select :building, @buildings ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false  %>
+                <div class="row">
+                  <div class="col-9 col-md pr-0 mt-1">
+                    <%= f.select :company, @companies_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false  %>
+                  </div>
+                  <div class="col-9 col-md pr-0 mt-1">
+                    <%= f.select :building, @buildings_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false  %>
+                  </div>
+                  <div class="col-9 col-md pr-0 d-flex align-items-center mt-1">
+                    <%= f.submit "Filtrer", class: "btn btn-yellow-mustard-small" %>
+                  </div>
+                </div>
               <% end %>
-              <%= f.submit "Filtrer", class: "btn btn-yellow-mustard-small ml-2" %>
             </div>
           <% end %>
           <h5 class="border-top pt-3"></h5>
@@ -198,3 +226,57 @@
     </div>
   </div>
 </div>
+<script>
+  document.querySelector("#search_company").addEventListener("change", (event) => {
+    let urlPath = origin
+    let url = urlPath + "/tenants.json"
+    // GET REQUEST
+    fetch(url)
+     .then(response => response.json())
+      .then((data) => {
+        const input = document.querySelector("#search_company");
+        const output = document.querySelector("#search_building");
+        // Get the information in the field company
+        const input_data = input.options[input.selectedIndex].text;
+        if (input_data != "Toutes les sociétés") {
+          // Delete information in the filed building
+          output.innerText = ""
+          // Add n/a - aucun immeuble
+          output.insertAdjacentHTML('beforeend',
+            `
+            <option value="Tous les immeubles">Tous les immeubles</option>
+            <option value="n/a - aucun immeuble">n/a - aucun immeuble</option>
+            `
+          );
+          // Add all building where company is the same as input
+          data.forEach((item)=>{
+            console.log(item.building_name)
+            if (item.company_name == input_data) {
+              output.insertAdjacentHTML('beforeend',
+                `<option value="${item.building_name}">${item.building_name}</option>`
+              );
+            }
+          });
+        } else if (input_data === "Toutes les sociétés") {
+          // Get the information in the field company
+          const input_data = input.options[input.selectedIndex].text;
+          // Delete information in the filed building
+          output.innerText = ""
+          // Add n/a - aucun immeuble
+          output.insertAdjacentHTML('beforeend',
+            `
+            <option value="Tous les immeubles">Tous les immeubles</option>
+            <option value="n/a - aucun immeuble">n/a - aucun immeuble</option>
+            `
+          );
+          // Add all building of user
+          data.forEach((item)=>{
+            output.insertAdjacentHTML('beforeend',
+              `<option value="${item.building_name}">${item.building_name}</option>`
+            );
+          });
+        };
+      }
+    );
+  });
+</script>
