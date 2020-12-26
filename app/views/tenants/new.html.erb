@@ -24,6 +24,8 @@
           <%= simple_form_for [@tenant] do |f| %>
             <%#= f.input :company_id, collection: @companies, label: "Selectionner une société", include_blank: "n/a - détention en nom propre", include_hidden: false, class:"field_input" %>
             <%#= f.input :building_id, collection: @buildings, label: "Selectionner un immeuble", include_blank: "n/a - aucun immeuble", include_hidden: false %>
+            <%= f.input :company_id, collection: @companies, label: "Selectionner une société", include_blank: "n/a - détention en nom propre", include_hidden: false, class:"field_input" %>
+            <%= f.input :building_id, collection: @buildings, label: "Selectionner un immeuble", include_blank: "n/a - aucun immeuble", include_hidden: false %>
             <%= f.input :apartment_id, collection: @apartments, label: "Selectionner un appartement", include_blank: false, include_hidden: false %>
             <%= f.input :first_name, label: "Prénom" %>
             <%= f.input :last_name, label: "Nom" %>
@@ -45,3 +47,34 @@
     </div>
   </div>
 </div>
+<script>
+  document.querySelector("#tenant_company_id").addEventListener("change", (event) => {
+    let urlPath = origin
+    let url = urlPath + "/tenants.json"
+    // GET REQUEST
+    fetch(url)
+     .then(response => response.json())
+      .then((data) => {
+        const input = document.querySelector("#tenant_company_id");
+        const output = document.querySelector("#tenant_building_id");
+        // Get the information in the field company
+        const input_data = input.options[input.selectedIndex].text;
+        // Delete information in the filed building
+        output.innerHTML = ""
+        // Add n/a - aucun immeuble
+        output.insertAdjacentHTML('beforeend',
+          `<option value="n/a - aucun immeuble</option>">n/a - aucun immeuble</option>`
+        );
+        // Add all building where company is the same as input
+        data.forEach((item)=>{
+          console.log(item)
+          if (item.company_name == input_data) {
+            output.insertAdjacentHTML('beforeend',
+              `<option value="${item.building_name}">${item.building_name}</option>`
+            );
+          }
+        })
+      }
+    );
+  });
+</script>
