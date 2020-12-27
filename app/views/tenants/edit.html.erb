@@ -48,7 +48,7 @@
           // console.log(item)
           if (item.company_name == input_data) {
             output.insertAdjacentHTML('beforeend',
-              `<option value="${item.building_name}">${item.building_name}</option>`
+              `<option value="${item.building_id}">${item.building_name}</option>`
             );
           }
         })
@@ -64,7 +64,7 @@
         data.forEach((item)=>{
           if (item.apartment_building_name == input_data_a && item.apartment_company_name == input_data) {
             output_a.insertAdjacentHTML('beforeend',
-              `<option value="${item.apartment_apartment_name}">${item.apartment_apartment_name}</option>`
+              `<option value="${item.apartment_apartment_id}">${item.apartment_apartment_name}</option>`
             );
           }
         })
@@ -92,7 +92,7 @@
         data.forEach((item)=>{
           if (item.apartment_building_name == input_data_a && item.apartment_company_name == input_data) {
             output_a.insertAdjacentHTML('beforeend',
-              `<option value="${item.apartment_apartment_name}">${item.apartment_apartment_name}</option>`
+              `<option value="${item.apartment_apartment_id}">${item.apartment_apartment_name}</option>`
             );
           }
         })
