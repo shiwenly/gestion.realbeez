@@ -29,10 +29,6 @@
         const input_data = input.options[input.selectedIndex].text;
         // Delete information in the filed building
         output.innerHTML = ""
-        // Add n/a - aucun immeuble
-        output.insertAdjacentHTML('beforeend',
-          `<option value="n/a - aucun immeuble</option>">n/a - aucun immeuble</option>`
-        );
         // Add all building where company is the same as input
         data.forEach((item)=>{
           console.log(item.building_name)
@@ -42,6 +38,10 @@
             );
           }
         })
+        // Add n/a - aucun immeuble
+        output.insertAdjacentHTML('beforeend',
+          `<option value="n/a - aucun immeuble</option>">n/a - aucun immeuble</option>`
+        );
       }
     );
   });

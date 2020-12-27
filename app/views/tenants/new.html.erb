@@ -25,7 +25,7 @@
             <%#= f.input :company_id, collection: @companies, label: "Selectionner une société", include_blank: "n/a - détention en nom propre", include_hidden: false, class:"field_input" %>
             <%#= f.input :building_id, collection: @buildings, label: "Selectionner un immeuble", include_blank: "n/a - aucun immeuble", include_hidden: false %>
             <%= f.input :company_id, collection: @companies, label: "Selectionner une société", include_blank: "n/a - détention en nom propre", include_hidden: false, class:"field_input" %>
-            <%= f.input :building_id, collection: @buildings, label: "Selectionner un immeuble", include_blank: "n/a - aucun immeuble", include_hidden: false %>
+            <%= f.input :building_id, collection: @buildings, label: "Selectionner un immeuble", include_blank: false, include_hidden: false %>
             <%= f.input :apartment_id, collection: @apartments, label: "Selectionner un appartement", include_blank: false, include_hidden: false %>
             <%= f.input :first_name, label: "Prénom" %>
             <%= f.input :last_name, label: "Nom" %>
@@ -48,6 +48,7 @@
   </div>
 </div>
 <script>
+  // Change building automatically
   document.querySelector("#tenant_company_id").addEventListener("change", (event) => {
     let urlPath = origin
     let url = urlPath + "/tenants.json"
@@ -61,16 +62,56 @@
         const input_data = input.options[input.selectedIndex].text;
         // Delete information in the filed building
         output.innerHTML = ""
+        // Add all building where company is the same as input
+        data.forEach((item)=>{
+          // console.log(item)
+          if (item.company_name == input_data) {
+            output.insertAdjacentHTML('beforeend',
+              `<option value="${item.building_name}">${item.building_name}</option>`
+            );
+          }
+        })
         // Add n/a - aucun immeuble
         output.insertAdjacentHTML('beforeend',
           `<option value="n/a - aucun immeuble</option>">n/a - aucun immeuble</option>`
         );
+        const input_a = document.querySelector("#tenant_building_id");
+        const output_a = document.querySelector("#tenant_apartment_id");
+        const input_data_a = input_a.options[input_a.selectedIndex].text;
+        console.log(input_data_a)
+        output_a.innerHTML = ""
+        data.forEach((item)=>{
+          if (item.apartment_building_name == input_data_a && item.apartment_company_name == input_data) {
+            output_a.insertAdjacentHTML('beforeend',
+              `<option value="${item.apartment_apartment_name}">${item.apartment_apartment_name}</option>`
+            );
+          }
+        })
+      }
+    );
+  });
+  // Change apartment automatically
+  document.querySelector("#tenant_building_id").addEventListener("change", (event) => {
+    let urlPath = origin
+    let url = urlPath + "/tenants.json"
+    // GET REQUEST
+    fetch(url)
+     .then(response => response.json())
+      .then((data) => {
+        const input = document.querySelector("#tenant_company_id");
+        const output = document.querySelector("#tenant_building_id");
+        const input_a = document.querySelector("#tenant_building_id");
+        const output_a = document.querySelector("#tenant_apartment_id");
+        // Get the information in the field company
+        const input_data = input.options[input.selectedIndex].text;
+        const input_data_a = input_a.options[input_a.selectedIndex].text;
+        // Delete information in the filed building
+        output_a.innerHTML = ""
         // Add all building where company is the same as input
         data.forEach((item)=>{
-          console.log(item)
-          if (item.company_name == input_data) {
-            output.insertAdjacentHTML('beforeend',
-              `<option value="${item.building_name}">${item.building_name}</option>`
+          if (item.apartment_building_name == input_data_a && item.apartment_company_name == input_data) {
+            output_a.insertAdjacentHTML('beforeend',
+              `<option value="${item.apartment_apartment_name}">${item.apartment_apartment_name}</option>`
             );
           }
         })

@@ -92,7 +92,9 @@ class TenantsController < ApplicationController
           end
           @apartments_active.each do |a|
             if a.company_name == c.name
-              @apartments << a
+              if @apartments.include?(a) == false
+                @apartments << a
+              end
             end
           end
         end
@@ -107,7 +109,7 @@ class TenantsController < ApplicationController
         @buildings.each do |b|
           @apartments_active.each do |a|
             if a.building_name == b.name
-              if @apartments.include?(a.name) == false
+              if @apartments.include?(a) == false
                 @apartments << a
               end
             end
@@ -115,7 +117,7 @@ class TenantsController < ApplicationController
         end
         @apartments_active.each do |a|
           if a.user == current_user
-            if @apartments.include?(a.name) == false
+            if @apartments.include?(a) == false
               @apartments << a
             end
           end
@@ -290,28 +292,28 @@ class TenantsController < ApplicationController
       end
       # List of buildings détenu en nom propre
       @buildings_active = Building.where("statut = ?", "active" ).order(created_at: :asc)
-      @buildings = []
-      @companies.each do |c|
-        @buildings_active.each do |b|
-          if @buildings.include?(b) == false
-            if b.company_name == "n/a - détention en nom propre"
-              @buildings << b
-            end
+      @buildings = ["n/a - aucun immeuble"]
+      # @companies.each do |c|
+      @buildings_active.each do |b|
+        if @buildings.include?(b) == false
+          if b.company_name == "n/a - détention en nom propre"
+            @buildings << b.name
           end
         end
       end
+      # end
       # List of apartment détenu en nom propre in aucun immeuble
       @apartments_active = Apartment.where("statut = ?", "active" ).order(created_at: :asc)
       @apartments = []
-      @buildings.each do |c|
-        @apartments_active.each do |a|
-          if @apartments.include?(a) == false
-            if a.building_name == "n/a - aucun immeuble"
-              @apartments << a
-            end
+      # @buildings.each do |c|
+      @apartments_active.each do |a|
+        if @apartments.include?(a) == false
+          if a.building_name == "n/a - aucun immeuble" && a.company_name == "n/a - détention en nom propre"
+            @apartments << a
           end
         end
       end
+      # end
     end
   end
 
@@ -354,50 +356,31 @@ class TenantsController < ApplicationController
         @companies << c
       end
     end
-    # List of buildings where the user is an associate of the company
+    # List of buildings détenu en nom propre
     @buildings_active = Building.where("statut = ?", "active" ).order(created_at: :asc)
     @buildings = []
-    @apartments = []
-    @companies.each do |c|
-      @buildings_active.each do |b|
-        if b.company_name == c.name
-          @buildings << b
-        end
-      end
-      # List of apartments where the user is an associate of the company
-      @apartments_active = Apartment.where("statut = ?", "active" ).order(created_at: :asc)
-      @apartments_active.each do |a|
-        if a.company_name == c.name
-          @apartments << a
-        end
-      end
-    end
-    # List of buildings created by the user
+    # @companies.each do |c|
     @buildings_active.each do |b|
-      if b.user == current_user
-        if @buildings.include?(b) == false
-          @buildings << b
+      if @buildings.include?(b) == false
+        if b.company_name == @tenant.company_name
+          @buildings << b.name
         end
       end
     end
-    # List of apartments in buildings of user
-    @buildings.each do |b|
-      @apartments_active.each do |a|
-        if a.building_name == b.name
-          if @apartments.include?(a) == false
-            @apartments << a
-          end
-        end
-      end
-    end
-    # List of apartments created by user
+    # end
+    # List of apartment détenu en nom propre in aucun immeuble
+    @apartments_active = Apartment.where("statut = ?", "active" ).order(created_at: :asc)
+    @apartments = []
+    # @buildings.each do |c|
     @apartments_active.each do |a|
-      if a.user == current_user
-        if @apartments.include?(a) == false
+      if @apartments.include?(a) == false
+        if a.building_name == @tenant.building_name && a.company_name == @tenant.company_name
           @apartments << a
         end
       end
     end
+    # end
+    @buildings << "n/a - aucun immeuble"
   end
 
   def update
