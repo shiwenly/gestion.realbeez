@@ -250,10 +250,9 @@
           );
           // Add all building where company is the same as input
           data.forEach((item)=>{
-            console.log(item.building_name)
             if (item.company_name == input_data) {
               output.insertAdjacentHTML('beforeend',
-                `<option value="${item.building_name}">${item.building_name}</option>`
+                `<option value="${item.building_id}">${item.building_name}</option>`
               );
             }
           });
@@ -271,9 +270,11 @@
           );
           // Add all building of user
           data.forEach((item)=>{
-            output.insertAdjacentHTML('beforeend',
-              `<option value="${item.building_name}">${item.building_name}</option>`
-            );
+            if (item.building_name != undefined) {
+              output.insertAdjacentHTML('beforeend',
+                `<option value="${item.building_id}">${item.building_name}</option>`
+              );
+            }
           });
         };
       }
