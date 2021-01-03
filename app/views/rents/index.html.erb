@@ -1,3 +1,20 @@
+<style>
+  #search_year {
+    width: 100%;
+  }
+  
+  #search_company {
+    width: 100%;
+  }
+  
+  #search_building {
+    width: 100%;
+  }
+  
+  #search_tenant {
+    width: 100%;
+  }
+</style>
 <div class="container-fluid">
   <div class="row">
     <%= render 'shared/vertical_navbar' %>
@@ -5,20 +22,44 @@
       <div class="container my-5">
         <h3 class="text-center mt-5" style="color: #D8A727; font-family: Simply Rounded; letter-spacing: 1px">Suivi des loyers</h3>
         <%= form_for :search, defaults: { required: false }, url:rents_path, method: "GET", html: { class: '' } do |f| %>
-          <div class="mt-5 mb-3 d-flex align-items-center">
+          <div class="mt-5 mb-3">
             <% if params[:search] != nil %>
-              <%= f.select :year,  @years,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:year]  %>
+              <div class="row">
+                <div class="col-9 col-md pr-0 mt-1">
+                  <%= f.select :year,  @years,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:year]  %>
+                </div>
+                <div class="col-9 col-md pr-0 mt-1">
+                  <%= f.select :company, @companies_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:company]  %>
+                </div>
+                <div class="col-9 col-md pr-0 mt-1">
+                  <%= f.select :building, @buildings_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:building]  %>
+                </div>
+                <div class="col-9 col-md pr-0 mt-1">
+                  <%= f.select :tenant, @tenants_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:tenant]  %>
+                </div>
+                <div class="col-9 col-md pr-0 d-flex align-items-center mt-1">
+                  <%= f.submit "Filtrer", class: "btn btn-yellow-mustard-small" %>
+                </div>
+              </div>
             <% else %>
-              <%= f.select :year,  @years,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: Date.today.year  %>
+              <div class="row">
+                <div class="col-9 col-md pr-0 mt-1">
+                  <%= f.select :year,  @years,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: Date.today.year  %>
+                </div>
+                <div class="col-9 col-md pr-0 mt-1">
+                  <%= f.select :company, @companies_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false  %>
+                </div>
+                <div class="col-9 col-md pr-0 mt-1">
+                  <%= f.select :building, @buildings_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false  %>
+                </div>
+                <div class="col-9 col-md pr-0 mt-1">
+                  <%= f.select :tenant, @tenants_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false  %>
+                </div>
+                <div class="col-9 col-md pr-0 d-flex align-items-center mt-1">
+                  <%= f.submit "Filtrer", class: "btn btn-yellow-mustard-small" %>
+                </div>
+              </div>
             <% end %>
-            <div class="ml-2">
-              <% if params[:search] != nil %>
-                <%= f.select :tenant, @tenants_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:tenant]  %>
-              <% else %>
-                <%= f.select :tenant, @tenants_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false  %>
-              <% end %>
-            </div>
-            <%= f.submit "Filtrer", class: "btn btn-yellow-mustard-small ml-2" %>
           </div>
         <% end %>
         <h5 class="border-top pt-3"></h5>
@@ -83,3 +124,151 @@
     </div>
   </div>
 </div>
+<script>
+  // If field company is change
+  document.querySelector("#search_company").addEventListener("change", (event) => {
+    let urlPath = origin
+    let url = urlPath + "/rents.json"
+    // GET REQUEST
+    fetch(url)
+     .then(response => response.json())
+      .then((data) => {
+        const input = document.querySelector("#search_company");
+        const output = document.querySelector("#search_building");
+        // Get the information in the field company
+        const input_data = input.options[input.selectedIndex].text;
+        if (input_data != "Toutes les sociétés") {
+          // Delete information in the filed building
+          output.innerText = ""
+          // Add n/a - aucun immeuble
+          output.insertAdjacentHTML('beforeend',
+            `
+            <option value="Tous les immeubles">Tous les immeubles</option>
+            <option value="n/a - aucun immeuble">n/a - aucun immeuble</option>
+            `
+          );
+          // Add all building where company is the same as input
+          data.forEach((item)=>{
+            if (item.company_name == input_data) {
+              output.insertAdjacentHTML('beforeend',
+                `<option value="${item.building_name}">${item.building_name}</option>`
+              );
+            }
+          });
+          const input_a = document.querySelector("#search_building");
+          const output_a = document.querySelector("#search_tenant");
+          // Get the information in the field building
+          const input_data_a = input_a.options[input_a.selectedIndex].text;
+          output_a.innerHTML = ""
+          // Add Tous les locataires
+          output_a.insertAdjacentHTML('beforeend',
+            `
+            <option value="Tous les locataires">Tous les locataires</option>
+            `
+          );
+          // Add all tenant where company is the same as input
+          data.forEach((item_a)=>{
+            if (item_a.tenant_company_name == input_data ) {
+              output_a.insertAdjacentHTML('beforeend',
+                `<option value="${item_a.name}">${item_a.name}</option>`
+              );
+            }
+          });
+        } else if (input_data === "Toutes les sociétés") {
+          // Get the information in the field company
+          const input_data = input.options[input.selectedIndex].text;
+          // Delete information in the filed building
+          output.innerText = ""
+          // Add n/a - aucun immeuble
+          output.insertAdjacentHTML('beforeend',
+            `
+            <option value="Tous les immeubles">Tous les immeubles</option>
+            <option value="n/a - aucun immeuble">n/a - aucun immeuble</option>
+            `
+          );
+          // Add all building of user
+          data.forEach((item)=>{
+            if (item.building_name != undefined) {
+              output.insertAdjacentHTML('beforeend',
+                `<option value="${item.building_name}">${item.building_name}</option>`
+              );
+            }
+          });
+          const input_a = document.querySelector("#search_building");
+          const output_a = document.querySelector("#search_tenant");
+          // Get the information in the field building
+          const input_data_a = input_a.options[input_a.selectedIndex].text;
+          output_a.innerHTML = ""
+          // Add Tous les locataires
+          output_a.insertAdjacentHTML('beforeend',
+            `
+            <option value="Tous les locataires">Tous les locataires</option>
+            `
+          );
+          // Add all tenants
+          data.forEach((item_a)=>{
+            if (item_a.name != undefined ) {
+              output_a.insertAdjacentHTML('beforeend',
+                `<option value="${item_a.name}">${item_a.name}</option>`
+              );
+            }
+          });
+        };
+      }
+    );
+  });
+  // If field building is change
+  document.querySelector("#search_building").addEventListener("change", (event) => {
+    let urlPath = origin
+    let url = urlPath + "/rents.json"
+    // GET REQUEST
+    fetch(url)
+     .then(response => response.json())
+      .then((data) => {
+        const input = document.querySelector("#search_company");
+        const input_a = document.querySelector("#search_building");
+        const output_a = document.querySelector("#search_tenant");
+        // Get the information in the field company
+        const input_data_a = input_a.options[input_a.selectedIndex].text;
+        if (input_data_a != "Tous les immeubles") {
+          // Delete information in the filed building
+          output_a.innerText = ""
+          // Add n/a - aucun immeuble
+          output_a.insertAdjacentHTML('beforeend',
+            `
+            <option value="Tous les locataires">Tous les locataires</option>
+            `
+          );
+          // Add all building where company is the same as input
+          data.forEach((item)=>{
+            if (item.tenant_building_name == input_data_a) {
+              output_a.insertAdjacentHTML('beforeend',
+                `<option value="${item.name}">${item.name}</option>`
+              );
+            }
+          });
+        } else if (input_data_a === "Tous les immeubles") {
+          // Get the information in the field company
+          const input_data_a = input_a.options[input_a.selectedIndex].text;
+          const input_data = input.options[input.selectedIndex].text;
+          // Delete information in the filed building
+          output_a.innerText = ""
+          // Add n/a - aucun immeuble
+          output_a.insertAdjacentHTML('beforeend',
+            `
+            <option value="Tous les locataires">Tous les locataires</option>
+            `
+          );
+          // Add all building of user
+          data.forEach((item)=>{
+            if (item.tenant_company_name === input_data) {
+              output_a.insertAdjacentHTML('beforeend',
+                `<option value="${item.name}">${item.name}</option>`
+              );
+            }
+          });
+        };
+      }
+    );
+  });
+</script>
