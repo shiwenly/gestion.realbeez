@@ -16,13 +16,22 @@
           <% end %>
         <% else %>
           <%= simple_form_for [@rent] do |f| %>
+            <%= f.input :statut, collection: @companies, label: "Selectionner une société", include_blank: "n/a - détention en nom propre", include_hidden: false, class:"field_input" %>
+            <%= f.input :name, collection: @buildings, label: "Selectionner un immeuble", include_blank: false, include_hidden: false %>
             <%= f.input :tenant_id, collection: @tenants, label: "Selectionner un locataire", include_blank: false, include_hidden: false, class:"field_input" %>
             <%= f.input :date_payment, label: "Date d'encaissement", :order => [:day, :month, :year] %>
             <%= f.input :period, label: "Période", :order => [:month, :year] %>
-            <%= f.input :rent_ask, label: "Montant du loyer à payer", input_html: { value: @tenants[0].rent } %>
-            <%= f.input :service_charge_ask, label: "Montant des charges à payer", input_html: { value: @tenants[0].service_charge } %>
-            <%= f.input :rent_paid, label: "Montant du loyer encaissé", input_html: { value: @tenants[0].rent } %>
-            <%= f.input :service_charge_paid, label: "Montant des charges encaissé", input_html: { value: @tenants[0].service_charge } %>
+            <% if @tenants != [] %>
+              <%= f.input :rent_ask, label: "Montant du loyer à payer", input_html: { value: @tenants[0].rent } %>
+              <%= f.input :service_charge_ask, label: "Montant des charges à payer", input_html: { value: @tenants[0].service_charge } %>
+              <%= f.input :rent_paid, label: "Montant du loyer encaissé", input_html: { value: @tenants[0].rent } %>
+              <%= f.input :service_charge_paid, label: "Montant des charges encaissé", input_html: { value: @tenants[0].service_charge } %>
+            <% else %>
+              <%= f.input :rent_ask, label: "Montant du loyer à payer" %>
+              <%= f.input :service_charge_ask, label: "Montant des charges à payer"%>
+              <%= f.input :rent_paid, label: "Montant du loyer encaissé"%>
+              <%= f.input :service_charge_paid, label: "Montant des charges encaissé" %>
+            <% end %>
             <%= f.submit "Créer", class: "btn btn-yellow-mustard mb-2", data: { confirm: "Confirmez votre saisie ?"  } %>
             <%= link_to "Annuler", root_path, class:"btn btn-danger mb-2" %>
           <% end %>
@@ -32,6 +41,147 @@
   </div>
 </div>
 <script>
+  // Change building automatically
+  document.querySelector("#rent_statut").addEventListener("change", (event) => {
+    let urlPath = origin
+    let url = urlPath + "/rents.json"
+    // GET REQUEST
+    fetch(url)
+     .then(response => response.json())
+      .then((data) => {
+        const input = document.querySelector("#rent_statut");
+        const output = document.querySelector("#rent_name");
+        // Get the information in the field company
+        const input_data = input.options[input.selectedIndex].text;
+        // Delete information in the filed building
+        output.innerHTML = ""
+        // Add n/a - aucun immeuble
+        output.insertAdjacentHTML('beforeend',
+          `<option value="n/a - aucun immeuble</option>">n/a - aucun immeuble</option>`
+        );
+        // Add all building where company is the same as input
+        data.forEach((item)=>{
+          // console.log(item)
+          if (item.company_name == input_data) {
+            output.insertAdjacentHTML('beforeend',
+              `<option value="${item.building_id}">${item.building_name}</option>`
+            );
+          }
+        })
+        const input_a = document.querySelector("#rent_name");
+        const output_a = document.querySelector("#rent_tenant_id");
+        const input_data_a = input_a.options[input_a.selectedIndex].text;
+        console.log(input_data_a)
+        output_a.innerHTML = ""
+        data.forEach((item)=>{
+          if (item.tenant_building_name == input_data_a && item.tenant_company_name == input_data) {
+            output_a.insertAdjacentHTML('beforeend',
+              `<option value="${item.tenant_id}">${item.name}</option>`
+            );
+          }
+        })
+      }
+    );
+  });
+  // Change tenant automatically
+  document.querySelector("#rent_name").addEventListener("change", (event) => {
+    let urlPath = origin
+    let url = urlPath + "/rents.json"
+    // GET REQUEST
+    fetch(url)
+     .then(response => response.json())
+      .then((data) => {
+        const input = document.querySelector("#rent_statut");
+        const input_a = document.querySelector("#rent_name");
+        const output_a = document.querySelector("#rent_tenant_id");
+        // Get the information in the field company
+        const input_data = input.options[input.selectedIndex].text;
+        const input_data_a = input_a.options[input_a.selectedIndex].text;
+        // Delete information in the filed building
+        output_a.innerHTML = ""
+        // Add all building where company is the same as input
+        data.forEach((item)=>{
+          if (item.tenant_building_name == input_data_a && item.tenant_company_name == input_data) {
+            output_a.insertAdjacentHTML('beforeend',
+              `<option value="${item.tenant_id}">${item.name}</option>`
+            );
+          }
+        })
+      }
+    );
+  });
+  // Change amount if change company
+  document.querySelector("#rent_statut").addEventListener("change", (event) => {
+    const input = document.querySelector("#rent_tenant_id");
+    let urlPath = origin
+    let url = urlPath + "/rents.json"
+    const rent = document.querySelector("#rent_rent_ask");
+  
+    // GET REQUEST
+    fetch(url)
+     .then(response => response.json())
+      .then((data) => {
+        const rent = document.querySelector("#rent_rent_ask");
+        const rentPaid = document.querySelector("#rent_rent_paid");
+        const serviceCharge = document.querySelector("#rent_service_charge_ask");
+        const serviceChargePaid = document.querySelector("#rent_service_charge_paid");
+        if (input.textContent != "") {
+          const input_data = input.options[input.selectedIndex].text;
+          console.log(input_data)
+          data.forEach((item) => {
+            if (item.name == input_data) {
+              rent.value = item.rent
+              serviceCharge.value = item.service_charge
+              rentPaid.value = item.rent
+              serviceChargePaid.value = item.service_charge
+            }
+          });
+        } else {
+          rent.value = ""
+          serviceCharge.value = ""
+          rentPaid.value = ""
+          serviceChargePaid.value = ""
+        }
+      }
+    );
+  });
+  // Change amount if change immeuble
+  document.querySelector("#rent_name").addEventListener("change", (event) => {
+    const input = document.querySelector("#rent_tenant_id");
+    let urlPath = origin
+    let url = urlPath + "/rents.json"
+    const rent = document.querySelector("#rent_rent_ask");
+  
+    // GET REQUEST
+    fetch(url)
+     .then(response => response.json())
+      .then((data) => {
+        console.log(data)
+        const rent = document.querySelector("#rent_rent_ask");
+        const rentPaid = document.querySelector("#rent_rent_paid");
+        const serviceCharge = document.querySelector("#rent_service_charge_ask");
+        const serviceChargePaid = document.querySelector("#rent_service_charge_paid");
+        if (input.textContent != "") {
+          const input_data = input.options[input.selectedIndex].text;
+          console.log(input_data)
+          data.forEach((item) => {
+            if (item.name == input_data) {
+              rent.value = item.rent
+              serviceCharge.value = item.service_charge
+              rentPaid.value = item.rent
+              serviceChargePaid.value = item.service_charge
+            }
+          });
+        } else {
+          rent.value = ""
+          serviceCharge.value = ""
+          rentPaid.value = ""
+          serviceChargePaid.value = ""
+        }
+      }
+    );
+  });
+  // Change amount if change tenant name
   document.querySelector("#rent_tenant_id").addEventListener("change", (event) => {
     const input = document.querySelector("#rent_tenant_id");
     let urlPath = origin
@@ -47,15 +197,23 @@
         const rentPaid = document.querySelector("#rent_rent_paid");
         const serviceCharge = document.querySelector("#rent_service_charge_ask");
         const serviceChargePaid = document.querySelector("#rent_service_charge_paid");
-        const input_data = input.options[input.selectedIndex].text;
-        data.forEach((item) => {
-          if (item.name == input_data) {
-            rent.value = item.rent
-            serviceCharge.value = item.service_charge
-            rentPaid.value = item.rent
-            serviceChargePaid.value = item.service_charge
-          }
-        });
+        if (input.textContent != "") {
+          const input_data = input.options[input.selectedIndex].text;
+          console.log(input_data)
+          data.forEach((item) => {
+            if (item.name == input_data) {
+              rent.value = item.rent
+              serviceCharge.value = item.service_charge
+              rentPaid.value = item.rent
+              serviceChargePaid.value = item.service_charge
+            }
+          });
+        } else {
+          rent.value = ""
+          serviceCharge.value = ""
+          rentPaid.value = ""
+          serviceChargePaid.value = ""
+        }
       }
     );
   });

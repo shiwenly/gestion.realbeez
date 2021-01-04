@@ -305,7 +305,6 @@ class TenantsController < ApplicationController
       # List of apartment détenu en nom propre in aucun immeuble
       @apartments_active = Apartment.where("statut = ?", "active" ).order(created_at: :asc)
       @apartments = []
-      # @buildings.each do |c|
       @apartments_active.each do |a|
         if @apartments.include?(a) == false
           if a.building_name == "n/a - aucun immeuble" && a.company_name == "n/a - détention en nom propre"
@@ -313,7 +312,6 @@ class TenantsController < ApplicationController
           end
         end
       end
-      # end
     end
   end
 
