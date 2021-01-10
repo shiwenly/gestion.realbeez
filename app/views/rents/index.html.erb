@@ -230,7 +230,9 @@
         const output_a = document.querySelector("#search_tenant");
         // Get the information in the field company
         const input_data_a = input_a.options[input_a.selectedIndex].text;
-        if (input_data_a != "Tous les immeubles") {
+        // Get the information in the field building
+        const input_data = input.options[input.selectedIndex].text;
+        if (input_data === "Toutes les sociétés" && input_data_a != "Tous les immeubles" ) {
           // Delete information in the filed building
           output_a.innerText = ""
           // Add n/a - aucun immeuble
@@ -247,7 +249,44 @@
               );
             }
           });
-        } else if (input_data_a === "Tous les immeubles") {
+        } else if (input_data != "Toutes les sociétés" && input_data_a != "Tous les immeubles" ) {
+          // Delete information in the filed building
+          output_a.innerText = ""
+          // Add n/a - aucun immeuble
+          output_a.insertAdjacentHTML('beforeend',
+            `
+            <option value="Tous les locataires">Tous les locataires</option>
+            `
+          );
+          // Add all building where company is the same as input
+          data.forEach((item)=>{
+            if (item.tenant_building_name == input_data_a && item.tenant_company_name == input_data) {
+              output_a.insertAdjacentHTML('beforeend',
+                `<option value="${item.name}">${item.name}</option>`
+              );
+            }
+          });
+        } else if (input_data === "Toutes les sociétés" &&input_data_a === "Tous les immeubles") {
+          // Get the information in the field company
+          const input_data_a = input_a.options[input_a.selectedIndex].text;
+          const input_data = input.options[input.selectedIndex].text;
+          // Delete information in the filed building
+          output_a.innerText = ""
+          // Add n/a - aucun immeuble
+          output_a.insertAdjacentHTML('beforeend',
+            `
+            <option value="Tous les locataires">Tous les locataires</option>
+            `
+          );
+          // Add all building of user
+          data.forEach((item)=>{
+            if (item.name != undefined ) {
+              output_a.insertAdjacentHTML('beforeend',
+                `<option value="${item.name}">${item.name}</option>`
+              );
+            }
+          });
+        } else if (input_data != "Toutes les sociétés" &&input_data_a === "Tous les immeubles") {
           // Get the information in the field company
           const input_data_a = input_a.options[input_a.selectedIndex].text;
           const input_data = input.options[input.selectedIndex].text;
