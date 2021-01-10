@@ -53,7 +53,7 @@
               <!-- Expenses -->
               <h5 class="border-top pt-3"></h5>
               <div class="mt-2 mb-4">
-                <p><%= link_to "Ajouter une dépense", new_building_expense_path(@building), class:"btn btn-transparent-bold"%></p>
+                <p><%= link_to "Ajouter une dépense", new_expense_path, class:"btn btn-transparent-bold"%></p>
               </div>
               <!-- recherche date -->
               <%= form_for :search, defaults: { required: false }, url:building_expenses_path(@building), method: "GET", html: { class: '' } do |f| %>
@@ -129,7 +129,7 @@
       <% else %>
         <div class="container mt-5">
           <h3 class="text-center mt-5" style="color: #D8A727; font-family: Simply Rounded; letter-spacing: 1px">Vos dépenses </h3>
-          <%= form_for :search, defaults: { required: false }, url:rents_path, method: "GET", html: { class: '' } do |f| %>
+          <%= form_for :search, defaults: { required: false }, url:expenses_path, method: "GET", html: { class: '' } do |f| %>
             <div class="mt-5 mb-3">
               <% if params[:search] != nil %>
                 <div class="row">
@@ -218,7 +218,7 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td class="text-right"><%= '%.2f' % @sum_ttc %></td>
+                    <!-- <td class="text-right"><%#= '%.2f' % @sum_ttc %></td> -->
                     <%# if @building.company.corporate_tax == true %>
                     <!-- <td class="text-right"><%#=  '%.2f' % @sum_vat %></td> -->
                     <%# end %>

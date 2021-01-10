@@ -159,13 +159,13 @@ class ExpensesController < ApplicationController
             end
           end
         end
-        @tenants_list = @tenants_active.select{ |t| t.building_name == params[:search][:building]}
+        @apartments_list = @apartments_active.select{ |t| t.building_name == params[:search][:building]}
       elsif params[:search][:company] != "Toutes les sociétés" && params[:search][:building] != "Tous les immeubles"
         @buildings_list = @buildings_active.select{ |b| b.company_name == params[:search][:company]}
-        @tenants_list = @tenants_active.select{ |t| t.company_name == params[:search][:company] && t.building_name == params[:search][:building]}
+        @apartments_list = @apartments_active.select{ |t| t.company_name == params[:search][:company] && t.building_name == params[:search][:building]}
       elsif params[:search][:company] != "Toutes les sociétés" && params[:search][:building] == "Tous les immeubles"
         @buildings_list = @buildings_active.select{ |b| b.company_name == params[:search][:company]}
-        @tenants_list = @tenants_active.select{ |t| t.company_name == params[:search][:company]}
+        @apartments_list = @apartments_active.select{ |t| t.company_name == params[:search][:company]}
       end
       # =========== Sort tenant list by alphabetic order ==========
       @tenants = @tenants_list.sort_by { |t| t.last_name }
@@ -198,17 +198,17 @@ class ExpensesController < ApplicationController
       @expenses = policy_scope(Expense.where("statut = ?", "active").order(created_at: :asc))
     end
     # ========== Sum calculation ==============
-    if params[:search] == nil
-      @expenses_unorder = Expense.search_by_date_expense(Date.today.year)
-      @expenses = @expenses_unorder.select{|a| a.statut == "active" && a.building_id == @building.id}.sort_by { |b| b.date }
-      @sum_ttc = @expenses.map{|a| a.amount_ttc}.sum
-      @sum_vat = @expenses.map{|a| a.amount_vat}.sum
-    else
-      @expenses_unorder = Expense.search_by_date_expense(params[:search][:date].to_i)
-      @expenses = @expenses_unorder.select{|a| a.statut == "active" && a.building_id == @building.id}.sort_by { |b| b.date }
-      @sum_ttc = @expenses.map{|a| a.amount_ttc}.sum
-      @sum_vat = @expenses.map{|a| a.amount_vat}.sum
-    end
+    # if params[:search] == nil
+    #   @expenses_unorder = Expense.search_by_date_expense(Date.today.year)
+    #   @expenses = @expenses_unorder.select{|a| a.statut == "active" && a.building_id == @building.id}.sort_by { |b| b.date }
+    #   @sum_ttc = @expenses.map{|a| a.amount_ttc}.sum
+    #   @sum_vat = @expenses.map{|a| a.amount_vat}.sum
+    # else
+    #   @expenses_unorder = Expense.search_by_date_expense(params[:search][:date].to_i)
+    #   @expenses = @expenses_unorder.select{|a| a.statut == "active" && a.building_id == @building.id}.sort_by { |b| b.date }
+    #   @sum_ttc = @expenses.map{|a| a.amount_ttc}.sum
+    #   @sum_vat = @expenses.map{|a| a.amount_vat}.sum
+    # end
   end
 
   def show
@@ -218,23 +218,73 @@ class ExpensesController < ApplicationController
 
   def new
     authorize @expense = Expense.new
-    @building = Building.find(params[:building_id])
-    @apartment_name = ["Tous"]
-    @apartments_name = @building.apartments.each do |apartment|
-      if apartment.statut == "active"
-        @apartment_name  << apartment.name.to_s
+    if params[:building_id] != nil
+      @building = Building.find(params[:building_id])
+      @apartment_name = ["Tous"]
+      @apartments_name = @building.apartments.each do |apartment|
+        if apartment.statut == "active"
+          @apartment_name  << apartment.name.to_s
+        end
       end
+    else
+      # List of companies of the user and where user is an associate
+      @companies_active = Company.where("statut = ?", "active" ).order(created_at: :asc)
+      @companies = []
+      @companies_active.each do |c|
+        associe = c.associe.downcase.split(",").map(&:strip)
+        if associe.include?(current_user.email) || c.user == current_user
+          @companies << c
+        end
+      end
+      # List of buildings détenu en nom propre
+      @buildings_active = Building.where("statut = ?", "active" ).order(created_at: :asc)
+      @buildings = []
+      # @companies.each do |c|
+      @buildings_active.each do |b|
+        if @buildings.include?(b) == false
+          if b.company_name == "n/a - détention en nom propre"
+            @buildings << b
+          end
+        end
+      end
+      # end
+      # List of apartment détenu en nom propre in aucun immeuble
+      @apartments_active = Apartment.where("statut = ?", "active" ).order(created_at: :asc)
+      @apartments_list = []
+      @apartments_active.each do |t|
+        if @apartments_list.include?(t) == false
+          if t.building_name == "n/a - aucun immeuble" && t.company_name == "n/a - détention en nom propre"
+            @apartments_list << t
+          end
+        end
+      end
+      @apartments = @apartments_list.sort_by { |b| b.name }
     end
   end
 
   def create
     authorize @expense = Expense.new(expense_params)
-    @building = Building.find(params[:building_id])
-    @expense.building = @building
+    # @building = Building.find(params[:building_id])
+    # @expense.building = @building
+    unless @expense.company_id == nil || @expense.company_id == ""
+      @expense.company_name = Company.find(@expense.company_id).name
+    else
+      @expense.company_name = "n/a - détention en nom propre"
+    end
+    unless @expense.building_id == nil || @expense.building_id == ""
+      @expense.building_name = Building.find(@expense.building_id).name
+    else
+      @expense.building_name = "n/a - aucun immeuble"
+    end
+    unless @expense.apartment_id == nil || @expense.apartment_id == "" || @expense.apartment_id == 0
+      @expense.apartment_name = Apartment.find(@expense.apartment_id).name
+    else
+      @expense.apartment_name = "Tous les appartements"
+    end
     @expense.user_id = current_user.id
     @expense.statut = "active"
     if @expense.save
-      redirect_to building_expenses_path(@building)
+      redirect_to expenses_path
     else
       render :new
     end
@@ -270,7 +320,9 @@ class ExpensesController < ApplicationController
 
   def expense_params
     params.require(:expense).permit(
-      :apartment_name,
+      :apartment_id,
+      :building_id,
+      :company_id,
       :expense_type,
       :date,
       :supplier,

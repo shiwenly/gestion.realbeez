@@ -18,7 +18,7 @@ Rails.application.routes.draw do
   resources :buildings do
     resources :expenses, only: [:new, :create, :index]
   end
-  resources :expenses, only: [:edit, :destroy, :update, :new, :index ]
+  resources :expenses, only: [:edit, :destroy, :update, :new, :create, :index ]
 
   resources :apartments do
     resources :tenants, only: [:new, :create, :index]
