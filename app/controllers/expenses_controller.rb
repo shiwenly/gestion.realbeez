@@ -195,7 +195,210 @@ class ExpensesController < ApplicationController
           @apartments_array << a.name
         end
       end
-      @expenses = policy_scope(Expense.where("statut = ?", "active").order(created_at: :asc))
+      # @expenses = policy_scope(Expense.where("statut = ?", "active").order(created_at: :asc))
+    end
+    # --------- Result of selection -----------
+    @expenses_active = Expense.where("statut = ?", "active" ).order(created_at: :asc)
+    # If params is nil
+    if params[:search] == nil || params[:search][:company] == "Toutes les sociétés" && params[:search][:building] == "Tous les immeubles" && params[:search][:apartment] == "Tous les appartements"
+      @expenss = policy_scope(Expense.all)
+      @expenses_list_unsorted = []
+      # @rents = policy_scope(Rent.where("statut = ?", "active").order("name ASC, period ASC"))
+      @apartments.each do |t|
+        @expenses_active.each do |r|
+          if r.apartment_name == t.name
+            if @expenses_list_unsorted.include?(r) == false
+              @expenses_list_unsorted << r
+            end
+          end
+        end
+      end
+      @buildings.each do |t|
+        @expenses_active.each do |r|
+          if r.building_name == t.name
+            if @expenses_list_unsorted.include?(r) == false
+              @expenses_list_unsorted << r
+            end
+          end
+        end
+      end
+      @companies.each do |t|
+        @expenses_active.each do |r|
+          if r.company_name == t.name
+            if @expenses_list_unsorted.include?(r) == false
+              @expenses_list_unsorted << r
+            end
+          end
+        end
+      end
+      # @expenses_sorted = @expenses_list_unsorted.sort_by { |b| [b.date] }
+      # @expenses_list = []
+      # @expenses_sorted.each do |r|
+      #   if r.date.strftime("%Y").to_i == Date.today.year
+      #     @expenses_list << r
+      #   end
+      # end
+      # if params = Tous companies/immeuble/locataires
+      # elsif params[:search][:company] == "Toutes les sociétés" && params[:search][:building] == "Tous les immeubles" && params[:search][:apartment] == "Tous les appartements"
+      #   @expenss = policy_scope(Expense.all)
+      #   @expenses_list_unsorted = []
+      #   # @rents = policy_scope(Rent.where("statut = ?", "active").order("name ASC, period ASC"))
+      #   @apartments.each do |t|
+      #     @expenses_active.each do |r|
+      #       if r.apartment_name == t.name
+      #         if @expenses_list_unsorted.include?(r) == false
+      #           @expenses_list_unsorted << r
+      #         end
+      #       end
+      #     end
+      #   end
+      #   @buildings.each do |t|
+      #     @expenses_active.each do |r|
+      #       if r.building_name == t.name
+      #         if @expenses_list_unsorted.include?(r) == false
+      #           @expenses_list_unsorted << r
+      #         end
+      #       end
+      #     end
+      #   end
+      #   @companies.each do |t|
+      #     @expenses_active.each do |r|
+      #       if r.company_name == t.name
+      #         if @expenses_list_unsorted.include?(r) == false
+      #           @expenses_list_unsorted << r
+      #         end
+      #       end
+      #     end
+      #   end
+      # @expenses_sorted = @expenses_list_unsorted.sort_by { |b| [b.date] }
+      # @expenses_list = []
+      # @expenses_sorted.each do |r|
+      #   if r.date.strftime("%Y") == params[:search][:year]
+      #     @expenses_list << r
+      #   end
+      # end
+      # if params not toutes les sociétés + tous immeubles/locataires
+    elsif params[:search][:company] == "Toutes les sociétés" && params[:search][:building] != "Tous les immeubles" && params[:search][:apartment] == "Tous les appartements"
+      @expenses = policy_scope(Expense.all)
+      @expenses_list_unsorted = @expenses_active.select{ |e| e.building_name == params[:search][:building]}
+      # @expenses_sorted = @expenses_list_unsorted.sort_by { |b| b.date }
+      # @expenses_list = []
+      # @expenses_sorted.each do |r|
+      #   if r.date.strftime("%Y") == params[:search][:year]
+      #     @expenses_list << r
+      #   end
+      # end
+    elsif params[:search][:company] == "Toutes les sociétés" && params[:search][:building] == "Tous les immeubles" && params[:search][:apartment] != "Tous les appartements"
+      @expenses = policy_scope(Expense.all)
+      @expenses_list_unsorted = @expenses_active.select{ |e| e.apartment_name == params[:search][:apartment]}
+      # @expenses_sorted = @expenses_list_unsorted.sort_by { |b| b.date }
+      # @expenses_list = []
+      # @expenses_sorted.each do |r|
+      #   if r.date.strftime("%Y") == params[:search][:year]
+      #     @expenses_list << r
+      #   end
+      # end
+    elsif params[:search][:company] == "Toutes les sociétés" && params[:search][:building] != "Tous les immeubles" && params[:search][:apartment] != "Tous les appartements"
+      @expenses = policy_scope(Expense.all)
+      @expenses_list_unsorted = @expenses_active.select{ |e| e.building_name == params[:search][:building] && e.apartment_name == params[:search][:apartment]}
+      # @expenses_sorted = @expenses_list_unsorted.sort_by { |b| b.date }
+      # @expenses_list = []
+      # @expenses_sorted.each do |r|
+      #   if r.date.strftime("%Y") == params[:search][:year]
+      #     @expenses_list << r
+      #   end
+      # end
+    elsif params[:search][:company] != "Toutes les sociétés" && params[:search][:building] != "Tous les immeubles" && params[:search][:apartment] != "Tous les appartements"
+      @expenses = policy_scope(Expense.all)
+      @expenses_list_unsorted = @expenses_active.select{ |e| e.company_name == params[:search][:company] && e.building_name == params[:search][:building] && e.apartment_name == params[:search][:apartment]}
+      # @expenses_sorted = @expenses_list_unsorted.sort_by { |b| b.date }
+      # @expenses_list = []
+      # @expenses_sorted.each do |r|
+      #   if r.date.strftime("%Y") == params[:search][:year]
+      #     @expenses_list << r
+      #   end
+      # end
+    elsif params[:search][:company] != "Toutes les sociétés" && params[:search][:building] == "Tous les immeubles" && params[:search][:apartment] == "Tous les appartements"
+      @expenses = policy_scope(Expense.all)
+      @expenses_list_unsorted = @expenses_active.select{ |e| e.company_name == params[:search][:company]}
+      # @expenses_sorted = @expenses_list_unsorted.sort_by { |b| b.date }
+      # @expenses_list = []
+      # @expenses_sorted.each do |r|
+      #   if r.date.strftime("%Y") == params[:search][:year]
+      #     @expenses_list << r
+      #   end
+      # end
+    elsif params[:search][:company] != "Toutes les sociétés" && params[:search][:building] != "Tous les immeubles" && params[:search][:apartment] == "Tous les appartements"
+      @expenses = policy_scope(Expense.all)
+      @expenses_list_unsorted = @expenses_active.select{ |e| e.company_name == params[:search][:company] && e.building_name == params[:search][:building]}
+      # @expenses_sorted = @expenses_list_unsorted.sort_by { |b| b.date }
+      # @expenses_list = []
+      # @expenses_sorted.each do |r|
+      #   if r.date.strftime("%Y") == params[:search][:year]
+      #     @expenses_list << r
+      #   end
+      # end
+    elsif params[:search][:company] != "Toutes les sociétés" && params[:search][:building] == "Tous les immeubles" && params[:search][:apartment] != "Tous les appartements"
+      @expenses = policy_scope(Expense.all)
+      @expenses_list_unsorted = @expenses_active.select{ |e| e.company_name == params[:search][:company] && e.apartment_name == params[:search][:apartment]}
+      # @expenses_sorted = @expenses_list_unsorted.sort_by { |b| b.date }
+      # @expenses_list = []
+      # @expenses_sorted.each do |r|
+      #   if r.date.strftime("%Y") == params[:search][:year]
+      #     @expenses_list << r
+      #   end
+      # end
+      # if not tous immeubles + tous locataires
+      # elsif params[:search][:building] != "Tous les immeubles" && params[:search][:tenant] == "Tous les locataires"
+      #   @rents = policy_scope(Rent.all)
+      #   @rents_list_unsorted = []
+      #   # @rents = policy_scope(Rent.where("statut = ?", "active").order("name ASC, period ASC"))
+      #   @tenants.each do |t|
+      #     if t.building_name == params[:search][:building]
+      #       @rents_active.each do |r|
+      #         if r.name == t.name
+      #           @rents_list_unsorted << r
+      #         end
+      #       end
+      #     end
+      #   end
+      # @rents_sorted = @rents_list_unsorted.sort_by { |b| [b.name, b.period] }
+      # @rents_list = []
+      # @rents_sorted.each do |r|
+      #   if r.period.strftime("%Y") == params[:search][:year]
+      #     @rents_list << r
+      #   end
+      # end
+      # else
+      #   @tenants_list
+      #   @rents = policy_scope(Rent.all)
+      #   @rents_list_unsorted = policy_scope(Rent.search_by_tenant(params[:search][:tenant]))
+      #   @rents_sorted = @rents_list_unsorted.sort_by { |b| [b.name, b.period] }
+      #   @rents_list = []
+      #   @rents_sorted.each do |r|
+      #     if r.period.strftime("%Y") == params[:search][:year]
+      #       @rents_list << r
+      #     end
+      #   end
+    end
+    if @expenses_list_unsorted != nil
+      if params[:search] != nil
+        @expenses_sorted = @expenses_list_unsorted.sort_by { |b| b.date }
+        @expenses_list = []
+        @expenses_sorted.each do |r|
+          if r.date.strftime("%Y") == params[:search][:year]
+            @expenses_list << r
+          end
+        end
+      else
+        @expenses_sorted = @expenses_list_unsorted.sort_by { |b| b.date }
+        @expenses_list = []
+        @expenses_sorted.each do |r|
+          if r.date.strftime("%Y").to_i == Date.today.year
+            @expenses_list << r
+          end
+        end
+      end
     end
     # ========== Sum calculation ==============
     # if params[:search] == nil
@@ -266,12 +469,12 @@ class ExpensesController < ApplicationController
     authorize @expense = Expense.new(expense_params)
     # @building = Building.find(params[:building_id])
     # @expense.building = @building
-    unless @expense.company_id == nil || @expense.company_id == ""
+    unless @expense.company_id == nil || @expense.company_id == "" || @expense.company_id == 0
       @expense.company_name = Company.find(@expense.company_id).name
     else
       @expense.company_name = "n/a - détention en nom propre"
     end
-    unless @expense.building_id == nil || @expense.building_id == ""
+    unless @expense.building_id == nil || @expense.building_id == "" || @expense.building_id == 0
       @expense.building_name = Building.find(@expense.building_id).name
     else
       @expense.building_name = "n/a - aucun immeuble"
@@ -313,7 +516,7 @@ class ExpensesController < ApplicationController
     authorize @expense
     @expense.statut = "deleted"
     @expense.save
-    redirect_to building_expenses_path(@expense.building)
+    redirect_to expenses_path
   end
 
   private

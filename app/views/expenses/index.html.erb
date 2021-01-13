@@ -81,7 +81,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <% @expenses.each do |expense| %>
+                      <% @expenses_list.each do |expense| %>
                         <tr>
                           <td><%= expense.date.strftime("%d/%m/%Y") %></td>
                           <td><%= expense.apartment_name %></td>
@@ -143,7 +143,7 @@
                     <%= f.select :building, @buildings_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:building]  %>
                   </div>
                   <div class="col-9 col-md pr-0 mt-1">
-                    <%= f.select :apartment, @apartments_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:tenant]  %>
+                    <%= f.select :apartment, @apartments_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:apartment]  %>
                   </div>
                   <div class="col-9 col-md pr-0 d-flex align-items-center mt-1">
                     <%= f.submit "Filtrer", class: "btn btn-yellow-mustard-small" %>
@@ -161,7 +161,7 @@
                     <%= f.select :building, @buildings_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false  %>
                   </div>
                   <div class="col-9 col-md pr-0 mt-1">
-                    <%= f.select :apartment, @apartments_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false  %>
+                    <%= f.select :apartment, @apartments_array,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false %>
                   </div>
                   <div class="col-9 col-md pr-0 d-flex align-items-center mt-1">
                     <%= f.submit "Filtrer", class: "btn btn-yellow-mustard-small" %>
@@ -180,6 +180,8 @@
                 <thead>
                   <tr>
                     <th scope="col">Date</th>
+                    <th scope="col">Société</th>
+                    <th scope="col">Immeuble</th>
                     <th scope="col">Appartement</th>
                     <th scope="col">Type</th>
                     <th scope="col">Fournisseurs</th>
@@ -193,9 +195,11 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <% @expenses.each do |expense| %>
+                  <% @expenses_list.each do |expense| %>
                     <tr>
                       <td><%= expense.date.strftime("%d/%m/%Y") %></td>
+                      <td><%= expense.company_name %></td>
+                      <td><%= expense.building_name %></td>
                       <td><%= expense.apartment_name %></td>
                       <td><%= expense.expense_type %></td>
                       <td><%= expense.supplier %></td>
@@ -222,6 +226,9 @@
                     <%# if @building.company.corporate_tax == true %>
                     <!-- <td class="text-right"><%#=  '%.2f' % @sum_vat %></td> -->
                     <%# end %>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>

@@ -258,12 +258,12 @@ class ApartmentsController < ApplicationController
   def create
     authorize @apartment = Apartment.new(apartment_params)
     # @building = Building.find(params[:building_id])
-    unless @apartment.company_id == nil || @apartment.company_id == ""
+    unless @apartment.company_id == nil || @apartment.company_id == "" || @apartment.company_id == 0
       @apartment.company_name = Company.find(@apartment.company_id).name
     else
       @apartment.company_name = "n/a - détention en nom propre"
     end
-    unless @apartment.building_id == nil || @apartment.building_id == ""
+    unless @apartment.building_id == nil || @apartment.building_id == "" || @apartment.building_id == 0
       @apartment.building_name = Building.find(@apartment.building_id).name
     else
       @apartment.building_name = "n/a - aucun immeuble"
