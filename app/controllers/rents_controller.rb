@@ -233,6 +233,22 @@ class RentsController < ApplicationController
         end
       end
     end
+    # if params[:search] == nil
+    #   @expenses_unorder = Expense.search_by_date_expense(Date.today.year)
+    #   @expenses = @expenses_unorder.select{|a| a.statut == "active" && a.building_id == @building.id}.sort_by { |b| b.date }
+    #   @sum_ttc = @expenses.map{|a| a.amount_ttc}.sum
+    #   @sum_vat = @expenses.map{|a| a.amount_vat}.sum
+    # else
+    #   @expenses_unorder = Expense.search_by_date_expense(params[:search][:date].to_i)
+    #   @expenses = @expenses_unorder.select{|a| a.statut == "active" && a.building_id == @building.id}.sort_by { |b| b.date }
+    #   @sum_ttc = @expenses.map{|a| a.amount_ttc}.sum
+    #   @sum_vat = @expenses.map{|a| a.amount_vat}.sum
+    # end
+    @sum_rent_ask = @rents_list.map{|a| a.rent_ask}.sum
+    @sum_service_charge_ask = @rents_list.map{|a| a.service_charge_ask}.sum
+    @sum_rent_paid = @rents_list.map{|a| a.rent_paid}.sum
+    @sum_service_charge_paid = @rents_list.map{|a| a.service_charge_paid}.sum
+    @solde = (@sum_rent_paid + @sum_service_charge_paid) - (@sum_rent_ask + @sum_service_charge_ask)
   end
 
   def show

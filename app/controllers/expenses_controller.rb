@@ -416,9 +416,9 @@ class ExpensesController < ApplicationController
     # else
     #   @expenses_unorder = Expense.search_by_date_expense(params[:search][:date].to_i)
     #   @expenses = @expenses_unorder.select{|a| a.statut == "active" && a.building_id == @building.id}.sort_by { |b| b.date }
-    #   @sum_ttc = @expenses.map{|a| a.amount_ttc}.sum
     #   @sum_vat = @expenses.map{|a| a.amount_vat}.sum
     # end
+    @sum_ttc = @expenses_list.map{|a| a.amount_ttc}.sum
   end
 
   def show

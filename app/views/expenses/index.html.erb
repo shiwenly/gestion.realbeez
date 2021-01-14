@@ -222,13 +222,12 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <!-- <td class="text-right"><%#= '%.2f' % @sum_ttc %></td> -->
                     <%# if @building.company.corporate_tax == true %>
                     <!-- <td class="text-right"><%#=  '%.2f' % @sum_vat %></td> -->
                     <%# end %>
                     <td></td>
                     <td></td>
-                    <td></td>
+                    <td class="text-right"><%= '%.2f' % @sum_ttc %></td>
                     <td></td>
                     <td></td>
                     <td></td>
