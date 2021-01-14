@@ -42,3 +42,82 @@
     </div>
   </div>
 </div>
+<script>
+  // Change building automatically
+  document.querySelector("#expense_company_id").addEventListener("change", (event) => {
+    let urlPath = origin
+    let url = urlPath + "/expenses.json"
+    // GET REQUEST
+    fetch(url)
+     .then(response => response.json())
+      .then((data) => {
+        const input = document.querySelector("#expense_company_id");
+        const output = document.querySelector("#expense_building_id");
+        // Get the information in the field company
+        const input_data = input.options[input.selectedIndex].text;
+        // Delete information in the filed building
+        output.innerHTML = ""
+        // Add n/a - aucun immeuble
+        output.insertAdjacentHTML('beforeend',
+          `<option value="n/a - aucun immeuble</option>">n/a - aucun immeuble</option>`
+        );
+        // Add all building where company is the same as input
+        data.forEach((item)=>{
+          // console.log(item)
+          if (item.company_name == input_data) {
+            output.insertAdjacentHTML('beforeend',
+              `<option value="${item.building_id}">${item.building_name}</option>`
+            );
+          }
+        })
+        const input_a = document.querySelector("#expense_building_id");
+        const output_a = document.querySelector("#expense_apartment_id");
+        const input_data_a = input_a.options[input_a.selectedIndex].text;
+        console.log(input_data_a)
+        output_a.innerHTML = ""
+          // Add n/a - aucun appartement
+        output_a.insertAdjacentHTML('beforeend',
+          `<option value="">Tous les appartements</option>`
+        );
+        data.forEach((item)=>{
+          if (item.apartment_building_name == input_data_a && item.apartment_company_name == input_data) {
+            output_a.insertAdjacentHTML('beforeend',
+              `<option value="${item.apartment_id}">${item.apartment_name}</option>`
+            );
+          }
+        })
+      }
+    );
+  });
+  // Change tenant automatically
+  document.querySelector("#expense_building_id").addEventListener("change", (event) => {
+    let urlPath = origin
+    let url = urlPath + "/expenses.json"
+    // GET REQUEST
+    fetch(url)
+     .then(response => response.json())
+      .then((data) => {
+        const input = document.querySelector("#expense_company_id");
+        const input_a = document.querySelector("#expense_building_id");
+        const output_a = document.querySelector("#expense_apartment_id");
+        // Get the information in the field company
+        const input_data = input.options[input.selectedIndex].text;
+        const input_data_a = input_a.options[input_a.selectedIndex].text;
+        // Delete information in the filed building
+        output_a.innerHTML = ""
+         // Add n/a - aucun appartement
+        output_a.insertAdjacentHTML('beforeend',
+          `<option value="">Tous les appartements</option>`
+        );
+        // Add all building where company is the same as input
+        data.forEach((item)=>{
+          if (item.apartment_building_name == input_data_a && item.apartment_company_name == input_data) {
+            output_a.insertAdjacentHTML('beforeend',
+              `<option value="${item.apartment_id}">${item.apartment_name}</option>`
+            );
+          }
+        })
+      }
+    );
+  });
+</script>
