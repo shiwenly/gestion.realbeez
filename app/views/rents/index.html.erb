@@ -72,11 +72,11 @@
             <table class="table table-hover" style="background-color: white">
               <thead>
                 <tr>
+                  <th scope="col">Date encaissement</th>
+                  <th scope="col">Mois</th>
                   <th scope="col">Société</th>
                   <th scope="col">Immeuble</th>
                   <th scope="col">Locataire</th>
-                  <th scope="col">Date encaissement</th>
-                  <th scope="col">Mois</th>
                   <th scope="col">Loyer appelé</th>
                   <th scope="col">Charges appelées</th>
                   <th scope="col">Loyer versé</th>
@@ -88,15 +88,15 @@
               <tbody>
                 <% @rents_list.each do |rent| %>
                   <tr>
-                    <td><%= rent.tenant.company_name %></td>
-                    <td><%= rent.tenant.building_name %></td>
-                    <td><%= rent.tenant.name %></td>
                     <% if rent.date_payment != nil %>
                       <td><%= rent.date_payment.strftime("%d/%m/%Y") %></td>
                     <% else %>
                       <td><%= link_to "A compléter", edit_rent_path(rent) %></td>
                     <% end %>
                     <td><%= rent.period.strftime("%b %Y") %></td>
+                    <td><%= rent.tenant.company_name %></td>
+                    <td><%= rent.tenant.building_name %></td>
+                    <td><%= rent.tenant.name %></td>
                     <td><%= rent.rent_ask %></td>
                     <td><%= rent.service_charge_ask %></td>
                     <td><%= rent.rent_paid %></td>

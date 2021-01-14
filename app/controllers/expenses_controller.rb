@@ -231,6 +231,13 @@ class ExpensesController < ApplicationController
           end
         end
       end
+      @expenses_active.each do |r|
+        if r.user == current_user
+          if @expenses_list_unsorted.include?(r) == false
+            @expenses_list_unsorted << r
+          end
+        end
+      end
       # @expenses_sorted = @expenses_list_unsorted.sort_by { |b| [b.date] }
       # @expenses_list = []
       # @expenses_sorted.each do |r|
@@ -495,18 +502,68 @@ class ExpensesController < ApplicationController
 
   def edit
     authorize @expense
-    @apartment_name = ["Tous"]
-    @apartments_name = @expense.building.apartments.each do |apartment|
-      if apartment.statut == "active"
-        @apartment_name  << apartment.name.to_s
+    if params[:building_id] != nil
+      @apartment_name = ["Tous"]
+      @apartments_name = @expense.building.apartments.each do |apartment|
+        if apartment.statut == "active"
+          @apartment_name  << apartment.name.to_s
+        end
       end
+    else
+      # List of companies of the user and where user is an associate
+      @companies_active = Company.where("statut = ?", "active" ).order(created_at: :asc)
+      @companies = []
+      @companies_active.each do |c|
+        associe = c.associe.downcase.split(",").map(&:strip)
+        if associe.include?(current_user.email) || c.user == current_user
+          @companies << c
+        end
+      end
+      # List of buildings détenu en nom propre
+      @buildings_active = Building.where("statut = ?", "active" ).order(created_at: :asc)
+      @buildings = []
+      # @companies.each do |c|
+      @buildings_active.each do |b|
+        if @buildings.include?(b) == false
+          if b.company_name == @expense.company_name
+            @buildings << b
+          end
+        end
+      end
+      # end
+      # List of apartment détenu en nom propre in aucun immeuble
+      @apartments_active = Apartment.where("statut = ?", "active" ).order(created_at: :asc)
+      @apartments_list = []
+      @apartments_active.each do |t|
+        if @apartments_list.include?(t) == false
+          if t.building_name == @expense.building_name && t.company_name == @expense.company_name
+            @apartments_list << t
+          end
+        end
+      end
+      @apartments = @apartments_list.sort_by { |b| b.name }
     end
   end
 
   def update
     authorize @expense
+    unless params[:expense][:company_id] == nil || params[:expense][:company_id] == "" || params[:expense][:company_id] == 0
+      @expense.company_name = Company.find(params[:expense][:company_id]).name
+    else
+      @expense.company_name = "n/a - détention en nom propre"
+    end
+    unless params[:expense][:building_id] == nil || params[:expense][:building_id] == "" || params[:expense][:building_id] == 0
+      @expense.building_name = Building.find(params[:expense][:building_id]).name
+    else
+      @expense.building_name = "n/a - aucun immeuble"
+    end
+    unless params[:expense][:apartment_id] == nil || params[:expense][:apartment_id] == "" || params[:expense][:apartment_id] == 0
+      @expense.apartment_name = Apartment.find(params[:expense][:apartment_id]).name
+    else
+      @expense.apartment_name = "Tous les appartements"
+    end
     if @expense.update(expense_params)
-      redirect_to building_expenses_path(@expense.building)
+      redirect_to expenses_path
     else
       render :edit
     end

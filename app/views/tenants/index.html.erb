@@ -181,8 +181,11 @@
                     </div>
                     <%= link_to tenant_path(tenant), style:"text-decoration:none; color: rgb(100, 100, 100)" do %>
                       <p>Locataire en place : <%= tenant.current_tenant ? "Oui" : "Non"%></p>
+                      <p class=" mt-0 mb-2" style="" ><i class="fas fa-city mr-3" style="color: #D8A727"></i><%= tenant.company_name%></p>
+                      <p class=" mt-0 mb-2" style="" ><i class="fas fa-building mr-3" style="color: #D8A727"></i><%= tenant.building_name%></p>
+                      <p class=" mt-0 mb-2" style="" ><i class="fas fa-house-user mr-3" style="color: #D8A727"></i><%= tenant.apartment_name%></p>
                       <!-- <p class=" mt-0 mb-1" style="" ><i class="fas fa-user mr-3" style="color: #D8A727"></i><%#= tenant.first_name %> <%#= tenant.last_name %> </p> -->
-                      <p class=" mt-0 mb-1" style="" ><i class="fas fa-envelope mr-3" style="color: #D8A727"></i><%= tenant.email %></p>
+                      <p class=" mt-0 mb-2" style="" ><i class="fas fa-envelope mr-3" style="color: #D8A727"></i><%= tenant.email %></p>
                       <p class=" mt-0 mb-2" style="" ><i class="fas fa-phone-square mr-3" style="color: #D8A727"></i><%= tenant.phone %></p>
                       <!-- Collapse -->
                       <a class="mt-0" data-toggle="collapse" href="#collapseExample<%= index+1 %>" role="button" aria-expanded="false" aria-controls="collapseExample<%= index+1 %>" style="text-decoration: none">

@@ -5,7 +5,9 @@
       <div class="center">
         <%= simple_form_for [@building, @expense] do |f| %>
           <%= f.input :date, :order => [:day, :month, :year] %>
-          <%= f.input :apartment_name, label: "Appartement concerné", collection: @apartment_name %>
+          <%= f.input :company_id, collection: @companies, label: "Selectionnez une société", include_blank: "n/a - détention en nom propre", include_hidden: false, class:"field_input" %>
+          <%= f.input :building_id, collection: @buildings, label: "Selectionnez un immeuble", include_blank: "n/a - aucun immeuble", include_hidden: false %>
+          <%= f.input :apartment_id, label: "Appartement concerné", collection: @apartments, include_blank:  "Tous les appartements", include_hidden: false %>
           <%= f.input :expense_type, label: "Type de dépense", collection:
               [
               "Assurance",
@@ -25,11 +27,11 @@
               ] %>
           <%= f.input :supplier, label: "Nom du fournisseur et description" %>
           <%= f.input :amount_ttc, label: "Montant TTC" %>
-          <% if @expense.building.company.corporate_tax == true %>
-            <%= f.input :amount_vat, label: "Montant de TVA"%>
-          <% else %>
-            <%= f.input :amount_vat, as: :hidden, label: "Montant de TVA"%>
-          <% end %>
+          <% #if @expense.building.company.corporate_tax == true %>
+          <%#= f.input :amount_vat, label: "Montant de TVA"%>
+          <%# else %>
+          <%= f.input :amount_vat, as: :hidden, label: "Montant de TVA"%>
+          <%# end %>
           <%= f.input :photo, label: false %>
           <%= f.input :photo_cache, as: :hidden %>
           <%= f.input :deductible, as: :radio_buttons, collection: [[true, "Oui"], [false, "Non"]], label_method: :second, value_method: :first, label: "Charge déductible" %>

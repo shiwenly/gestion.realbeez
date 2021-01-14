@@ -361,7 +361,7 @@ class TenantsController < ApplicationController
     @buildings_active.each do |b|
       if @buildings.include?(b) == false
         if b.company_name == @tenant.company_name
-          @buildings << b.name
+          @buildings << b
         end
       end
     end
@@ -378,7 +378,7 @@ class TenantsController < ApplicationController
       end
     end
     # end
-    @buildings << "n/a - aucun immeuble"
+    # @buildings << "n/a - aucun immeuble"
   end
 
   def update
