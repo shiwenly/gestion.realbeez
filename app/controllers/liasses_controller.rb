@@ -199,6 +199,8 @@ class LiassesController < ApplicationController
       # ================== Revenue (rent) ========================
       @rents_active = Rent.where("statut = ?", "active")
       @rent_paid = []
+      @expenses_active = Expense.where("statut = ?", "active")
+      @expenses_array = []
       if params[:search] == nil || params[:search][:company] == "Toutes les sociétés" && params[:search][:building] == "Tous les immeubles" && params[:search][:apartment] == "Tous les appartements"
         @tenants.each do |t|
           @rents_active.each do |r|
@@ -209,80 +211,138 @@ class LiassesController < ApplicationController
             end
           end
         end
+        # ---------------- ALL Expenses ----------------
+        @companies.each do |c|
+          @expenses_active.each do |e|
+            if c.name == e.company_name
+              if @expenses_array.include?(e) == false
+                @expenses_array << e
+              end
+            end
+          end
+        end
+        @buildings.each do |b|
+          @expenses_active.each do |e|
+            if b.name == e.building_name
+              if @expenses_array.include?(e) == false
+                @expenses_array << e
+              end
+            end
+          end
+        end
+        @apartments.each do |a|
+          @expenses_active.each do |e|
+            if a.name == e.apartment_name
+              if @expenses_array.include?(e) == false
+                @expenses_array << e
+              end
+            end
+          end
+        end
+        @expenses_active.each do |e|
+          if e.user == current_user
+            if @expenses_array.include?(e) == false
+              @expenses_array << e
+            end
+          end
+        end
       elsif params[:search][:company] == "Toutes les sociétés" && params[:search][:building] != "Tous les immeubles" && params[:search][:apartment] == "Tous les appartements"
         @tenants_list = @tenants_active.select { |t| t.building_name == params[:search][:building]  }
-        @tenants_list.each do |t|
-          @rents_active.each do |r|
-            if t.name == r.name
-              if @rent_paid.include?(r) == false
-                @rent_paid << r
-              end
-            end
-          end
-        end
+        # @tenants_list.each do |t|
+        #   @rents_active.each do |r|
+        #     if t.name == r.name
+        #       if @rent_paid.include?(r) == false
+        #         @rent_paid << r
+        #       end
+        #     end
+        #   end
+        # end
+        # -------------- expenses ---------
+        @expenses_array = @expenses_active.select{ |e| e.building_name == params[:search][:building] }
       elsif params[:search][:company] == "Toutes les sociétés" && params[:search][:building] == "Tous les immeubles" && params[:search][:apartment] != "Tous les appartements"
         @tenants_list = @tenants_active.select { |t| t.apartment_name == params[:search][:apartment]  }
-        @tenants_list.each do |t|
-          @rents_active.each do |r|
-            if t.name == r.name
-              if @rent_paid.include?(r) == false
-                @rent_paid << r
-              end
-            end
-          end
-        end
+        # @tenants_list.each do |t|
+        #   @rents_active.each do |r|
+        #     if t.name == r.name
+        #       if @rent_paid.include?(r) == false
+        #         @rent_paid << r
+        #       end
+        #     end
+        #   end
+        # end
+        # -------------- expenses ---------
+        @expenses_array = @expenses_active.select{ |e| e.apartment_name == params[:search][:apartment] }
       elsif params[:search][:company] == "Toutes les sociétés" && params[:search][:building] != "Tous les immeubles" && params[:search][:apartment] != "Tous les appartements"
         @tenants_list = @tenants_active.select { |t| t.building_name == params[:search][:building] && t.apartment_name == params[:search][:apartment]  }
-        @tenants_list.each do |t|
-          @rents_active.each do |r|
-            if t.name == r.name
-              if @rent_paid.include?(r) == false
-                @rent_paid << r
-              end
-            end
-          end
-        end
+        # @tenants_list.each do |t|
+        #   @rents_active.each do |r|
+        #     if t.name == r.name
+        #       if @rent_paid.include?(r) == false
+        #         @rent_paid << r
+        #       end
+        #     end
+        #   end
+        # end
+        # -------------- expenses ---------
+        @expenses_array = @expenses_active.select{ |e| e.building_name == params[:search][:building] && e.apartment_name == params[:search][:apartment] }
       elsif params[:search][:company] != "Toutes les sociétés" && params[:search][:building] != "Tous les immeubles" && params[:search][:apartment] != "Tous les appartements"
         @tenants_list = @tenants_active.select { |t| t.company_name == params[:search][:company] && t.building_name == params[:search][:building] && t.apartment_name == params[:search][:apartment]  }
-        @tenants_list.each do |t|
-          @rents_active.each do |r|
-            if t.name == r.name
-              if @rent_paid.include?(r) == false
-                @rent_paid << r
-              end
-            end
-          end
-        end
+        # @tenants_list.each do |t|
+        #   @rents_active.each do |r|
+        #     if t.name == r.name
+        #       if @rent_paid.include?(r) == false
+        #         @rent_paid << r
+        #       end
+        #     end
+        #   end
+        # end
+        # -------------- expenses ---------
+        @expenses_array = @expenses_active.select{ |e| e.company_name == params[:search][:company] && e.building_name == params[:search][:building] && e.apartment_name == params[:search][:apartment] }
       elsif params[:search][:company] != "Toutes les sociétés" && params[:search][:building] == "Tous les immeubles" && params[:search][:apartment] == "Tous les appartements"
         @tenants_list = @tenants_active.select { |t| t.company_name == params[:search][:company] }
-        @tenants_list.each do |t|
-          @rents_active.each do |r|
-            if t.name == r.name
-              if @rent_paid.include?(r) == false
-                @rent_paid << r
-              end
-            end
-          end
-        end
+        # @tenants_list.each do |t|
+        #   @rents_active.each do |r|
+        #     if t.name == r.name
+        #       if @rent_paid.include?(r) == false
+        #         @rent_paid << r
+        #       end
+        #     end
+        #   end
+        # end
+        # -------------- expenses ---------
+        @expenses_array = @expenses_active.select{ |e| e.company_name == params[:search][:company] }
       elsif params[:search][:company] != "Toutes les sociétés" && params[:search][:building] != "Tous les immeubles" && params[:search][:apartment] == "Tous les appartements"
         @tenants_list = @tenants_active.select { |t| t.company_name == params[:search][:company] && t.building_name == params[:search][:building] }
-        @tenants_list.each do |t|
-          @rents_active.each do |r|
-            if t.name == r.name
-              if @rent_paid.include?(r) == false
-                @rent_paid << r
-              end
-            end
-          end
-        end
+        # @tenants_list.each do |t|
+        #   @rents_active.each do |r|
+        #     if t.name == r.name
+        #       if @rent_paid.include?(r) == false
+        #         @rent_paid << r
+        #       end
+        #     end
+        #   end
+        # end
+        # -------------- expenses ---------
+        @expenses_array = @expenses_active.select{ |e| e.company_name == params[:search][:company] && e.building_name == params[:search][:building] }
       elsif params[:search][:company] != "Toutes les sociétés" && params[:search][:building] == "Tous les immeubles" && params[:search][:apartment] != "Tous les appartements"
         @tenants_list = @tenants_active.select { |t| t.company_name == params[:search][:company] && t.apartment_name == params[:search][:apartment]  }
-        @tenants_list.each do |t|
-          @rents_active.each do |r|
-            if t.name == r.name
-              if @rent_paid.include?(r) == false
-                @rent_paid << r
-              end
+        # @tenants_list.each do |t|
+        #   @rents_active.each do |r|
+        #     if t.name == r.name
+        #       if @rent_paid.include?(r) == false
+        #         @rent_paid << r
+        #       end
+        #     end
+        #   end
+        # end
+        # -------------- expenses ---------
+        @expenses_array = @expenses_active.select{ |e| e.company_name == params[:search][:company] && e.apartment_name == params[:search][:apartment]  }
+      end
+      @tenants_list.each do |t|
+        @rents_active.each do |r|
+          if t.name == r.name
+            if @rent_paid.include?(r) == false
+              @rent_paid << r
             end
           end
         end
@@ -295,43 +355,7 @@ class LiassesController < ApplicationController
         @rent_paid_unsorted = @rent_paid.select{ |a| a.period.strftime("%Y").to_i == Date.today.year }.sort_by{ |b| b.date_payment}
         @sum_rent_paid = @rent_paid_unsorted.map{ |r| r.rent_paid}.sum
       end
-      # ================== ALL Expenses ========================
-      @expenses_active = Expense.where("statut = ?", "active")
-      @expenses_array = []
-      @companies.each do |c|
-        @expenses_active.each do |e|
-          if c.name == e.company_name
-            if @expenses_array.include?(e) == false
-              @expenses_array << e
-            end
-          end
-        end
-      end
-      @buildings.each do |b|
-        @expenses_active.each do |e|
-          if b.name == e.building_name
-            if @expenses_array.include?(e) == false
-              @expenses_array << e
-            end
-          end
-        end
-      end
-      @apartments.each do |a|
-        @expenses_active.each do |e|
-          if a.name == e.apartment_name
-            if @expenses_array.include?(e) == false
-              @expenses_array << e
-            end
-          end
-        end
-      end
-      @expenses_active.each do |e|
-        if e.user == current_user
-          if @expenses_array.include?(e) == false
-            @expenses_array << e
-          end
-        end
-      end
+      # ------------ Expense sort and filter by date ----------
       @expenses_array = @expenses_array.sort_by { |e| e.date }
       @expenses = []
       if params[:search] != nil
