@@ -1,45 +1,583 @@
-<% unless @building.statut == "deleted" || @building.company.statut == "deleted" %>
-  <% associe = @building.company.associe.downcase.split(",").map(&:strip) %>
-  <% if associe.include?(current_user.email) || @building.company.user == current_user || @building.user == current_user || current_user.admin == true %>
-    <div class="container my-5">
-      <h3 class="text-center mt-5" style="color: #D8A727; font-family: Simply Rounded; letter-spacing: 1px">Vos revenus fonciers</h3>
-      <h5 class="text-center mb-4"><%= @building.address %></h5>
-      <p class="mt-5">
-        <%= link_to "Page d'accueil", root_path, style:"text-decoration:none; color:rgb(100, 100, 100)"  %> >
-        <%= link_to "Sociétés", companies_path, style:"text-decoration:none; color:rgb(100, 100, 100)" %> >
-        <%= link_to "Immeubles", company_buildings_path(@building.company), style:"text-decoration:none; color:rgb(100, 100, 100)" %>
-      </p>
-      <div class="mt-2 mb-4 border-top pt-3"></div>
-      <%= render 'shared/icon_liasse' %>
-      <% unless @apartments == [] %>
-        <div class="row">
-          <div class="p-3 col-12 col-md-6 offset-md-3 my-4">
-            <div class="p-4 content border mb-4", style="box-shadow: 0 0 5px rgba(0,0,0,0.1); background-color: white">
-              <p style="font-weight: bolder">Chiffres <%= Date.today.year %> : Immeuble <%= @building.address %></p>
-              <p class="mb-1">Loyers charges comprises encaissés : <%= '%.0f' % (@building_sum_rent_paid + @building_sum_service_charge_paid) %> € </p>
-              <p><em>Loyers hors charges encaissés : </em><%= '%.0f' % @building_sum_rent_paid  %> €</p>
-              <p class="border-bottom mx-4"> </p>
-              <p class="mb-1">Loyers charges comprises manquant : <%= '%.0f' % @building_solde %> €</p>
-              <p class="mb-1">Loyers charges comprises attendus : <%= '%.0f' % @building_loyer_annuel  %> €</p>
-              <% if @building_loyer_annuel != 0 && @building_loyer_annuel != nil  %>
-                <p>% atteint : <%= '%.2f' % ((@building_sum_rent_paid + @building_sum_service_charge_paid) / @building_loyer_annuel * 100)  %> %</p>
-              <% end %>
+<style>
+  #search_year {
+    width: 100%;
+  }
+  
+  #search_company {
+    width: 100%;
+  }
+  
+  #search_building {
+    width: 100%;
+  }
+  
+  #search_apartment {
+    width: 100%;
+  }
+</style>
+<% if params[:building_id] != nil %>
+  <% unless @building.statut == "deleted" || @building.company.statut == "deleted" %>
+    <% associe = @building.company.associe.downcase.split(",").map(&:strip) %>
+    <% if associe.include?(current_user.email) || @building.company.user == current_user || @building.user == current_user || current_user.admin == true %>
+      <div class="container my-5">
+        <h3 class="text-center mt-5" style="color: #D8A727; font-family: Simply Rounded; letter-spacing: 1px">Vos revenus fonciers</h3>
+        <h5 class="text-center mb-4"><%= @building.address %></h5>
+        <p class="mt-5">
+          <%= link_to "Page d'accueil", root_path, style:"text-decoration:none; color:rgb(100, 100, 100)"  %> >
+          <%= link_to "Sociétés", companies_path, style:"text-decoration:none; color:rgb(100, 100, 100)" %> >
+          <%= link_to "Immeubles", company_buildings_path(@building.company), style:"text-decoration:none; color:rgb(100, 100, 100)" %>
+        </p>
+        <div class="mt-2 mb-4 border-top pt-3"></div>
+        <%= render 'shared/icon_liasse' %>
+        <% unless @apartments == [] %>
+          <div class="row">
+            <div class="p-3 col-12 col-md-6 offset-md-3 my-4">
+              <div class="p-4 content border mb-4", style="box-shadow: 0 0 5px rgba(0,0,0,0.1); background-color: white">
+                <p style="font-weight: bolder">Chiffres <%= Date.today.year %> : Immeuble <%= @building.address %></p>
+                <p class="mb-1">Loyers charges comprises encaissés : <%= '%.0f' % (@building_sum_rent_paid + @building_sum_service_charge_paid) %> € </p>
+                <p><em>Loyers hors charges encaissés : </em><%= '%.0f' % @building_sum_rent_paid  %> €</p>
+                <p class="border-bottom mx-4"> </p>
+                <p class="mb-1">Loyers charges comprises manquant : <%= '%.0f' % @building_solde %> €</p>
+                <p class="mb-1">Loyers charges comprises attendus : <%= '%.0f' % @building_loyer_annuel  %> €</p>
+                <% if @building_loyer_annuel != 0 && @building_loyer_annuel != nil  %>
+                  <p>% atteint : <%= '%.2f' % ((@building_sum_rent_paid + @building_sum_service_charge_paid) / @building_loyer_annuel * 100)  %> %</p>
+                <% end %>
+              </div>
             </div>
           </div>
+        <% end %>
+        <!-- Liasse fiscale -->
+        <h5 class="border-top pt-3"></h5>
+        <div class="mt-2 mb-4">
+          <p><%= link_to "Calculer vos revenus", new_building_liass_path(@building), class:"btn btn-transparent-bold"%></p>
         </div>
-      <% end %>
-      <!-- Liasse fiscale -->
-      <h5 class="border-top pt-3"></h5>
-      <div class="mt-2 mb-4">
-        <p><%= link_to "Calculer vos revenus", new_building_liass_path(@building), class:"btn btn-transparent-bold"%></p>
+        <% @liasses.each do |liasse| %>
+          <%= link_to liasse.year.strftime("%Y"), liass_path(liasse), class: "btn btn-transparent-bold mb-5" %>
+        <% end %>
       </div>
-      <% @liasses.each do |liasse| %>
-        <%= link_to liasse.year.strftime("%Y"), liass_path(liasse), class: "btn btn-transparent-bold mb-5" %>
-      <% end %>
-    </div>
+    <% else %>
+      <h3 class="text-center my-5" style="color:red">Vous n'avez pas accès à cette page</h3>
+    <% end %>
   <% else %>
-    <h3 class="text-center my-5" style="color:red">Vous n'avez pas accès à cette page</h3>
+    <h3 class="text-center my-5" style="color:red">Cet immeuble a été supprimé</h3>
   <% end %>
 <% else %>
-  <h3 class="text-center my-5" style="color:red">Cet immeuble a été supprimé</h3>
+  <div class="container-fluid">
+    <div class="row">
+      <%= render 'shared/vertical_navbar' %>
+      <div class="col-12 col-md-10" style="overflow: scroll">
+        <h3 class="text-center mt-5" style="color: #D8A727; font-family: Simply Rounded; letter-spacing: 1px">Vos revenus fonciers</h3>
+        <%= form_for :search, defaults: { required: false }, url:liasses_path, method: "GET", html: { class: '' } do |f| %>
+          <div class="mt-5 mb-3">
+            <% if params[:search] != nil %>
+              <div class="row">
+                <div class="col-9 col-md pr-0 mt-1">
+                  <%= f.select :year,  @years,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:year]  %>
+                </div>
+                <div class="col-9 col-md pr-0 mt-1">
+                  <%= f.select :company, @companies_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:company]  %>
+                </div>
+                <div class="col-9 col-md pr-0 mt-1">
+                  <%= f.select :building, @buildings_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:building]  %>
+                </div>
+                <div class="col-9 col-md pr-0 mt-1">
+                  <%= f.select :apartment, @apartments_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:apartment]  %>
+                </div>
+                <div class="col-9 col-md pr-0 d-flex align-items-center mt-1">
+                  <%= f.submit "Filtrer", class: "btn btn-yellow-mustard-small" %>
+                </div>
+              </div>
+            <% else %>
+              <div class="row">
+                <div class="col-9 col-md pr-0 mt-1">
+                  <%= f.select :year,  @years,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: Date.today.year  %>
+                </div>
+                <div class="col-9 col-md pr-0 mt-1">
+                  <%= f.select :company, @companies_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false  %>
+                </div>
+                <div class="col-9 col-md pr-0 mt-1">
+                  <%= f.select :building, @buildings_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false  %>
+                </div>
+                <div class="col-9 col-md pr-0 mt-1">
+                  <%= f.select :apartment, @apartments_array,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false %>
+                </div>
+                <div class="col-9 col-md pr-0 d-flex align-items-center mt-1">
+                  <%= f.submit "Filtrer", class: "btn btn-yellow-mustard-small" %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+        <h5 class="border-top pt-3"></h5>
+        <table class="table table-hover mt-3 mb-5" style="background-color: white; font-size : 12px; font-style: lighter">
+          <thead>
+            <tr>
+              <th scope="col" style="font-size: 15px">LIBELLES</th>
+              <th scope="col" style="font-size: 15px">MONTANT</th>
+              <th scope="col" style="font-size: 15px; font-weight: lighter;">Détails</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>2. Recettes</strong></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>1. Montant brut des fermages ou des loyers encaissés</td>
+              <td class="text-right"><%= '%.0f' % @sum_rent_paid %></td>
+              <!-- MODAL FRAIS -->
+              <td class="p-0"><!-- Button trigger modal -->
+                <div class="d-flex justify-content-around align-items-center">
+                  <button type="button" class="btn" data-toggle="modal" data-target="#exampleModal2">
+                    <span class="fas fa-search" style="font-size: 10px"></span>
+                  </button>
+                </div>
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="overflow:scroll">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Primes d'assurance</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <table class="table table-hover" style="background-color: white">
+                          <thead>
+                            <tr>
+                              <th scope="col">id</th>
+                              <th scope="col">Date</th>
+                              <th scope="col">Période</th>
+                              <th scope="col">Société</th>
+                              <th scope="col">Immeuble</th>
+                              <th scope="col">Locataire</th>
+                              <th scope="col" class="text-right">MT TTC</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <!-- Rents-->
+                            <% @rent_paid_unsorted.each do |rent| %>
+                              <tr>
+                                <td><%= rent.id %></td>
+                                <td><%= rent.date_payment.strftime("%d/%m/%Y") %></td>
+                                <td><%= rent.period.strftime("%b %Y") %></td>
+                                <td><%= rent.tenant.company_name %></td>
+                                <td><%= rent.tenant.building_name %></td>
+                                <td><%= rent.tenant.name %></td>
+                                <td class="text-right"><%= '%.2f' % rent.rent_paid %></td>
+                              </tr>
+                            <% end %>
+                            <tr>
+                              <td>TOTAL</td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td><%= @sum_rent_paid %></td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>3. Deductions, frais et charges</strong></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>6. Frais d'administration et de gestion</td>
+              <td class="text-right"><%= '%.0f' % @frais_admin %></td>
+              <!-- MODAL FRAIS -->
+              <td class="p-0"><!-- Button trigger modal -->
+                <div class="d-flex justify-content-around align-items-center">
+                  <button type="button" class="btn" data-toggle="modal" data-target="#exampleModal1">
+                    <span class="fas fa-search" style="font-size: 10px"></span>
+                  </button>
+                </div>
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="overflow:scroll">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Frais d'administration et de gestion</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <table class="table table-hover" style="background-color: white">
+                          <thead>
+                            <tr>
+                              <th scope="col">Date</th>
+                              <th scope="col">Fournisseurs</th>
+                              <th scope="col" class="text-right">MT TTC</th>
+                              <th scope="col">Justificatif</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <!-- Frais bancaire -->
+                            <% @frais_bancaire.each do |expense| %>
+                              <tr>
+                                <td><%= expense.date.strftime("%d/%m/%Y") %></td>
+                                <td><%= expense.supplier %></td>
+                                <td class="text-right"><%= '%.2f' % expense.amount_ttc %></td>
+                                <td>
+                                  <%= link_to "Ouvrir", "https://res.cloudinary.com/myhouze/image/upload/#{expense.photo.filename}", :target => "_blank",class: "btn btn-transparent py-0", style: "font-size:12px" %>
+                                </td>
+                              </tr>
+                            <% end %>
+                            <!-- Honoraire -->
+                            <% @honoraire.each do |expense| %>
+                              <tr>
+                                <td><%= expense.date.strftime("%d/%m/%Y") %></td>
+                                <td><%= expense.supplier %></td>
+                                <td class="text-right"><%= '%.2f' % expense.amount_ttc %></td>
+                                <td>
+                                  <%= link_to "Ouvrir", "https://res.cloudinary.com/myhouze/image/upload/#{expense.photo.filename}", :target => "_blank",class: "btn btn-transparent py-0", style: "font-size:12px" %>
+                                </td>
+                              </tr>
+                            <% end %>
+                            <!-- Dossier -->
+                            <% @dossier.each do |expense| %>
+                              <tr>
+                                <td><%= expense.date.strftime("%d/%m/%Y") %></td>
+                                <td><%= expense.supplier %></td>
+                                <td class="text-right"><%= '%.2f' % expense.amount_ttc %></td>
+                                <td>
+                                  <%= link_to "Ouvrir", "https://res.cloudinary.com/myhouze/image/upload/#{expense.photo.filename}", :target => "_blank",class: "btn btn-transparent py-0", style: "font-size:12px" %>
+                                </td>
+                              </tr>
+                            <% end %>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>7. Autres frais de gestion non déductibles pour leur montant réel (forfait €20 x nb appart)</td>
+              <td class="text-right"><%= '%.0f' % @autre_frais_non_deductible %></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>8. Primes d'assurance</td>
+              <td class="text-right"><%= '%.0f' % @sum_assurance %></td>
+              <!-- MODAL FRAIS -->
+              <td class="p-0"><!-- Button trigger modal -->
+                <div class="d-flex justify-content-around align-items-center">
+                  <button type="button" class="btn" data-toggle="modal" data-target="#exampleModal2">
+                    <span class="fas fa-search" style="font-size: 10px"></span>
+                  </button>
+                </div>
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="overflow:scroll">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Primes d'assurance</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <table class="table table-hover" style="background-color: white">
+                          <thead>
+                            <tr>
+                              <th scope="col">Date</th>
+                              <th scope="col">Fournisseurs</th>
+                              <th scope="col" class="text-right">MT TTC</th>
+                              <th scope="col">Justificatif</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <!-- Assurance -->
+                            <% @assurance.each do |expense| %>
+                              <tr>
+                                <td><%= expense.date.strftime("%d/%m/%Y") %></td>
+                                <td><%= expense.supplier %></td>
+                                <td class="text-right"><%= '%.2f' % expense.amount_ttc %></td>
+                                <td>
+                                  <%= link_to "Ouvrir", "https://res.cloudinary.com/myhouze/image/upload/#{expense.photo.filename}", :target => "_blank",class: "btn btn-transparent py-0", style: "font-size:12px" %>
+                                </td>
+                              </tr>
+                            <% end %>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>9. Dépenses de réparation, d'entretien et d'amélioration</td>
+              <td class="text-right"><%= '%.0f' % @depense_de_reparation %></td>
+              <!-- MODAL FRAIS -->
+              <td class="p-0"><!-- Button trigger modal -->
+                <div class="d-flex justify-content-around align-items-center">
+                  <button type="button" class="btn" data-toggle="modal" data-target="#exampleModal3">
+                    <span class="fas fa-search" style="font-size: 10px"></span>
+                  </button>
+                </div>
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="overflow:scroll">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Réparation, entretien et amélioration</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <table class="table table-hover" style="background-color: white">
+                          <thead>
+                            <tr>
+                              <th scope="col">Date</th>
+                              <th scope="col">Fournisseurs</th>
+                              <th scope="col" class="text-right">MT TTC</th>
+                              <th scope="col">Justificatif</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <!-- frais_nettoyage -->
+                            <% @frais_nettoyage.each do |expense| %>
+                              <tr>
+                                <td><%= expense.date.strftime("%d/%m/%Y") %></td>
+                                <td><%= expense.supplier %></td>
+                                <td class="text-right"><%= '%.2f' % expense.amount_ttc %></td>
+                                <td>
+                                  <%= link_to "Ouvrir", "https://res.cloudinary.com/myhouze/image/upload/#{expense.photo.filename}", :target => "_blank",class: "btn btn-transparent py-0", style: "font-size:12px" %>
+                                </td>
+                              </tr>
+                            <% end %>
+                            <!-- remplacement_chaudiere -->
+                            <% @remplacement_chaudiere.each do |expense| %>
+                              <tr>
+                                <td><%= expense.date.strftime("%d/%m/%Y") %></td>
+                                <td><%= expense.supplier %></td>
+                                <td class="text-right"><%= '%.2f' % expense.amount_ttc %></td>
+                                <td>
+                                  <%= link_to "Ouvrir", "https://res.cloudinary.com/myhouze/image/upload/#{expense.photo.filename}", :target => "_blank",class: "btn btn-transparent py-0", style: "font-size:12px" %>
+                                </td>
+                              </tr>
+                            <% end %>
+                            <!-- reparation -->
+                            <% @reparation.each do |expense| %>
+                              <tr>
+                                <td><%= expense.date.strftime("%d/%m/%Y") %></td>
+                                <td><%= expense.supplier %></td>
+                                <td class="text-right"><%= '%.2f' % expense.amount_ttc %></td>
+                                <td>
+                                  <%= link_to "Ouvrir", "https://res.cloudinary.com/myhouze/image/upload/#{expense.photo.filename}", :target => "_blank",class: "btn btn-transparent py-0", style: "font-size:12px" %>
+                                </td>
+                              </tr>
+                            <% end %>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>11. Charges récupérables non récupérées au départ du locataire</td>
+              <td class="text-right"><%= '%.0f' % @sum_non_paye %></td>
+              <!-- MODAL FRAIS -->
+              <td class="p-0"><!-- Button trigger modal -->
+                <div class="d-flex justify-content-around align-items-center">
+                  <button type="button" class="btn" data-toggle="modal" data-target="#exampleModal4">
+                    <span class="fas fa-search" style="font-size: 10px"></span>
+                  </button>
+                </div>
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal4" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="overflow:scroll">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Charges récupérables non récupérées</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <table class="table table-hover" style="background-color: white">
+                          <thead>
+                            <tr>
+                              <th scope="col">Date</th>
+                              <th scope="col">Fournisseurs</th>
+                              <th scope="col" class="text-right">MT TTC</th>
+                              <th scope="col">Justificatif</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <!-- non_paye -->
+                            <% @non_paye.each do |expense| %>
+                              <tr>
+                                <td><%= expense.date.strftime("%d/%m/%Y") %></td>
+                                <td><%= expense.supplier %></td>
+                                <td class="text-right"><%= '%.2f' % expense.amount_ttc %></td>
+                                <td>
+                                  <%= link_to "Ouvrir", "https://res.cloudinary.com/myhouze/image/upload/#{expense.photo.filename}", :target => "_blank",class: "btn btn-transparent py-0", style: "font-size:12px" %>
+                                </td>
+                              </tr>
+                            <% end %>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>13. Impositions</td>
+              <td class="text-right"><%= '%.0f' % @sum_taxe %></td>
+              <!-- MODAL FRAIS -->
+              <td class="p-0"><!-- Button trigger modal -->
+                <div class="d-flex justify-content-around align-items-center">
+                  <button type="button" class="btn" data-toggle="modal" data-target="#exampleModal5">
+                    <span class="fas fa-search" style="font-size: 10px"></span>
+                  </button>
+                </div>
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal5" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="overflow:scroll">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Impositions</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <table class="table table-hover" style="background-color: white">
+                          <thead>
+                            <tr>
+                              <th scope="col">Date</th>
+                              <th scope="col">Fournisseurs</th>
+                              <th scope="col" class="text-right">MT TTC</th>
+                              <th scope="col">Justificatif</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <!-- Taxe -->
+                            <% @taxe.each do |expense| %>
+                              <tr>
+                                <td><%= expense.date.strftime("%d/%m/%Y") %></td>
+                                <td><%= expense.supplier %></td>
+                                <td class="text-right"><%= '%.2f' % expense.amount_ttc %></td>
+                                <td>
+                                  <%= link_to "Ouvrir", "https://res.cloudinary.com/myhouze/image/upload/#{expense.photo.filename}", :target => "_blank",class: "btn btn-transparent py-0", style: "font-size:12px" %>
+                                </td>
+                              </tr>
+                            <% end %>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>18. TOTAL DES DEDUCTIONS, FRAIS ET CHARGES</strong></td>
+              <td class="text-right"><strong><%= '%.0f' % @total_deduction %></strong></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>21. Intérêts des emprunts contracté l'acquisition, la reconstruction, l'agrandissement, la réparation, l'amélioration ou la conservation de l'immeuble</td>
+              <td class="text-right"><%= '%.0f' % @sum_interet %></td>
+              <!-- MODAL FRAIS -->
+              <td class="p-0"><!-- Button trigger modal -->
+                <div class="d-flex justify-content-around align-items-center">
+                  <button type="button" class="btn" data-toggle="modal" data-target="#exampleModal6">
+                    <span class="fas fa-search" style="font-size: 10px"></span>
+                  </button>
+                </div>
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal6" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="overflow:scroll">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Intérêts des emprunts</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <table class="table table-hover" style="background-color: white">
+                          <thead>
+                            <tr>
+                              <th scope="col">Date</th>
+                              <th scope="col">Fournisseurs</th>
+                              <th scope="col" class="text-right">MT TTC</th>
+                              <th scope="col">Justificatif</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <!-- Interet -->
+                            <% @interet.each do |expense| %>
+                              <tr>
+                                <td><%= expense.date.strftime("%d/%m/%Y") %></td>
+                                <td><%= expense.supplier %></td>
+                                <td class="text-right"><%= '%.2f' % expense.amount_ttc %></td>
+                                <td>
+                                  <%= link_to "Ouvrir", "https://res.cloudinary.com/myhouze/image/upload/#{expense.photo.filename}", :target => "_blank",class: "btn btn-transparent py-0", style: "font-size:12px" %>
+                                </td>
+                              </tr>
+                            <% end %>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>22. REVENUS (+) ou DEFICITS (-)</strong></td>
+              <td class="text-right"><strong><%= '%.0f' % @revenus %></strong></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><strong>25. REVENUS NETS (+) ou DEFICITS (-)</strong></td>
+              <td class="text-right"><strong><%= '%.0f' % @revenus %></strong></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 <% end %>

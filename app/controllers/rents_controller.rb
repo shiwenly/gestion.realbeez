@@ -142,7 +142,7 @@ class RentsController < ApplicationController
     # --------- Result of selection -----------
     @rents_active = Rent.where("statut = ?", "active" ).order(created_at: :asc)
     # If params is nil
-    if params[:search] == nil
+    if params[:search] == nil || params[:search][:company] == "Toutes les sociétés" && params[:search][:building] == "Tous les immeubles" && params[:search][:tenant] == "Tous les locataires"
       @rents = policy_scope(Rent.all)
       @rents_list_unsorted = []
       # @rents = policy_scope(Rent.where("statut = ?", "active").order("name ASC, period ASC"))
@@ -151,34 +151,27 @@ class RentsController < ApplicationController
           if r.name == t.name
             @rents_list_unsorted << r
           end
-        end
-      end
-      @rents_sorted = @rents_list_unsorted.sort_by { |b| [b.name, b.period] }
-      @rents_list = []
-      @rents_sorted.each do |r|
-        if r.period.strftime("%Y").to_i == Date.today.year
-          @rents_list << r
         end
       end
       # if params = Tous companies/immeuble/locataires
-    elsif params[:search][:company] == "Toutes les sociétés" && params[:search][:building] == "Tous les immeubles" && params[:search][:tenant] == "Tous les locataires"
-      @rents = policy_scope(Rent.all)
-      @rents_list_unsorted = []
-      # @rents = policy_scope(Rent.where("statut = ?", "active").order("name ASC, period ASC"))
-      @tenants.each do |t|
-        @rents_active.each do |r|
-          if r.name == t.name
-            @rents_list_unsorted << r
-          end
-        end
-      end
-      @rents_sorted = @rents_list_unsorted.sort_by { |b| [b.name, b.period] }
-      @rents_list = []
-      @rents_sorted.each do |r|
-        if r.period.strftime("%Y").to_i == params[:search][:year].to_i
-          @rents_list << r
-        end
-      end
+      # elsif params[:search][:company] == "Toutes les sociétés" && params[:search][:building] == "Tous les immeubles" && params[:search][:tenant] == "Tous les locataires"
+      #   @rents = policy_scope(Rent.all)
+      #   @rents_list_unsorted = []
+      #   # @rents = policy_scope(Rent.where("statut = ?", "active").order("name ASC, period ASC"))
+      #   @tenants.each do |t|
+      #     @rents_active.each do |r|
+      #       if r.name == t.name
+      #         @rents_list_unsorted << r
+      #       end
+      #     end
+      #   end
+      # @rents_sorted = @rents_list_unsorted.sort_by { |b| [b.name, b.period] }
+      # @rents_list = []
+      # @rents_sorted.each do |r|
+      #   if r.period.strftime("%Y").to_i == params[:search][:year].to_i
+      #     @rents_list << r
+      #   end
+      # end
       # if params not toutes les sociétés + tous immeubles/locataires
     elsif params[:search][:company] != "Toutes les sociétés" && params[:search][:building] == "Tous les immeubles" && params[:search][:tenant] == "Tous les locataires"
       @rents = policy_scope(Rent.all)
@@ -193,13 +186,13 @@ class RentsController < ApplicationController
           end
         end
       end
-      @rents_sorted = @rents_list_unsorted.sort_by { |b| [b.name, b.period] }
-      @rents_list = []
-      @rents_sorted.each do |r|
-        if r.period.strftime("%Y") == params[:search][:year]
-          @rents_list << r
-        end
-      end
+      # @rents_sorted = @rents_list_unsorted.sort_by { |b| [b.name, b.period] }
+      # @rents_list = []
+      # @rents_sorted.each do |r|
+      #   if r.period.strftime("%Y") == params[:search][:year]
+      #     @rents_list << r
+      #   end
+      # end
       # if not tous immeubles + tous locataires
     elsif params[:search][:building] != "Tous les immeubles" && params[:search][:tenant] == "Tous les locataires"
       @rents = policy_scope(Rent.all)
@@ -214,17 +207,28 @@ class RentsController < ApplicationController
           end
         end
       end
-      @rents_sorted = @rents_list_unsorted.sort_by { |b| [b.name, b.period] }
-      @rents_list = []
-      @rents_sorted.each do |r|
-        if r.period.strftime("%Y") == params[:search][:year]
-          @rents_list << r
-        end
-      end
+      # @rents_sorted = @rents_list_unsorted.sort_by { |b| [b.name, b.period] }
+      # @rents_list = []
+      # @rents_sorted.each do |r|
+      #   if r.period.strftime("%Y") == params[:search][:year]
+      #     @rents_list << r
+      #   end
+      # end
     else
       @tenants_list
       @rents = policy_scope(Rent.all)
       @rents_list_unsorted = policy_scope(Rent.search_by_tenant(params[:search][:tenant]))
+    end
+    # ------------------ Filter by date -----------------
+    if params[:search] == nil
+      @rents_sorted = @rents_list_unsorted.sort_by { |b| [b.name, b.period] }
+      @rents_list = []
+      @rents_sorted.each do |r|
+        if r.period.strftime("%Y").to_i == Date.today.year
+          @rents_list << r
+        end
+      end
+    else
       @rents_sorted = @rents_list_unsorted.sort_by { |b| [b.name, b.period] }
       @rents_list = []
       @rents_sorted.each do |r|

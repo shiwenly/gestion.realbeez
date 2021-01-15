@@ -101,9 +101,9 @@
                     <%= link_to "", building_path(building), method: :delete, data: { confirm: "Confirmez la suppression de l'immeuble situé au #{building.address}?" }, class:"fas fa-trash", style:"font-size:12px" %>
                   </div>
                   <%= link_to building_path(building), style:"text-decoration:none; color: rgb(100, 100, 100)" do %>
-                    <p class=" mt-0 mb-3" style="" ><i class="fas fa-city mr-3" style="color: #D8A727"></i><%= building.company_name%></p>
-                    <p class=" mt-0 mb-3" style="" ><i class="fas fa-map-marker-alt mr-3" style="color: #D8A727"></i><%= building.address%></p>
-                    <p class=" mt-0 mb-3" style="" ><i class="fas fa-house-user mr-3" style="color: #D8A727"></i><%= building.number_of_flat %> appartement(s)</p>
+                    <p class=" mt-0 mb-2" style="" ><i class="fas fa-city mr-3" style="color: #D8A727"></i><%= building.company_name%></p>
+                    <p class=" mt-0 mb-2" style="" ><i class="fas fa-map-marker-alt mr-3" style="color: #D8A727"></i><%= building.address%></p>
+                    <p class=" mt-0 mb-2" style="" ><i class="fas fa-house-user mr-3" style="color: #D8A727"></i><%= building.number_of_flat %> appartement(s)</p>
                   <% end %>
                   <div class="d-flex mt-3 justify-content-end">
                     <%#= link_to "Voir détails", building_apartments_path(building), class:"btn btn-yellow-mustard"  %>

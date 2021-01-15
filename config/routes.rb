@@ -38,6 +38,6 @@ Rails.application.routes.draw do
   resources :buildings do
     resources :liasses, only: [:new, :create, :index]
   end
-  resources :liasses, only: [:show, :edit, :destroy, :update ]
+  resources :liasses, only: [:show, :edit, :destroy, :update, :index ]
 
 end
