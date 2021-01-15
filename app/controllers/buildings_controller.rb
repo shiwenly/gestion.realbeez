@@ -104,6 +104,7 @@ class BuildingsController < ApplicationController
       else
         authorize @buildings = Building.search_by_company(params[:search][:company])
       end
+      @buildings_list = @buildings.sort_by{ |b| b.name}
     end
   end
 

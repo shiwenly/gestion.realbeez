@@ -21,7 +21,7 @@
             <%= f.input :tenant_id, collection: @tenants, label: "Selectionner un locataire", include_blank: false, include_hidden: false, class:"field_input" %>
             <%= f.input :date_payment, label: "Date d'encaissement", :order => [:day, :month, :year] %>
             <%= f.input :period, label: "Période", :order => [:month, :year] %>
-            <% if @tenants != [] %>
+            <% unless @tenants == [] || @tenants == nil  %>
               <%= f.input :rent_ask, label: "Montant du loyer à payer", input_html: { value: @tenants[0].rent } %>
               <%= f.input :service_charge_ask, label: "Montant des charges à payer", input_html: { value: @tenants[0].service_charge } %>
               <%= f.input :rent_paid, label: "Montant du loyer encaissé", input_html: { value: @tenants[0].rent } %>

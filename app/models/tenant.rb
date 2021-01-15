@@ -9,7 +9,7 @@ class Tenant < ApplicationRecord
   mount_uploader :contract, PhotoUploader
   mount_uploader :inventory, PhotoUploader
 
-  validates :first_name, :last_name, :rent, :service_charge, presence: true
+  validates :apartment_id,:first_name, :last_name, :rent, :service_charge, presence: true
 
   include PgSearch::Model
   pg_search_scope :search_by_company,

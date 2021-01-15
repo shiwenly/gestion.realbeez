@@ -249,6 +249,7 @@ class TenantsController < ApplicationController
           end
         end
       end
+      @tenants_list = @tenants_list.sort_by{ |t| t.last_name}
     end
   end
 
@@ -317,20 +318,23 @@ class TenantsController < ApplicationController
 
   def create
     authorize @tenant = Tenant.new(tenant_params)
-    @tenant.apartment_name = Apartment.find(@tenant.apartment_id).name
-    unless Apartment.find(@tenant.apartment_id).building_id == nil || Apartment.find(@tenant.apartment_id).building_id == "" || Apartment.find(@tenant.apartment_id).building_id == 0
-      @tenant.building_name = Building.find(Apartment.find(@tenant.apartment_id).building_id).name
-      @tenant.building_id = Building.find(Apartment.find(@tenant.apartment_id).building_id).id
-    else
-      @tenant.building_name = "n/a - aucun immeuble"
-      @tenant.building_id = nil
-    end
-    unless Apartment.find(@tenant.apartment_id).company_id == nil || Apartment.find(@tenant.apartment_id).company_id == "" || Apartment.find(@tenant.apartment_id).company_id == 0
-      @tenant.company_name = Company.find(Apartment.find(@tenant.apartment_id).company_id).name
-      @tenant.company_id = Company.find(Apartment.find(@tenant.apartment_id).company_id).id
-    else
-      @tenant.company_name = "n/a - détention en nom propre"
-      @tenant.company_id = nil
+    if @tenant.apartment_id != nil
+      @tenant.apartment_name = Apartment.find(@tenant.apartment_id).name
+      unless Apartment.find(@tenant.apartment_id).building_id == nil || Apartment.find(@tenant.apartment_id).building_id == "" || Apartment.find(@tenant.apartment_id).building_id == 0
+        @tenant.building_name = Building.find(Apartment.find(@tenant.apartment_id).building_id).name
+        @tenant.building_id = Building.find(Apartment.find(@tenant.apartment_id).building_id).id
+      else
+        @tenant.building_name = "n/a - aucun immeuble"
+        @tenant.building_id = nil
+      end
+      unless Apartment.find(@tenant.apartment_id).company_id == nil || Apartment.find(@tenant.apartment_id).company_id == "" || Apartment.find(@tenant.apartment_id).company_id == 0
+        @tenant.company_name = Company.find(Apartment.find(@tenant.apartment_id).company_id).name
+        @tenant.company_id = Company.find(Apartment.find(@tenant.apartment_id).company_id).id
+      else
+        @tenant.company_name = "n/a - détention en nom propre"
+        @tenant.company_id = nil
+      end
+
     end
     @tenant.user_id = current_user.id
     @tenant.name = "#{@tenant.first_name} #{@tenant.last_name}"

@@ -233,6 +233,7 @@ class RentsController < ApplicationController
         end
       end
     end
+    @rent_list = @rents_list.sort_by{ |r| [r.period, r.date_payment, r.name] }
     # if params[:search] == nil
     #   @expenses_unorder = Expense.search_by_date_expense(Date.today.year)
     #   @expenses = @expenses_unorder.select{|a| a.statut == "active" && a.building_id == @building.id}.sort_by { |b| b.date }
@@ -388,7 +389,9 @@ class RentsController < ApplicationController
     # @tenant = Tenant.find(params[:tenant_id])
     # @rent.tenant = Tenant.find(params[:s])
     @rent.user_id = current_user.id
-    @rent.name = Tenant.find(@rent.tenant_id).name
+    if @rent.tenant_id != nil
+      @rent.name = Tenant.find(@rent.tenant_id).name
+    end
     @rent.statut = "active"
     if @rent.save
       redirect_to rents_path

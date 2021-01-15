@@ -190,6 +190,7 @@ class ApartmentsController < ApplicationController
           end
         end
       end
+      @apartments_list = @apartments_list.sort_by{ |a| a.name}
     end
   end
 

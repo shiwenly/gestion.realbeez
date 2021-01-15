@@ -89,7 +89,7 @@
             <p><%= link_to "Ajouter un immeuble", new_building_path, class:"btn btn-transparent-bold"%></p>
           </div>
           <div class="row justify-content-center">
-            <% @buildings.each do |building| %>
+            <% @buildings_list.each do |building| %>
               <%# unless building.statut != "active" %>
               <%# associe = building.company.associe.downcase.split(",").map(&:strip) %>
               <%# if associe.include?(current_user.email) || building.company.user == current_user %>
