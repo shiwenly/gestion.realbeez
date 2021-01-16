@@ -221,7 +221,7 @@ class RentsController < ApplicationController
     end
     # ------------------ Filter by date -----------------
     if params[:search] == nil
-      @rents_sorted = @rents_list_unsorted.sort_by { |b| [b.name, b.period] }
+      @rents_sorted = @rents_list_unsorted.sort_by { |b| [b.tenant.last_name, b.period, b.date_payment] }
       @rents_list = []
       @rents_sorted.each do |r|
         if r.period.strftime("%Y").to_i == Date.today.year
@@ -229,7 +229,7 @@ class RentsController < ApplicationController
         end
       end
     else
-      @rents_sorted = @rents_list_unsorted.sort_by { |b| [b.name, b.period] }
+      @rents_sorted = @rents_list_unsorted.sort_by { |b| [b.tenant.last_name, b.period, b.date_payment] }
       @rents_list = []
       @rents_sorted.each do |r|
         if r.period.strftime("%Y") == params[:search][:year]
