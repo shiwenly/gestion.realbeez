@@ -283,6 +283,7 @@ class BuildingsController < ApplicationController
           t.company_name = "n/a - détention en nom propre"
           t.company_id = nil
         end
+        t.building_name = @building.name
         t.save
       end
       # Update all tenants with the correct company
@@ -295,6 +296,7 @@ class BuildingsController < ApplicationController
           t.company_name = "n/a - détention en nom propre"
           t.company_id = nil
         end
+        t.building_name = @building.name
         t.save
       end
       # Update all tenants with the correct company
@@ -307,6 +309,7 @@ class BuildingsController < ApplicationController
           t.company_name = "n/a - détention en nom propre"
           t.company_id = nil
         end
+        t.building_name = @building.name
         t.save
       end
       redirect_to buildings_path

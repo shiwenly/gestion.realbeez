@@ -333,6 +333,7 @@ class ApartmentsController < ApplicationController
           t.company_name = "n/a - détention en nom propre"
           t.company_id = nil
         end
+        t.apartment_name = @apartment.name
         t.save
       end
       # Update all expense with the correct building and company
@@ -352,6 +353,7 @@ class ApartmentsController < ApplicationController
           t.company_name = "n/a - détention en nom propre"
           t.company_id = nil
         end
+        t.apartment_name = @apartment.name
         t.save
       end
       redirect_to apartments_path

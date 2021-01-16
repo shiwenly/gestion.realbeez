@@ -404,6 +404,11 @@ class TenantsController < ApplicationController
     end
     @tenant.name = "#{params[:tenant][:first_name]} #{params[:tenant][:last_name]}"
     if @tenant.update(tenant_params)
+      @rents = @tenant.rents
+      @rents.each do |r|
+        r.name = @tenant.name
+        r.save
+      end
       redirect_to tenants_path
     else
       render :edit

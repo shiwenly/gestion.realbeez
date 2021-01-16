@@ -143,6 +143,30 @@ class CompaniesController < ApplicationController
   def update
     authorize @company
     if @company.update(company_params)
+      # Update all building with correct company name
+      @buildings = Building.where("company_id = ?", @company)
+      @buildings.each do |t|
+        t.company_name = @company.name
+        t.save
+      end
+      # Update all apartments ith correct company name
+      @apartments = Apartment.where("company_id = ?", @company)
+      @apartments.each do |t|
+        t.company_name = @company.name
+        t.save
+      end
+      # Update all tenants ith correct company name
+      @tenants = Tenant.where("company_id = ?", @company)
+      @tenants.each do |t|
+        t.company_name = @company.name
+        t.save
+      end
+      # Update all expenses ith correct company name
+      @expense = Expense.where("company_id = ?", @company)
+      @expense.each do |t|
+        t.company_name = @company.name
+        t.save
+      end
       redirect_to companies_path
     else
       render :edit
