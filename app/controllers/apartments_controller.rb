@@ -316,9 +316,28 @@ class ApartmentsController < ApplicationController
       @apartment.building_name = "n/a - aucun immeuble"
     end
     if @apartment.update(apartment_params)
-      # Update all tenants in the apartment
+      # Update all tenants with the building and company
       @tenants = Tenant.where("apartment_id = ?", @apartment)
       @tenants.each do |t|
+        unless @apartment.building_id == nil || @apartment.building_id == ""
+          t.building_name = Building.find(@apartment.building_id).name
+          t.building_id = Building.find(@apartment.building_id).id
+        else
+          t.building_name = "n/a - aucun immeuble"
+          t.building_id = nil
+        end
+        unless @apartment.company_id == nil || @apartment.company_id == ""
+          t.company_name = Company.find(@apartment.company_id).name
+          t.company_id = Company.find(@apartment.company_id).id
+        else
+          t.company_name = "n/a - détention en nom propre"
+          t.company_id = nil
+        end
+        t.save
+      end
+      # Update all expense with the correct building and company
+      @expenses = Expense.where("apartment_id = ?", @apartment)
+      @expenses.each do |t|
         unless @apartment.building_id == nil || @apartment.building_id == ""
           t.building_name = Building.find(@apartment.building_id).name
           t.building_id = Building.find(@apartment.building_id).id

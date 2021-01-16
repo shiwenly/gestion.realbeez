@@ -273,6 +273,42 @@ class BuildingsController < ApplicationController
       @building.company_name = "n/a - détention en nom propre"
     end
     if @building.update(building_params)
+      # Update all appartment with the correct company
+      @apartments = Apartment.where("building_id = ?", @building)
+      @apartments.each do |t|
+        unless @building.company_id == nil || @building.company_id == ""
+          t.company_name = Company.find(@building.company_id).name
+          t.company_id = Company.find(@building.company_id).id
+        else
+          t.company_name = "n/a - détention en nom propre"
+          t.company_id = nil
+        end
+        t.save
+      end
+      # Update all tenants with the correct company
+      @tenants = Tenant.where("building_id = ?", @building)
+      @tenants.each do |t|
+        unless @building.company_id == nil || @building.company_id == ""
+          t.company_name = Company.find(@building.company_id).name
+          t.company_id = Company.find(@building.company_id).id
+        else
+          t.company_name = "n/a - détention en nom propre"
+          t.company_id = nil
+        end
+        t.save
+      end
+      # Update all tenants with the correct company
+      @expenses = Expense.where("building_id = ?", @building)
+      @expenses.each do |t|
+        unless @building.company_id == nil || @building.company_id == ""
+          t.company_name = Company.find(@building.company_id).name
+          t.company_id = Company.find(@building.company_id).id
+        else
+          t.company_name = "n/a - détention en nom propre"
+          t.company_id = nil
+        end
+        t.save
+      end
       redirect_to buildings_path
     else
       render :edit
