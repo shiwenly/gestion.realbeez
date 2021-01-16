@@ -179,7 +179,7 @@
                       <%= link_to "", edit_tenant_path(tenant)  , class:"fas fa-edit ml-2", style:"font-size:12px"  %> /
                       <%= link_to "", tenant_path(tenant), method: :delete, data: { confirm: "Confirmez la suppression du locataire #{tenant.first_name} #{tenant.last_name}?" }, class:"fas fa-trash", style:"font-size:12px" %>
                     </div>
-                    <%= link_to tenant_path(tenant), style:"text-decoration:none; color: rgb(100, 100, 100)" do %>
+                    <%#= link_to tenant_path(tenant), style:"text-decoration:none; color: rgb(100, 100, 100)" do %>
                       <p>Locataire en place : <%= tenant.current_tenant ? "Oui" : "Non"%></p>
                       <p class=" mt-0 mb-2" style="" ><i class="fas fa-city mr-3" style="color: #D8A727"></i><%= tenant.company_name%></p>
                       <p class=" mt-0 mb-2" style="" ><i class="fas fa-building mr-3" style="color: #D8A727"></i><%= tenant.building_name%></p>
@@ -212,75 +212,75 @@
                           <% end %>
                         </div>
                       </div>
-                    <% end %>
-                    <!-- <p>Statut : <%#= tenant.statut %> </p> -->
-                    <div class="d-flex mt-3 justify-content-end">
-                      <%#= link_to "Voir détails", tenant_path(tenant), class:"btn btn-yellow-mustard"  %>
+                      <%# end %>
+                      <!-- <p>Statut : <%#= tenant.statut %> </p> -->
+                      <div class="d-flex mt-3 justify-content-end">
+                        <%#= link_to "Voir détails", tenant_path(tenant), class:"btn btn-yellow-mustard"  %>
+                      </div>
                     </div>
                   </div>
-                </div>
-              <% end %>
-            </div>
-          <% else %>
-            <h4 class="text-center my-5 py-5" style="width: 100%; color:#DA334A; font-style: italic;">"Aucun locataire actuellement"</h4>
-          <% end %>
-        </div>
-      <% end %>
+                <% end %>
+              </div>
+            <% else %>
+              <h4 class="text-center my-5 py-5" style="width: 100%; color:#DA334A; font-style: italic;">"Aucun locataire actuellement"</h4>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
     </div>
   </div>
-</div>
-<script>
-  document.querySelector("#search_company").addEventListener("change", (event) => {
-    let urlPath = origin
-    let url = urlPath + "/tenants.json"
-    // GET REQUEST
-    fetch(url)
-     .then(response => response.json())
-      .then((data) => {
-        const input = document.querySelector("#search_company");
-        const output = document.querySelector("#search_building");
-        // Get the information in the field company
-        const input_data = input.options[input.selectedIndex].text;
-        if (input_data != "Toutes les sociétés") {
-          // Delete information in the filed building
-          output.innerText = ""
-          // Add n/a - aucun immeuble
-          output.insertAdjacentHTML('beforeend',
-            `
-            <option value="Tous les immeubles">Tous les immeubles</option>
-            <option value="n/a - aucun immeuble">n/a - aucun immeuble</option>
-            `
-          );
-          // Add all building where company is the same as input
-          data.forEach((item)=>{
-            if (item.company_name == input_data) {
-              output.insertAdjacentHTML('beforeend',
-                `<option value="${item.building_id}">${item.building_name}</option>`
-              );
-            }
-          });
-        } else if (input_data === "Toutes les sociétés") {
+  <script>
+    document.querySelector("#search_company").addEventListener("change", (event) => {
+      let urlPath = origin
+      let url = urlPath + "/tenants.json"
+      // GET REQUEST
+      fetch(url)
+       .then(response => response.json())
+        .then((data) => {
+          const input = document.querySelector("#search_company");
+          const output = document.querySelector("#search_building");
           // Get the information in the field company
           const input_data = input.options[input.selectedIndex].text;
-          // Delete information in the filed building
-          output.innerText = ""
-          // Add n/a - aucun immeuble
-          output.insertAdjacentHTML('beforeend',
-            `
-            <option value="Tous les immeubles">Tous les immeubles</option>
-            <option value="n/a - aucun immeuble">n/a - aucun immeuble</option>
-            `
-          );
-          // Add all building of user
-          data.forEach((item)=>{
-            if (item.building_name != undefined) {
-              output.insertAdjacentHTML('beforeend',
-                `<option value="${item.building_id}">${item.building_name}</option>`
-              );
-            }
-          });
-        };
-      }
-    );
-  });
-</script>
+          if (input_data != "Toutes les sociétés") {
+            // Delete information in the filed building
+            output.innerText = ""
+            // Add n/a - aucun immeuble
+            output.insertAdjacentHTML('beforeend',
+              `
+              <option value="Tous les immeubles">Tous les immeubles</option>
+              <option value="n/a - aucun immeuble">n/a - aucun immeuble</option>
+              `
+            );
+            // Add all building where company is the same as input
+            data.forEach((item)=>{
+              if (item.company_name == input_data) {
+                output.insertAdjacentHTML('beforeend',
+                  `<option value="${item.building_id}">${item.building_name}</option>`
+                );
+              }
+            });
+          } else if (input_data === "Toutes les sociétés") {
+            // Get the information in the field company
+            const input_data = input.options[input.selectedIndex].text;
+            // Delete information in the filed building
+            output.innerText = ""
+            // Add n/a - aucun immeuble
+            output.insertAdjacentHTML('beforeend',
+              `
+              <option value="Tous les immeubles">Tous les immeubles</option>
+              <option value="n/a - aucun immeuble">n/a - aucun immeuble</option>
+              `
+            );
+            // Add all building of user
+            data.forEach((item)=>{
+              if (item.building_name != undefined) {
+                output.insertAdjacentHTML('beforeend',
+                  `<option value="${item.building_id}">${item.building_name}</option>`
+                );
+              }
+            });
+          };
+        }
+      );
+    });
+  </script>

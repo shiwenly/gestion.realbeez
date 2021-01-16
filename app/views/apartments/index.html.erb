@@ -129,7 +129,7 @@
                       <%= link_to "", edit_apartment_path(apartment)  , class:"fas fa-edit ml-2", style:"font-size:12px"  %> /
                       <%= link_to "", apartment_path(apartment), method: :delete, data: { confirm: "Confirmez la suppression de l'appartement : #{apartment.name}?" }, class:"fas fa-trash", style:"font-size:12px" %>
                     </div>
-                    <%= link_to apartment_path(apartment), style:"text-decoration:none; color: rgb(100, 100, 100)" do %>
+                    <%#= link_to apartment_path(apartment), style:"text-decoration:none; color: rgb(100, 100, 100)" do %>
                       <!-- <p class=" mt-0 mb-3" style="" ><i class="fas fa-house-user mr-3" style="color: #D8A727"></i><%#= apartment.name %></p> -->
                       <p class=" mt-0 mb-2" style="" ><i class="fas fa-city mr-3" style="color: #D8A727"></i><%= apartment.company_name%></p>
                       <p class=" mt-0 mb-3" style="" ><i class="fas fa-building mr-3" style="color: #D8A727"></i><%= apartment.building_name%></p>
@@ -138,68 +138,68 @@
                       <div class="d-flex mt-3 justify-content-end">
                         <%#= link_to "Voir détails", apartment_tenants_path(apartment) , class:"btn btn-yellow-mustard"  %>
                       </div>
-                    <% end %>
+                      <%# end %>
+                    </div>
                   </div>
-                </div>
+                <% end %>
               <% end %>
-            <% end %>
+            </div>
           </div>
-        </div>
-      <% end %>
+        <% end %>
+      </div>
     </div>
   </div>
-</div>
-<script>
-  document.querySelector("#search_company").addEventListener("change", (event) => {
-    let urlPath = origin
-    let url = urlPath + "/apartments.json"
-    // GET REQUEST
-    fetch(url)
-     .then(response => response.json())
-      .then((data) => {
-        const input = document.querySelector("#search_company");
-        const output = document.querySelector("#search_building");
-        // Get the information in the field company
-        const input_data = input.options[input.selectedIndex].text;
-        if (input_data != "Toutes les sociétés") {
-          // Delete information in the filed building
-          output.innerText = ""
-          // Add n/a - aucun immeuble
-          output.insertAdjacentHTML('beforeend',
-            `
-            <option value="Tous les immeubles">Tous les immeubles</option>
-            <option value="n/a - aucun immeuble">n/a - aucun immeuble</option>
-            `
-          );
-          // Add all building where company is the same as input
-          data.forEach((item)=>{
-            console.log(item.building_name)
-            if (item.company_name == input_data) {
+  <script>
+    document.querySelector("#search_company").addEventListener("change", (event) => {
+      let urlPath = origin
+      let url = urlPath + "/apartments.json"
+      // GET REQUEST
+      fetch(url)
+       .then(response => response.json())
+        .then((data) => {
+          const input = document.querySelector("#search_company");
+          const output = document.querySelector("#search_building");
+          // Get the information in the field company
+          const input_data = input.options[input.selectedIndex].text;
+          if (input_data != "Toutes les sociétés") {
+            // Delete information in the filed building
+            output.innerText = ""
+            // Add n/a - aucun immeuble
+            output.insertAdjacentHTML('beforeend',
+              `
+              <option value="Tous les immeubles">Tous les immeubles</option>
+              <option value="n/a - aucun immeuble">n/a - aucun immeuble</option>
+              `
+            );
+            // Add all building where company is the same as input
+            data.forEach((item)=>{
+              console.log(item.building_name)
+              if (item.company_name == input_data) {
+                output.insertAdjacentHTML('beforeend',
+                  `<option value="${item.building_name}">${item.building_name}</option>`
+                );
+              }
+            });
+          } else if (input_data === "Toutes les sociétés") {
+            // Get the information in the field company
+            const input_data = input.options[input.selectedIndex].text;
+            // Delete information in the filed building
+            output.innerText = ""
+            // Add n/a - aucun immeuble
+            output.insertAdjacentHTML('beforeend',
+              `
+              <option value="Tous les immeubles">Tous les immeubles</option>
+              <option value="n/a - aucun immeuble">n/a - aucun immeuble</option>
+              `
+            );
+            // Add all building of user
+            data.forEach((item)=>{
               output.insertAdjacentHTML('beforeend',
                 `<option value="${item.building_name}">${item.building_name}</option>`
               );
-            }
-          });
-        } else if (input_data === "Toutes les sociétés") {
-          // Get the information in the field company
-          const input_data = input.options[input.selectedIndex].text;
-          // Delete information in the filed building
-          output.innerText = ""
-          // Add n/a - aucun immeuble
-          output.insertAdjacentHTML('beforeend',
-            `
-            <option value="Tous les immeubles">Tous les immeubles</option>
-            <option value="n/a - aucun immeuble">n/a - aucun immeuble</option>
-            `
-          );
-          // Add all building of user
-          data.forEach((item)=>{
-            output.insertAdjacentHTML('beforeend',
-              `<option value="${item.building_name}">${item.building_name}</option>`
-            );
-          });
-        };
-      }
-    );
-  });
-</script>
+            });
+          };
+        }
+      );
+    });
+  </script>
