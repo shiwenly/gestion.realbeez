@@ -419,6 +419,11 @@ class TenantsController < ApplicationController
     authorize @tenant
     @tenant.statut = "deleted"
     @tenant.save
+    @rents = @tenant.rents
+    @rents.each do |r|
+      r.statut = "deleted"
+      r.save
+    end
     redirect_to tenants_path
   end
 

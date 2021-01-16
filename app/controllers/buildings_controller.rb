@@ -323,6 +323,29 @@ class BuildingsController < ApplicationController
     @building.name = @building.name+" deleted #{@building.id}"
     @building.statut = "deleted"
     @building.save
+    # flag as deleted all appartment from this building
+    @apartments = Apartment.where("building_id = ?", @building)
+    @apartments.each do |t|
+      t.statut = "deleted"
+      t.save
+    end
+    # flag as deleted all tenants from this building
+    @tenants = Tenant.where("building_id = ?", @building)
+    @tenants.each do |t|
+      t.statut = "deleted"
+      # flag as deleted all rents from this building
+      t.rents.each do |r|
+        r.statut = "deleted"
+        r.save
+      end
+      t.save
+    end
+    # flag as deleted all expenses from this building
+    @expenses = Expense.where("building_id = ?", @building)
+    @expenses.each do |t|
+      t.statut = "deleted"
+      t.save
+    end
     redirect_to buildings_path
   end
 

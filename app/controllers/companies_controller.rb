@@ -178,6 +178,35 @@ class CompaniesController < ApplicationController
     @company.name = @company.name+" deleted #{@company.id}"
     @company.statut = "deleted"
     @company.save
+    # Flag as delete all building from this company
+    @buildings = Building.where("company_id = ?", @company)
+    @buildings.each do |t|
+      t.statut = "deleted"
+      t.save
+    end
+    # Flag as delete all apartment from this company
+    @apartments = Apartment.where("company_id = ?", @company)
+    @apartments.each do |t|
+      t.statut = "deleted"
+      t.save
+    end
+    # Flag as delete all tenants from this company
+    @tenants = Tenant.where("company_id = ?", @company)
+    @tenants.each do |t|
+      t.statut = "deleted"
+      t.save
+      # Flag as delete all rents from this company
+      t.rents.each do |r|
+        r.statut = "deleted"
+        r.save
+      end
+    end
+    # Flag as delete all expense from this company
+    @expense = Expense.where("company_id = ?", @company)
+    @expense.each do |t|
+      t.statut = "deleted"
+      t.save
+    end
     redirect_to companies_path
   end
 

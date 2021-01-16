@@ -367,6 +367,23 @@ class ApartmentsController < ApplicationController
     @apartment.name = @apartment.name+" deleted #{@apartment.id}"
     @apartment.statut = "deleted"
     @apartment.save
+    # Update all tenants with the building and company
+    @tenants = Tenant.where("apartment_id = ?", @apartment)
+    @tenants.each do |t|
+      t.statut = "deleted"
+      t.save
+      # flag as deleted all rents from this building
+      t.rents.each do |r|
+        r.statut = "deleted"
+        r.save
+      end
+    end
+    # Update all expense with the correct building and company
+    @expenses = Expense.where("apartment_id = ?", @apartment)
+    @expenses.each do |t|
+      t.statut = "deleted"
+      t.save
+    end
     redirect_to apartments_path
   end
 
