@@ -349,10 +349,10 @@ class LiassesController < ApplicationController
       end
       # ---------filter by date and calculate sum---------
       if params[:search] != nil
-        @rent_paid_unsorted = @rent_paid.select{ |a| a.period.strftime("%Y").to_i == params[:search][:year].to_i }.sort_by{ |b| b.date_payment}
+        @rent_paid_unsorted = @rent_paid.select{ |a| a.date_payment.strftime("%Y").to_i == params[:search][:year].to_i }.sort_by{ |b| b.date_payment}
         @sum_rent_paid = @rent_paid_unsorted.map{ |r| r.rent_paid}.sum
       else
-        @rent_paid_unsorted = @rent_paid.select{ |a| a.period.strftime("%Y").to_i == Date.today.year }.sort_by{ |b| b.date_payment}
+        @rent_paid_unsorted = @rent_paid.select{ |a| a.date_payment.strftime("%Y").to_i == Date.today.year }.sort_by{ |b| b.date_payment}
         @sum_rent_paid = @rent_paid_unsorted.map{ |r| r.rent_paid}.sum
       end
       # ------------ Expense sort and filter by date ----------
