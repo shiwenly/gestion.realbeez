@@ -337,7 +337,7 @@ class TenantsController < ApplicationController
 
     end
     @tenant.user_id = current_user.id
-    @tenant.name = "#{@tenant.first_name} #{@tenant.last_name}"
+    @tenant.name = "#{@tenant.first_name.strip} #{@tenant.last_name.strip}"
     @tenant.statut = "active"
     @tenant.current_tenant = true
     if @tenant.save
@@ -402,8 +402,9 @@ class TenantsController < ApplicationController
       @tenant.company_name = "n/a - détention en nom propre"
       @tenant.company_id = nil
     end
-    @tenant.name = "#{params[:tenant][:first_name]} #{params[:tenant][:last_name]}"
+    @tenant.name = "#{params[:tenant][:first_name].strip} #{params[:tenant][:last_name].strip}"
     if @tenant.update(tenant_params)
+      # Change name
       @rents = @tenant.rents
       @rents.each do |r|
         r.name = @tenant.name
