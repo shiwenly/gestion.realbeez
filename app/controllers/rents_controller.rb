@@ -221,7 +221,8 @@ class RentsController < ApplicationController
     end
     # ------------------ Filter by date -----------------
     if params[:search] == nil
-      @rents_sorted = @rents_list_unsorted.sort_by { |b| [b.tenant.last_name, b.period, b.date_payment] }
+      @rents_sorted = @rents_list_unsorted.sort_by { |b| [b.tenant.last_name, b.period] }
+      # , b.date_payment
       @rents_list = []
       @rents_sorted.each do |r|
         # if r.date_payment.strftime("%Y").to_i == Date.today.year
@@ -229,7 +230,7 @@ class RentsController < ApplicationController
         # end
       end
     else
-      @rents_sorted = @rents_list_unsorted.sort_by { |b| [b.tenant.last_name, b.period, b.date_payment] }
+      @rents_sorted = @rents_list_unsorted.sort_by { |b| [b.tenant.last_name, b.period] }
       @rents_list = []
       @rents_sorted.each do |r|
         # if r.date_payment.strftime("%Y") == params[:search][:year]
@@ -237,7 +238,8 @@ class RentsController < ApplicationController
         # end
       end
     end
-    @rent_list = @rents_list.sort_by{ |r| [r.period, r.date_payment, r.name] }
+    @rent_list = @rents_list.sort_by{ |r| [r.period, r.name] }
+    # , r.date_payment
     # if params[:search] == nil
     #   @expenses_unorder = Expense.search_by_date_expense(Date.today.year)
     #   @expenses = @expenses_unorder.select{|a| a.statut == "active" && a.building_id == @building.id}.sort_by { |b| b.date }
