@@ -419,7 +419,13 @@ class LiassesController < ApplicationController
       @frais_admin = @sum_frais_bancaire + @sum_honoraire + @sum_dossier
       # Autre frais non deductible
       # @autre_frais_non_deductible = 20 * @building.number_of_flat
-      @autre_frais_non_deductible = 20 * @apartments.count
+      if params[:search] == nil
+        @autre_frais_non_deductible = 20 * @apartments.count
+      elsif params[:search][:apartment] == "Tous les appartements"
+        @autre_frais_non_deductible = 20 * @apartments.count
+      else
+        @autre_frais_non_deductible = 20
+      end
       # Depense de réparataion
       @depense_de_reparation = @sum_frais_nettoyage + @sum_remplacement_chaudiere + @sum_reparation
       # Total deduction
