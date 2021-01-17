@@ -34,8 +34,8 @@
                     </a>
                     <div class="collapse" id="collapseExample<%= index+1 %>">
                       <div class="card card-body">
-                        <p class="mb-1">Société soumis à l'IS : <%= company.corporate_tax ? "Oui" : "Non" %></p>
-                        <p>Société soumis à la TVA : <%= company.vat ? "Oui" : "Non" %></p>
+                        <p class="mb-1">Société soumise à l'IS : <%= company.corporate_tax ? "Oui" : "Non" %></p>
+                        <p>Société soumise à la TVA : <%= company.vat ? "Oui" : "Non" %></p>
                         <% if company.associe != nil && company.associe != "" %>
                           <p class="mb-1">Les associés :  </p>
                           <% company.associe.split(",").each do |a| %>
