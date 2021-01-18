@@ -4,9 +4,15 @@ class TenantsController < ApplicationController
 
   def index
     if params[:apartment_id] != nil
-      # authorize @apartment = Apartment.find(params[:apartment_id])
-      # @tenants = policy_scope(Tenant.where("statut = ? AND apartment_id = ?", "active", @apartment.id ).order(created_at: :desc))
-      # @tenants_actuel = policy_scope(Tenant.where("statut = ? AND apartment_id = ? AND current_tenant = ?", "active", @apartment.id, true ).order(created_at: :desc))
+      authorize @apartment = Apartment.find(params[:apartment_id])
+      @tenants_list = policy_scope(Tenant.where("statut = ? AND apartment_id = ?", "active", @apartment.id ).order(created_at: :desc))
+      @rents_active = Rent.where("statut = ?", "active")
+      @rent_ask = @rents_active.select{ |r| r.tenant.apartment_id == @apartment.id && r.date_payment.strftime("%Y").to_i == Date.today.year }.map{ |r| r.rent_ask}.sum
+      @service_charge_ask = @rents_active.select{ |r| r.tenant.apartment_id == @apartment.id && r.date_payment.strftime("%Y").to_i == Date.today.year }.map{ |r| r.service_charge_ask}.sum
+      @rent_paid = @rents_active.select{ |r| r.tenant.apartment_id == @apartment.id && r.date_payment.strftime("%Y").to_i == Date.today.year }.map{ |r| r.rent_paid}.sum
+      @service_charge_paid = @rents_active.select{ |r| r.tenant.apartment_id == @apartment.id && r.date_payment.strftime("%Y").to_i == Date.today.year}.map{ |r| r.service_charge_paid}.sum
+      @solde = @rent_ask + @service_charge_ask - @rent_paid - @service_charge_paid
+      @tenants = policy_scope(Tenant.where("statut = ? AND apartment_id = ?", "active", @apartment.id ).order(created_at: :desc))
       # @tenants_passé = policy_scope(Tenant.where("statut = ? AND apartment_id = ? AND current_tenant = ?", "active", @apartment.id, false ).order(created_at: :desc))
       # @waters = policy_scope(Water.where("statut = ?", "active").order(submission_date: :desc).limit(10))
       # unless @tenants == []
@@ -318,32 +324,50 @@ class TenantsController < ApplicationController
 
   def create
     authorize @tenant = Tenant.new(tenant_params)
-    if @tenant.apartment_id != nil
-      @tenant.apartment_name = Apartment.find(@tenant.apartment_id).name
-      unless Apartment.find(@tenant.apartment_id).building_id == nil || Apartment.find(@tenant.apartment_id).building_id == "" || Apartment.find(@tenant.apartment_id).building_id == 0
-        @tenant.building_name = Building.find(Apartment.find(@tenant.apartment_id).building_id).name
-        @tenant.building_id = Building.find(Apartment.find(@tenant.apartment_id).building_id).id
+    if params[:apartment_id] != nil
+      @apartment = Apartment.find(params[:apartment_id])
+      @tenant.apartment_id = @apartment.id
+      @tenant.apartment_name = @apartment.name
+      @tenant.building_id = @apartment.building_id
+      @tenant.building_name = @apartment.building_name
+      @tenant.company_id = @apartment.company_id
+      @tenant.company_name = @apartment.company_name
+      @tenant.user_id = current_user.id
+      @tenant.name = "#{@tenant.first_name.strip} #{@tenant.last_name.strip}"
+      @tenant.statut = "active"
+      @tenant.current_tenant = true
+      if @tenant.save
+        redirect_to apartment_tenants_path(@apartment)
       else
-        @tenant.building_name = "n/a - aucun immeuble"
-        @tenant.building_id = nil
+        render :new
       end
-      unless Apartment.find(@tenant.apartment_id).company_id == nil || Apartment.find(@tenant.apartment_id).company_id == "" || Apartment.find(@tenant.apartment_id).company_id == 0
-        @tenant.company_name = Company.find(Apartment.find(@tenant.apartment_id).company_id).name
-        @tenant.company_id = Company.find(Apartment.find(@tenant.apartment_id).company_id).id
-      else
-        @tenant.company_name = "n/a - détention en nom propre"
-        @tenant.company_id = nil
-      end
-
-    end
-    @tenant.user_id = current_user.id
-    @tenant.name = "#{@tenant.first_name.strip} #{@tenant.last_name.strip}"
-    @tenant.statut = "active"
-    @tenant.current_tenant = true
-    if @tenant.save
-      redirect_to tenants_path
     else
-      render :new
+      if @tenant.apartment_id != nil
+        @tenant.apartment_name = Apartment.find(@tenant.apartment_id).name
+        unless Apartment.find(@tenant.apartment_id).building_id == nil || Apartment.find(@tenant.apartment_id).building_id == "" || Apartment.find(@tenant.apartment_id).building_id == 0
+          @tenant.building_name = Building.find(Apartment.find(@tenant.apartment_id).building_id).name
+          @tenant.building_id = Building.find(Apartment.find(@tenant.apartment_id).building_id).id
+        else
+          @tenant.building_name = "n/a - aucun immeuble"
+          @tenant.building_id = nil
+        end
+        unless Apartment.find(@tenant.apartment_id).company_id == nil || Apartment.find(@tenant.apartment_id).company_id == "" || Apartment.find(@tenant.apartment_id).company_id == 0
+          @tenant.company_name = Company.find(Apartment.find(@tenant.apartment_id).company_id).name
+          @tenant.company_id = Company.find(Apartment.find(@tenant.apartment_id).company_id).id
+        else
+          @tenant.company_name = "n/a - détention en nom propre"
+          @tenant.company_id = nil
+        end
+      end
+      @tenant.user_id = current_user.id
+      @tenant.name = "#{@tenant.first_name.strip} #{@tenant.last_name.strip}"
+      @tenant.statut = "active"
+      @tenant.current_tenant = true
+      if @tenant.save
+        redirect_to tenants_path
+      else
+        render :new
+      end
     end
   end
 

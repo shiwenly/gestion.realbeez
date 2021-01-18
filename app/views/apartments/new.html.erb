@@ -1,15 +1,24 @@
-<h3 class="text-center mt-5 mb-4">Ajouter un nouvel appartement</h3>
+<h3 class="text-center mt-5 mb-5">Ajouter un nouvel appartement</h3>
 <div class="container center mb-5">
   <div class="row justify-content-center">
     <div class="col-12 col-md-6 col-lg-6">
       <div class="center">
-        <%= simple_form_for [@apartment] do |f| %>
-          <%= f.input :company_id, collection: @companies, label: "Selectionner une société", include_blank: "n/a - détention en nom propre", include_hidden: false, class:"field_input" %>
-          <%= f.input :building_id, collection: @buildings, label: "Selectionner un immeuble", include_blank: "n/a - aucun immeuble", include_hidden: false %>
-          <%= f.input :name, label: "Saisir un nom, identifiant, référence ou numéro unique" %>
-          <%= f.input :water, label: "Numéro du compteur d'eau" %>
-          <%= f.submit "Créer", class: "btn btn-yellow-mustard mb-2" %>
-          <%= link_to "Annuler", root_path, class:"btn btn-danger mb-2" %>
+        <% if params[:building_id] != nil %>
+          <%= simple_form_for [@building, @apartment] do |f| %>
+            <%= f.input :name, label: "Saisir un nom, identifiant, référence ou numéro unique" %>
+            <%= f.input :water, label: "Numéro du compteur d'eau" %>
+            <%= f.submit "Créer", class: "btn btn-yellow-mustard mb-2" %>
+            <%= link_to "Annuler", root_path, class:"btn btn-danger mb-2" %>
+          <% end %>
+        <% else %>
+          <%= simple_form_for [@apartment] do |f| %>
+            <%= f.input :company_id, collection: @companies, label: "Selectionner une société", include_blank: "n/a - détention en nom propre", include_hidden: false, class:"field_input" %>
+            <%= f.input :building_id, collection: @buildings, label: "Selectionner un immeuble", include_blank: "n/a - aucun immeuble", include_hidden: false %>
+            <%= f.input :name, label: "Saisir un nom, identifiant, référence ou numéro unique" %>
+            <%= f.input :water, label: "Numéro du compteur d'eau" %>
+            <%= f.submit "Créer", class: "btn btn-yellow-mustard mb-2" %>
+            <%= link_to "Annuler", root_path, class:"btn btn-danger mb-2" %>
+          <% end %>
         <% end %>
       </div>
     </div>

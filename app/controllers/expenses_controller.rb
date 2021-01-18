@@ -418,6 +418,7 @@ class ExpensesController < ApplicationController
     #   @expenses = @expenses_unorder.select{|a| a.statut == "active" && a.building_id == @building.id}.sort_by { |b| b.date }
     #   @sum_vat = @expenses.map{|a| a.amount_vat}.sum
     # end
+    @sum_vat = @expenses_list.map{|a| a.amount_vat}.sum
     @sum_ttc = @expenses_list.map{|a| a.amount_ttc}.sum
   end
 

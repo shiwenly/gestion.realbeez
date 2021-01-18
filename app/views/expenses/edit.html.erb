@@ -1,4 +1,4 @@
-<h3 class="text-center mt-5 mb-4">Modifier une dépense</h3>
+<h3 class="text-center mt-5 mb-5">Modifier une dépense</h3>
 <div class="container center mb-5">
   <div class="row justify-content-center">
     <div class="col-12 col-md-6 col-lg-6">
@@ -28,9 +28,9 @@
           <%= f.input :supplier, label: "Nom du fournisseur et description" %>
           <%= f.input :amount_ttc, label: "Montant TTC" %>
           <% #if @expense.building.company.corporate_tax == true %>
-          <%#= f.input :amount_vat, label: "Montant de TVA"%>
+          <%= f.input :amount_vat, label: "Montant de TVA"%>
           <%# else %>
-          <%= f.input :amount_vat, as: :hidden, label: "Montant de TVA"%>
+          <%#= f.input :amount_vat, as: :hidden, label: "Montant de TVA"%>
           <%# end %>
           <%= f.input :photo, label: false %>
           <%= f.input :photo_cache, as: :hidden %>

@@ -5,8 +5,15 @@ class BuildingsController < ApplicationController
 
   def index
     if params[:company_id] != nil
-      # @company = Company.find(params[:company_id])
-      # authorize @buildings = policy_scope(Building.where("statut = ? AND company_id = ?", "active", @company.id ).order(created_at: :asc))
+      @company = Company.find(params[:company_id])
+      authorize @buildings = policy_scope(Building.where("statut = ? AND company_id = ?", "active", @company.id ).order(created_at: :asc))
+      @rents_active = Rent.where("statut = ?", "active")
+      @rent_ask = @rents_active.select{ |r| r.tenant.company_id == @company.id && r.date_payment.strftime("%Y").to_i == Date.today.year }.map{ |r| r.rent_ask}.sum
+      @service_charge_ask = @rents_active.select{ |r| r.tenant.company_id == @company.id && r.date_payment.strftime("%Y").to_i == Date.today.year }.map{ |r| r.service_charge_ask}.sum
+      @rent_paid = @rents_active.select{ |r| r.tenant.company_id == @company.id && r.date_payment.strftime("%Y").to_i == Date.today.year }.map{ |r| r.rent_paid}.sum
+      @service_charge_paid = @rents_active.select{ |r| r.tenant.company_id == @company.id && r.date_payment.strftime("%Y").to_i == Date.today.year}.map{ |r| r.service_charge_paid}.sum
+      @solde = @rent_ask + @service_charge_ask - @rent_paid - @service_charge_paid
+
       # unless @buildings == []
       #   @company_building_sum_rent_ask = 0
       #   @company_building_sum_service_charge_ask = 0
@@ -233,23 +240,30 @@ class BuildingsController < ApplicationController
 
   def create
     authorize @building = Building.new(building_params)
-    # if params[:company_id] != nil
-    #   @company = Company.find(params[:company_id])
-    # else
-    #   @company = Company.find(params[:building][:company_id])
-    # end
-    # @building.company = @company
-    @building.user_id = current_user.id
-    @building.statut = "active"
-    unless @building.company_id == nil || @building.company_id == ""
-      @building.company_name = Company.find(@building.company_id).name
+    if params[:company_id] != nil
+      @company = Company.find(params[:company_id])
+      @building.company_name = @company.name
+      @building.company_id = @company.id
+      @building.user_id = current_user.id
+      @building.statut = "active"
+      if @building.save
+        redirect_to company_buildings_path(@company)
+      else
+        render :new
+      end
     else
-      @building.company_name = "n/a - détention en nom propre"
-    end
-    if @building.save
-      redirect_to buildings_path
-    else
-      render :new
+      unless @building.company_id == nil || @building.company_id == ""
+        @building.company_name = Company.find(@building.company_id).name
+      else
+        @building.company_name = "n/a - détention en nom propre"
+      end
+      @building.user_id = current_user.id
+      @building.statut = "active"
+      if @building.save
+        redirect_to buildings_path
+      else
+        render :new
+      end
     end
   end
 

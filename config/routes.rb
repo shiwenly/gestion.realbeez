@@ -10,14 +10,16 @@ Rails.application.routes.draw do
 
   resources :companies do
     resources :buildings, only: [:new, :create, :index]
-    resources :apartments, only: [:new, :create, :index]
+    # resources :apartments, only: [:new, :create, :index]
   end
   resources :buildings, only: [:new, :edit, :destroy, :update, :index ]
-  resources :apartments, only: [:edit, :destroy, :update, :index, :new ]
 
   resources :buildings do
-    resources :expenses, only: [:new, :create, :index]
+    resources :apartments, only: [:index, :new, :create ]
+    # resources :expenses, only: [:new, :create, :index]
   end
+  resources :apartments, only: [:edit, :destroy, :update, :index, :new ]
+
   resources :expenses, only: [:edit, :destroy, :update, :new, :create, :index ]
 
   resources :apartments do

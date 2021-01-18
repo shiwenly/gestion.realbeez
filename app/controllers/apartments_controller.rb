@@ -5,8 +5,14 @@ class ApartmentsController < ApplicationController
   def index
     # Appartments
     if params[:building_id] != nil
-      # @building = Building.find(params[:building_id])
-      # authorize @apartments = policy_scope(Apartment.where("statut = ? AND building_id = ?", "active", @building.id).order(created_at: :asc))
+      @building = Building.find(params[:building_id])
+      authorize @apartments = policy_scope(Apartment.where("statut = ? AND building_id = ?", "active", @building.id).order(created_at: :asc))
+      @rents_active = Rent.where("statut = ?", "active")
+      @rent_ask = @rents_active.select{ |r| r.tenant.building_id == @building.id && r.date_payment.strftime("%Y").to_i == Date.today.year }.map{ |r| r.rent_ask}.sum
+      @service_charge_ask = @rents_active.select{ |r| r.tenant.building_id == @building.id && r.date_payment.strftime("%Y").to_i == Date.today.year }.map{ |r| r.service_charge_ask}.sum
+      @rent_paid = @rents_active.select{ |r| r.tenant.building_id == @building.id && r.date_payment.strftime("%Y").to_i == Date.today.year }.map{ |r| r.rent_paid}.sum
+      @service_charge_paid = @rents_active.select{ |r| r.tenant.building_id == @building.id && r.date_payment.strftime("%Y").to_i == Date.today.year}.map{ |r| r.service_charge_paid}.sum
+      @solde = @rent_ask + @service_charge_ask - @rent_paid - @service_charge_paid
       # unless @apartments == []
       #   @building_sum_rent_ask = 0
       #   @building_sum_service_charge_ask = 0
@@ -230,6 +236,7 @@ class ApartmentsController < ApplicationController
     @companies_user = Company.where("user_id = ? AND statut = ?", current_user.id, "active" ).order(created_at: :asc)
     if params[:building_id] != nil
       authorize @apartment = Apartment.new
+      @building = Building.find(params[:building_id])
     else
       authorize @apartment = Apartment.new
       # List of companies of the user and where user is an associate
@@ -258,23 +265,38 @@ class ApartmentsController < ApplicationController
 
   def create
     authorize @apartment = Apartment.new(apartment_params)
-    # @building = Building.find(params[:building_id])
-    unless @apartment.company_id == nil || @apartment.company_id == "" || @apartment.company_id == 0
-      @apartment.company_name = Company.find(@apartment.company_id).name
+    if params[:building_id] != nil
+      @building = Building.find(params[:building_id])
+      @apartment.building_id = @building.id
+      @apartment.building_name = @building.name
+      @apartment.company_id = @building.company_id
+      @apartment.company_name = @building.company_name
+      @apartment.user_id = current_user.id
+      @apartment.statut = "active"
+      if @apartment.save
+        redirect_to building_apartments_path(@building)
+      else
+        render :new
+      end
     else
-      @apartment.company_name = "n/a - détention en nom propre"
-    end
-    unless @apartment.building_id == nil || @apartment.building_id == "" || @apartment.building_id == 0
-      @apartment.building_name = Building.find(@apartment.building_id).name
-    else
-      @apartment.building_name = "n/a - aucun immeuble"
-    end
-    @apartment.user_id = current_user.id
-    @apartment.statut = "active"
-    if @apartment.save
-      redirect_to apartments_path
-    else
-      render :new
+      # @building = Building.find(params[:building_id])
+      unless @apartment.company_id == nil || @apartment.company_id == "" || @apartment.company_id == 0
+        @apartment.company_name = Company.find(@apartment.company_id).name
+      else
+        @apartment.company_name = "n/a - détention en nom propre"
+      end
+      unless @apartment.building_id == nil || @apartment.building_id == "" || @apartment.building_id == 0
+        @apartment.building_name = Building.find(@apartment.building_id).name
+      else
+        @apartment.building_name = "n/a - aucun immeuble"
+      end
+      @apartment.user_id = current_user.id
+      @apartment.statut = "active"
+      if @apartment.save
+        redirect_to apartments_path
+      else
+        render :new
+      end
     end
   end
 
