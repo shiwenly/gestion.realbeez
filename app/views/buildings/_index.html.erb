@@ -5,8 +5,6 @@
       <!-- Index buildings of one companies  -->
       <% if params[:company_id] != nil %>
         <% unless @company.statut == "deleted" %>
-          <%# associe = @company.associe.downcase.split(",").map(&:strip) %>
-          <%# if associe.include?(current_user.email) || @company.user == current_user || current_user.admin == true %>
           <div class="container my-5">
             <h3 class="text-center mt-5" style="color: #D8A727; font-family: Simply Rounded; letter-spacing: 1px">Vos immeubles </h3>
             <h5 class="text-center mb-4">société <%= @company.name %></h5>
@@ -60,9 +58,6 @@
               <% end %>
             </div>
           </div>
-          <%# else %>
-          <!-- <h3 class="text-center my-5" style="color:red">Vous n'avez pas accès à cette page</h3> -->
-          <%# end %>
         <% else %>
           <h3 class="text-center my-5" style="color:red">La société a été supprimée</h3>
         <% end %>
