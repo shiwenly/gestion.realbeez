@@ -33,7 +33,7 @@ Rails.application.routes.draw do
   resources :waters, only: [:edit, :destroy, :update, :index, :new]
 
   resources :tenants do
-    resources :rents, only: [:new, :create]
+    resources :rents, only: [:new, :create, :index]
   end
   resources :rents, only: [:edit, :destroy, :update, :index, :new, :create]
 

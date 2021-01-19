@@ -9,8 +9,8 @@
             <%= f.input :period, label: "Période", :order => [:month, :year] %>
             <%= f.input :rent_ask, label: "Montant du loyer à payer", input_html: { value: @tenant.rent } %>
             <%= f.input :service_charge_ask, label: "Montant des charges à payer", input_html: { value: @tenant.service_charge } %>
-            <%= f.input :rent_paid, label: "Montant du loyer encaissé" %>
-            <%= f.input :service_charge_paid, label: "Montant des charges encaissé" %>
+            <%= f.input :rent_paid, label: "Montant du loyer encaissé", input_html: { value: @tenant.rent } %>
+            <%= f.input :service_charge_paid, label: "Montant des charges encaissé", input_html: { value: @tenant.service_charge }  %>
             <%= f.submit "Créer", class: "btn btn-yellow-mustard mb-2", data: { confirm: "Confirmez votre saisie ?"  } %>
             <%= link_to "Annuler", root_path, class:"btn btn-danger mb-2" %>
           <% end %>
