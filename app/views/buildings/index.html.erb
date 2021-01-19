@@ -38,7 +38,7 @@
                 <p><%= link_to "Ajouter un immeuble", new_company_building_path(@company), class:"btn btn-transparent-bold"%></p>
               </div>
               <div class="row justify-content-center">
-                <% if @buildings =! [] %>
+                <% unless @buildings == [] %>
                   <% @buildings.each do |building| %>
                     <div class="p-3 col-12 col-md-6">
                       <div class="p-4 content border mb-3", style="box-shadow: 0 0 5px rgba(0,0,0,0.1); background-color: white">
@@ -61,6 +61,7 @@
                   <% end %>
                 <% else %>
                   <h4 class="text-center mt-4 mb-5 py-5" style="width: 100%; color:#DA334A; font-style: italic;">"Aucun immeuble actuellement"</h4>
+                  <% raise %>
                 <% end %>
               </div>
             </div>
