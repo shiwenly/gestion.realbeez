@@ -6,7 +6,7 @@ class ApartmentsController < ApplicationController
     # Appartments
     if params[:building_id] != nil
       @building = Building.find(params[:building_id])
-      authorize @apartments = policy_scope(Apartment.where("statut = ? AND building_id = ?", "active", @building.id).order(created_at: :asc))
+      authorize @apartments = policy_scope(Apartment.where("statut = ? AND building_id = ?", "active", @building.id).order(name: :asc))
       @rents_active = Rent.where("statut = ?", "active")
       @rent_ask = @rents_active.select{ |r| r.tenant.building_id == @building.id && r.date_payment.strftime("%Y").to_i == Date.today.year }.map{ |r| r.rent_ask}.sum
       @service_charge_ask = @rents_active.select{ |r| r.tenant.building_id == @building.id && r.date_payment.strftime("%Y").to_i == Date.today.year }.map{ |r| r.service_charge_ask}.sum

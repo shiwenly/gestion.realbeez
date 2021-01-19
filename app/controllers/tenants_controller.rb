@@ -5,7 +5,7 @@ class TenantsController < ApplicationController
   def index
     if params[:apartment_id] != nil
       authorize @apartment = Apartment.find(params[:apartment_id])
-      @tenants_list = policy_scope(Tenant.where("statut = ? AND apartment_id = ?", "active", @apartment.id ).order(created_at: :desc))
+      @tenants_list = policy_scope(Tenant.where("statut = ? AND apartment_id = ?", "active", @apartment.id ).order(name: :asc))
       @rents_active = Rent.where("statut = ?", "active")
       @rent_ask = @rents_active.select{ |r| r.tenant.apartment_id == @apartment.id && r.date_payment.strftime("%Y").to_i == Date.today.year }.map{ |r| r.rent_ask}.sum
       @service_charge_ask = @rents_active.select{ |r| r.tenant.apartment_id == @apartment.id && r.date_payment.strftime("%Y").to_i == Date.today.year }.map{ |r| r.service_charge_ask}.sum

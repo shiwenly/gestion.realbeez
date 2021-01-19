@@ -4,8 +4,8 @@ class CompaniesController < ApplicationController
   before_action :set_company, only: [:edit, :show, :update, :destroy]
 
   def index
-    @companies = policy_scope(Company.where("statut = ?", "active" ).order(created_at: :asc))
-    @companies_active = Company.where("statut = ?", "active" ).order(created_at: :asc)
+    @companies = policy_scope(Company.where("statut = ?", "active" ).order(name: :asc))
+    @companies_active = Company.where("statut = ?", "active" ).order(name: :asc)
     @companies_list = []
     @companies_active.each do |c|
       associe = c.associe.downcase.split(",").map(&:strip)

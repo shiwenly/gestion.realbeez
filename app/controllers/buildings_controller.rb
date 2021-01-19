@@ -6,7 +6,7 @@ class BuildingsController < ApplicationController
   def index
     if params[:company_id] != nil
       @company = Company.find(params[:company_id])
-      authorize @buildings = policy_scope(Building.where("statut = ? AND company_id = ?", "active", @company.id ).order(created_at: :asc))
+      authorize @buildings = policy_scope(Building.where("statut = ? AND company_id = ?", "active", @company.id ).order(name: :asc))
       @rents_active = Rent.where("statut = ?", "active")
       @rent_ask = @rents_active.select{ |r| r.tenant.company_id == @company.id && r.date_payment.strftime("%Y").to_i == Date.today.year }.map{ |r| r.rent_ask}.sum
       @service_charge_ask = @rents_active.select{ |r| r.tenant.company_id == @company.id && r.date_payment.strftime("%Y").to_i == Date.today.year }.map{ |r| r.service_charge_ask}.sum
