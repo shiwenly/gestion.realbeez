@@ -28,24 +28,28 @@
   </div>
   <!-- ------------------------- -->
   <div class="row justify-content-center mb-4 justify-content-center">
-    <% @apartments.each do |apartment| %>
-      <div class="p-3 col-12 col-md-6">
-        <div class="p-4 content border mb-3", style="box-shadow: 0 0 5px rgba(0,0,0,0.1); background-color: white">
-          <div class="d-flex align-items-center mb-4 justify-content-center">
-            <p class="m-0 p-0" style="color: #D8A727; font-family: Simply Rounded; font-size: 22px; letter-spacing: 1px"><%= apartment.name %></p>
-            <%= link_to "", edit_apartment_path(apartment)  , class:"fas fa-edit ml-2", style:"font-size:12px"  %> /
-            <%= link_to "", apartment_path(apartment), method: :delete, data: { confirm: "Confirmez la suppression de l'appartement : #{apartment.name}?" }, class:"fas fa-trash", style:"font-size:12px" %>
-          </div>
-          <%= link_to apartment_tenants_path(apartment), style:"text-decoration:none; color: rgb(100, 100, 100)" do %>
-            <p class=" mt-0 mb-2" style="" ><i class="fas fa-city mr-3" style="color: #D8A727"></i><%= apartment.company_name%></p>
-            <p class=" mt-0 mb-3" style="" ><i class="fas fa-building mr-3" style="color: #D8A727"></i><%= apartment.building_name%></p>
-            <p>Numéro du compteur d'eau : <%= apartment.water %></p>
-            <div class="d-flex mt-3 justify-content-end">
-              <%= link_to "Voir détails", apartment_tenants_path(apartment) , class:"btn btn-yellow-mustard"  %>
+    <% if @apartments != [%>
+      <% @apartments.each do |apartment| %>
+        <div class="p-3 col-12 col-md-6">
+          <div class="p-4 content border mb-3", style="box-shadow: 0 0 5px rgba(0,0,0,0.1); background-color: white">
+            <div class="d-flex align-items-center mb-4 justify-content-center">
+              <p class="m-0 p-0" style="color: #D8A727; font-family: Simply Rounded; font-size: 22px; letter-spacing: 1px"><%= apartment.name %></p>
+              <%= link_to "", edit_apartment_path(apartment)  , class:"fas fa-edit ml-2", style:"font-size:12px"  %> /
+              <%= link_to "", apartment_path(apartment), method: :delete, data: { confirm: "Confirmez la suppression de l'appartement : #{apartment.name}?" }, class:"fas fa-trash", style:"font-size:12px" %>
             </div>
-          <% end %>
+            <%= link_to apartment_tenants_path(apartment), style:"text-decoration:none; color: rgb(100, 100, 100)" do %>
+              <p class=" mt-0 mb-2" style="" ><i class="fas fa-city mr-3" style="color: #D8A727"></i><%= apartment.company_name%></p>
+              <p class=" mt-0 mb-3" style="" ><i class="fas fa-building mr-3" style="color: #D8A727"></i><%= apartment.building_name%></p>
+              <p>Numéro du compteur d'eau : <%= apartment.water %></p>
+              <div class="d-flex mt-3 justify-content-end">
+                <%= link_to "Voir détails", apartment_tenants_path(apartment) , class:"btn btn-yellow-mustard"  %>
+              </div>
+            <% end %>
+          </div>
         </div>
-      </div>
+      <% end %>
+    <% else %>
+      <h4 class="text-center my-5 py-5" style="width: 100%; color:#DA334A; font-style: italic;">"Aucun appartement actuellement"</h4>
     <% end %>
   </div>
 </div>

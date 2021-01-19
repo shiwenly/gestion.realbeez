@@ -14,43 +14,47 @@
         </div>
         <% counter = 1 %>
         <div class="row justify-content-center">
-          <% @companies.each_with_index do |company, index| %>
-            <% if company.statut == "active" %>
-              <% associe = company.associe.downcase.split(",").map(&:strip) %>
-              <% if associe.include?(current_user.email) || company.user == current_user %>
-                <div class="p-3 col-12 col-md-6">
-                  <div class="p-4 content border mb-4", style="box-shadow: 0 0 5px rgba(0,0,0,0.1); background-color: white">
-                    <div class="d-flex align-items-center mb-4 justify-content-center">
-                      <p class="m-0 p-0" style="color: #D8A727; font-family: Simply Rounded; font-size: 22px; letter-spacing: 1px"><%= company.name %></p>
-                      <%= link_to "", edit_company_path(company), class:"fas fa-edit ml-2", style:"font-size:12px"  %> /
-                      <%= link_to "", company_path(company), method: :delete, data: { confirm: "Confirmez la suppression de la société #{company.name}?" }, class:"fas fa-trash", style:"font-size:12px" %>
-                    </div>
-                    <!-- <p class=" mt-0 mb-3" style="" ><i class="fas fa-city mr-3" style="color: #D8A727"></i><%#= company.name %></p> -->
-                    <p class=" mt-0 mb-3" style="" ><i class="fas fa-map-marker-alt mr-3" style="color: #D8A727"></i><%= company.address %></p>
-                    <!-- Collapse -->
-                    <a class="" data-toggle="collapse" href="#collapseExample<%= index+1 %>" role="button" aria-expanded="false" aria-controls="collapseExample<%= index+1 %>" style="text-decoration: none">
-                      <i class="btn btn-transparent fas fa-angle-double-down" style="font-size: 14px"></i>
-                      <span class="m-0 ml-1" style="color: rgb(100,100,100">Plus d'information</span>
-                    </a>
-                    <div class="collapse" id="collapseExample<%= index+1 %>">
-                      <div class="card card-body">
-                        <p class="mb-1">Société soumise à l'IS : <%= company.corporate_tax ? "Oui" : "Non" %></p>
-                        <p>Société soumise à la TVA : <%= company.vat ? "Oui" : "Non" %></p>
-                        <% if company.associe != nil && company.associe != "" %>
-                          <p class="mb-1">Les associés :  </p>
-                          <% company.associe.split(",").each do |a| %>
-                            <li class="px-2" style="font-size: 14px"><%= a %></li>
-                          <% end %>
+          <% if @companies_list != [] %>
+            <% @companies_list.each_with_index do |company, index| %>
+              <%# if company.statut == "active" %>
+              <%# associe = company.associe.downcase.split(",").map(&:strip) %>
+              <%# if associe.include?(current_user.email) || company.user == current_user %>
+              <div class="p-3 col-12 col-md-6">
+                <div class="p-4 content border mb-4", style="box-shadow: 0 0 5px rgba(0,0,0,0.1); background-color: white">
+                  <div class="d-flex align-items-center mb-4 justify-content-center">
+                    <p class="m-0 p-0" style="color: #D8A727; font-family: Simply Rounded; font-size: 22px; letter-spacing: 1px"><%= company.name %></p>
+                    <%= link_to "", edit_company_path(company), class:"fas fa-edit ml-2", style:"font-size:12px"  %> /
+                    <%= link_to "", company_path(company), method: :delete, data: { confirm: "Confirmez la suppression de la société #{company.name}?" }, class:"fas fa-trash", style:"font-size:12px" %>
+                  </div>
+                  <!-- <p class=" mt-0 mb-3" style="" ><i class="fas fa-city mr-3" style="color: #D8A727"></i><%#= company.name %></p> -->
+                  <p class=" mt-0 mb-3" style="" ><i class="fas fa-map-marker-alt mr-3" style="color: #D8A727"></i><%= company.address %></p>
+                  <!-- Collapse -->
+                  <a class="" data-toggle="collapse" href="#collapseExample<%= index+1 %>" role="button" aria-expanded="false" aria-controls="collapseExample<%= index+1 %>" style="text-decoration: none">
+                    <i class="btn btn-transparent fas fa-angle-double-down" style="font-size: 14px"></i>
+                    <span class="m-0 ml-1" style="color: rgb(100,100,100">Plus d'information</span>
+                  </a>
+                  <div class="collapse" id="collapseExample<%= index+1 %>">
+                    <div class="card card-body">
+                      <p class="mb-1">Société soumise à l'IS : <%= company.corporate_tax ? "Oui" : "Non" %></p>
+                      <p>Société soumise à la TVA : <%= company.vat ? "Oui" : "Non" %></p>
+                      <% if company.associe != nil && company.associe != "" %>
+                        <p class="mb-1">Les associés :  </p>
+                        <% company.associe.split(",").each do |a| %>
+                          <li class="px-2" style="font-size: 14px"><%= a %></li>
                         <% end %>
-                      </div>
-                    </div>
-                    <div class="d-flex mt-3 justify-content-end">
-                      <%= link_to "Voir détails", company_buildings_path(company), class:"btn btn-yellow-mustard"  %>
+                      <% end %>
                     </div>
                   </div>
+                  <div class="d-flex mt-3 justify-content-end">
+                    <%= link_to "Voir détails", company_buildings_path(company), class:"btn btn-yellow-mustard"  %>
+                  </div>
                 </div>
-              <% end %>
+              </div>
+              <%# end %>
+              <%# end %>
             <% end %>
+          <% else %>
+            <h4 class="text-center my-5 py-5" style="width: 100%; color:#DA334A; font-style: italic;">"Aucune société actuellement"</h4>
           <% end %>
         </div>
         <!-- ONLY FOR ADMIN -->

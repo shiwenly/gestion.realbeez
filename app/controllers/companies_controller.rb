@@ -5,6 +5,14 @@ class CompaniesController < ApplicationController
 
   def index
     @companies = policy_scope(Company.where("statut = ?", "active" ).order(created_at: :asc))
+    @companies_active = Company.where("statut = ?", "active" ).order(created_at: :asc)
+    @companies_list = []
+    @companies_active.each do |c|
+      associe = c.associe.downcase.split(",").map(&:strip)
+      if associe.include?(current_user.email) || c.user == current_user
+        @companies_list << c
+      end
+    end
   end
 
   def show
