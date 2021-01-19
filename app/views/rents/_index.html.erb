@@ -1,0 +1,91 @@
+<h3 class="text-center mt-5" style="color: #D8A727; font-family: Simply Rounded; letter-spacing: 1px">Suivi des loyers</h3>
+<h5 class="text-center mb-4"><%= @tenant.name %></h5>
+<%= form_for :search, defaults: { required: false }, url:tenant_rents_path(@tenant), method: "GET", html: { class: '' } do |f| %>
+  <div class="mt-5 mb-3">
+    <% if params[:search] != nil %>
+      <div class="row">
+        <div class="col-4 col-md-2 pr-0 mt-1">
+          <%= f.select :year,  @years,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:year]  %>
+        </div>
+        <div class="col-1 pr-0 d-flex align-items-center mt-1">
+          <%= f.submit "Filtrer", class: "btn btn-yellow-mustard-small" %>
+        </div>
+      </div>
+    <% else %>
+      <div class="row">
+        <div class="col-4 col-md-2 pr-0 mt-1">
+          <%= f.select :year,  @years,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: Date.today.year  %>
+        </div>
+        <div class="col-1 pr-0 d-flex align-items-center mt-1">
+          <%= f.submit "Filtrer", class: "btn btn-yellow-mustard-small" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+<h5 class="border-top pt-3"></h5>
+<div class="mt-2 mb-4">
+  <p><%= link_to "Ajouter un loyer", new_tenant_rent_path(@tenant), class:"btn btn-transparent-bold"%></p>
+</div>
+<!-- Tableau  -->
+<div class="" style="overflow:scroll;">
+  <div class="mb-5" style="font-size: 12px ">
+    <table class="table table-hover" style="background-color: white">
+      <thead>
+        <tr>
+          <!-- <th scope="col">id</th> -->
+          <th scope="col">Date encaissement</th>
+          <th scope="col">Mois</th>
+          <th scope="col">Société</th>
+          <th scope="col">Immeuble</th>
+          <th scope="col">Locataire</th>
+          <th scope="col">Loyer appelé</th>
+          <th scope="col">Charges appelées</th>
+          <th scope="col">Loyer versé</th>
+          <th scope="col">Charges versées</th>
+          <th scope="col">Solde</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @rents_list.each do |rent| %>
+          <tr>
+            <!-- <td><%#= rent.id %></td> -->
+            <% if rent.date_payment != nil %>
+              <td><%= rent.date_payment.strftime("%d/%m/%Y") %></td>
+            <% else %>
+              <td><%= link_to "A compléter", edit_rent_path(rent) %></td>
+            <% end %>
+            <td><%= rent.period.strftime("%b %Y") %></td>
+            <td><%= rent.tenant.company_name %></td>
+            <td><%= rent.tenant.building_name %></td>
+            <td><%= rent.tenant.name %></td>
+            <td><%= rent.rent_ask %></td>
+            <td><%= rent.service_charge_ask %></td>
+            <td><%= rent.rent_paid %></td>
+            <td><%= rent.service_charge_paid %></td>
+            <td><%= rent.rent_ask + rent.service_charge_ask - rent.service_charge_paid - rent.rent_paid %></td>
+            <td>
+              <%= link_to "", edit_rent_path(rent), class:"fas fa-edit mr-2" %>
+              <%= link_to "",rent_path(rent), method: :delete, data: { confirm: "Confirmez la suppression de la saisie?" }, class:"fas fa-trash" %>
+            </td>
+          </tr>
+        <% end %>
+        <tr style="font-weight: bolder">
+          <td>TOTAL</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td><%= @sum_rent_ask %></td>
+          <td><%= @sum_service_charge_ask %></td>
+          <td><%= @sum_rent_paid %></td>
+          <td><%= @sum_service_charge_paid %></td>
+          <td><%= @solde %></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <br>
+  </div>
+</div>

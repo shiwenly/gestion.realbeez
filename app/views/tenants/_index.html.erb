@@ -1,0 +1,83 @@
+<div class="container mt-5">
+  <h3 class="text-center mt-5" style="color: #D8A727; font-family: Simply Rounded; letter-spacing: 1px">Vos locataires </h3>
+  <h5 class="text-center mb-4"><%= @apartment.name %></h5>
+  <!-- <h5 class="text-center mb-4"><%#= @apartment.building.address %></h5> -->
+  <!-- <p class="mt-5"> -->
+  <%#= link_to "Page d'accueil", root_path, style:"text-decoration:none; color:rgb(100, 100, 100)"  %>
+  <%#= link_to "Sociétés", companies_path, style:"text-decoration:none; color:rgb(100, 100, 100)" %>
+  <%#= link_to "Immeubles", company_buildings_path(Building.find(@apartment.company_id)), style:"text-decoration:none; color:rgb(100, 100, 100)" %>
+  <%#= link_to "Appartements", building_apartments_path(@apartment.building_id), style:"text-decoration:none; color:rgb(100, 100, 100)" %>
+  <%#= link_to "Locataire", apartment_tenants_path(@apartment), style:"text-decoration:none; color:rgb(100, 100, 100)" %>
+  <!-- </p> -->
+  <!-- <div class="mt-2 mb-4 border-top pt-3"></div> -->
+  <%#= render 'shared/icon_tenant' %>
+  <% unless @tenants == [] %>
+    <div class="row justify-content-center">
+      <div class="p-3 col-12 col-md-6 my-4">
+        <div class="p-4 content border mb-4", style="box-shadow: 0 0 5px rgba(0,0,0,0.1); background-color: white">
+          <p style="font-weight: bolder">Chiffres <%= Date.today.year %> : Appartement <%= @apartment.name %></p>
+          <p class="mb-1">Loyers charges comprises encaissés : <%= '%.0f' % (@rent_paid + @service_charge_paid) %> €</p>
+          <p><em>Loyers hors charges encaissés :</em> <%= '%.0f' % @rent_paid %> €</p>
+          <p class="border-bottom mx-4"> </p>
+          <p class="mb-1">Loyers charges comprises manquant : <%= '%.0f' % @solde %> €</p>
+        </div>
+      </div>
+    </div>
+  <% end %>
+  <h5 class="border-top pt-3"></h5>
+  <div class="mt-2 mb-4">
+    <p><%= link_to "Ajouter un locataire", new_apartment_tenant_path(@apartment), class:"btn btn-transparent-bold"%></p>
+  </div>
+  <% counter = 1 %>
+  <% if @tenants_list != []  %>
+    <div class="row justify-content-center">
+      <% @tenants_list.each_with_index do |tenant, index| %>
+        <div class="p-3 col-12 col-md-6">
+          <div class="p-4 content border mb-4", style="box-shadow: 0 0 5px rgba(0,0,0,0.1); background-color: white">
+            <div class="d-flex align-items-center mb-4 justify-content-center">
+              <p class="m-0 p-0" style="color: #D8A727; font-family: Simply Rounded; font-size: 22px; letter-spacing: 1px"><%= tenant.first_name %> <%= tenant.last_name %> </p>
+              <%= link_to "", edit_tenant_path(tenant)  , class:"fas fa-edit ml-2", style:"font-size:12px"  %> /
+              <%= link_to "", tenant_path(tenant), method: :delete, data: { confirm: "Confirmez la suppression du locataire #{tenant.first_name} #{tenant.last_name}?" }, class:"fas fa-trash", style:"font-size:12px" %>
+            </div>
+            <p>Locataire en place : <%= tenant.current_tenant ? "Oui" : "Non"%></p>
+            <p class=" mt-0 mb-2" style="" ><i class="fas fa-city mr-3" style="color: #D8A727"></i><%= tenant.company_name%></p>
+            <p class=" mt-0 mb-2" style="" ><i class="fas fa-building mr-3" style="color: #D8A727"></i><%= tenant.building_name%></p>
+            <p class=" mt-0 mb-2" style="" ><i class="fas fa-house-user mr-3" style="color: #D8A727"></i><%= tenant.apartment_name%></p>
+            <p class=" mt-0 mb-2" style="" ><i class="fas fa-envelope mr-3" style="color: #D8A727"></i><%= tenant.email %></p>
+            <p class=" mt-0 mb-3" style="" ><i class="fas fa-phone-square mr-3" style="color: #D8A727"></i><%= tenant.phone %></p>
+            <!-- Collapse -->
+            <a class="mt-0" data-toggle="collapse" href="#collapseExample<%= index+1 %>" role="button" aria-expanded="false" aria-controls="collapseExample<%= index+1 %>" style="text-decoration: none">
+              <i class="btn btn-transparent fas fa-angle-double-down" style="font-size: 14px"></i>
+              <span class="m-0 ml-1" style="color: rgb(100,100,100">Plus d'information</span>
+            </a>
+            <div class="collapse" id="collapseExample<%= index+1 %>">
+              <div class="card card-body">
+                <p class="mb-1">Loyer : <%= tenant.rent %></p>
+                <p class="mb-1">Charges : <%= tenant.service_charge %></p>
+                <p>Dépôt de garantie : <%= tenant.deposit %></p>
+                <!-- cloudinary -->
+                <p class="mb-1">Contrat de bail :
+                  <%= link_to "Ouvrir", "https://res.cloudinary.com/myhouze/image/upload/#{tenant.contract.filename}", :target => "_blank",class: "btn btn-transparent mx-2" %>
+                  <%= link_to "Télécharger", "https://res.cloudinary.com/myhouze/image/upload/fl_attachment/#{tenant.contract.filename}", :target => "_blank",class: "btn btn-transparent" %>
+                </p>
+                <p>Etat des lieux :
+                  <%= link_to "Ouvrir", "https://res.cloudinary.com/myhouze/image/upload/#{tenant.inventory.filename}", :target => "_blank",class: "btn btn-transparent mx-2" %>
+                  <%= link_to "Télécharger", "https://res.cloudinary.com/myhouze/image/upload/fl_attachment/#{tenant.inventory.filename}", :target => "_blank",class: "btn btn-transparent" %>
+                </p>
+                <p class="mb-1">Date d'entrée : <%= tenant.move_in_date %></p>
+                <% if tenant.current_tenant == false  %>
+                  <p>Date de sortie : <%= tenant.move_out_date %></p>
+                <% end %>
+              </div>
+            </div>
+            <div class="d-flex mt-3 justify-content-end">
+              <%= link_to "Voir loyers", tenant_rents_path(tenant), class:"btn btn-yellow-mustard"  %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <h4 class="text-center my-5 py-5" style="width: 100%; color:#DA334A; font-style: italic;">"Aucun locataire actuellement"</h4>
+  <% end %>
+</div>
