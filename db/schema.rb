@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_22_044752) do
+ActiveRecord::Schema.define(version: 2021_02_21_135639) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -83,7 +83,7 @@ ActiveRecord::Schema.define(version: 2020_12_22_044752) do
     t.string "supplier"
     t.decimal "amount_ttc", precision: 10, scale: 2
     t.decimal "amount_vat", precision: 10, scale: 2
-    t.string "photo", default: "image/upload/v1598991055/default_annonce_k6x0wm.png"
+    t.string "photo", default: "image/upload/v1613915595/default_annonce_tj0cet.png"
     t.boolean "deductible"
     t.string "statut"
     t.bigint "user_id"
@@ -176,7 +176,7 @@ ActiveRecord::Schema.define(version: 2020_12_22_044752) do
   create_table "waters", force: :cascade do |t|
     t.date "submission_date"
     t.decimal "quantity", precision: 10, scale: 2
-    t.string "photo", default: "image/upload/v1598991055/default_annonce_k6x0wm.png"
+    t.string "photo", default: "image/upload/v1613915595/default_annonce_tj0cet.png"
     t.string "statut"
     t.bigint "user_id"
     t.bigint "tenant_id"
