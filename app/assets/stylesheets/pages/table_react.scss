@@ -1,0 +1,43 @@
+// #title {
+//   text-align: center;
+//   font-family: arial, sans-serif;
+// }
+
+#waters {
+  text-align: center;
+  // font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  // border: 1px solid #ddd;
+
+
+  width: 100%;
+}
+
+#waters th {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #dee2e6;
+  padding: 8px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #dee2e6;
+}
+
+#waters td {
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: #dee2e6;
+  padding: 8px;
+}
+
+#waters tr:nth-child(even){background-color: #white;}
+
+#waters tr:hover {background-color: #ddd;}
+
+#waters th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: center;
+  background-color: white;
+  // color: white;
+}

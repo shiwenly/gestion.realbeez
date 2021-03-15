@@ -56,52 +56,59 @@ class WatersNew extends Component {
 
   render() {
     return (
-      <div>
-        <form onSubmit={this.props.handleSubmit(this.onSubmit)}>
-          <Field
-              label="Submission_date"
-              name="submission_date"
-              type="date"
-              component={this.renderField}
-          />
-          <label>Locataire</label>
-            <div>
-              <Field
-              className="form-control"
-              label="Tenant_id"
-              name="tenant_id"
-              type="text"
-              component="select"
-              rows="8"
-              >
-                {this.renderPosts()}
-              </Field>
+      <div className="row justify-content-center mt-5">
+        <div className="col-12 col-md-6">
+        <h3 className="text-center mb-5" style={{}}>Déclarer ma consommation d'eau</h3>
+          <form onSubmit={this.props.handleSubmit(this.onSubmit)}>
+            <Field
+                label="Date"
+                name="submission_date"
+                type="date"
+                component={this.renderField}
+            />
+            <div className="mt-3">
+              <label>Locataire</label>
+                <Field
+                className="form-control"
+                label="Tenant_id"
+                name="tenant_id"
+                type="text"
+                component="select"
+                rows="8"
+                >
+                  {this.renderPosts()}
+                </Field>
             </div>
-          <label htmlFor="quantity">Quantité</label>
-           <Field
-             className="form-control"
-             label="Quantity"
-             name="quantity"
-             type="text"
-             component="input"
-             rows="8"
-           />
-          <label htmlFor="photo">Pièce jointe</label>
-           <Field
-             className="form-control"
-             label="Photo"
-             name="photo"
-             type="file"
-             component={WaterDropzone}
-             // photo={this.props.fileUploaded()}
-             // handleOnDrop={this.handleOnDrop}
-             rows="8"
-           />
-          <button className="btn btn-primary" type="submit"
-            disabled={this.props.pristine || this.props.submitting}>
-             Create Post
-            </button>
-        </form>
+            <div className="mt-3">
+              <label htmlFor="quantity">Quantité</label>
+               <Field
+                 className="form-control"
+                 label="Quantity"
+                 name="quantity"
+                 type="text"
+                 component="input"
+                 rows="8"
+               />
+            </div>
+            <div className="mt-3">
+              <label htmlFor="photo">Pièce jointe</label>
+               <Field
+                 className="form-control"
+                 label="Photo"
+                 name="photo"
+                 type="file"
+                 component={WaterDropzone}
+                 // photo={this.props.fileUploaded()}
+                 // handleOnDrop={this.handleOnDrop}
+                 rows="8"
+               />
+            </div>
+            <button className="btn btn-yellow-mustard mt-4" type="submit"
+              disabled={this.props.pristine || this.props.submitting}>
+               Create Post
+              </button>
+          </form>
+        </div>
       </div>
     );
   }

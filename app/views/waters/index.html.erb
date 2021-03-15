@@ -1,2 +1,11 @@
-<div id="water" data-posts="<%= @waters.to_json %>"></></div>
-<%= javascript_pack_tag 'water' %>
+<div class="container-fluid">
+  <div class="row">
+    <%= render 'shared/vertical_navbar' %>
+    <div class="col-12 col-md-10">
+      <div class="container my-5">
+        <!-- REACT -->
+        <div id="water" data-posts="<%= @waters.to_json %>"></></div>
+      <%= javascript_pack_tag 'water' %>
+    </div>
+  </div>
+</div>

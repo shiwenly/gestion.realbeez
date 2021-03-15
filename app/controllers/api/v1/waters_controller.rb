@@ -5,7 +5,7 @@ class Api::V1::WatersController < ActionController::Base
   skip_before_action :verify_authenticity_token
 
   def index
-    @waters = Water.all
+    @waters = Water.where("statut = ?", "active").order("tenant_name ASC, submission_date DESC")
     render json: @waters
   end
 
