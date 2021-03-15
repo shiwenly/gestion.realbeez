@@ -27,10 +27,22 @@ Rails.application.routes.draw do
   end
   resources :tenants, only: [:edit, :destroy, :update, :index]
 
-  resources :tenants do
-    resources :waters, only: [:new, :create]
+  namespace :api, defaults: { format: :json } do
+    namespace :v1 do
+      resources :tenants, only: [ :index]
+    end
   end
-  resources :waters, only: [:edit, :destroy, :update, :index, :new]
+
+  get '/waters/new', to: 'waters#index'
+  get '/waters/:id', to: 'waters#index'
+
+  resources :waters, only: [:index]
+  # get '/waters/new', to: '/waters#index'
+  namespace :api, defaults: { format: :json } do
+    namespace :v1 do
+      resources :waters, only: [ :index, :show, :create ]
+    end
+  end
 
   resources :tenants do
     resources :rents, only: [:new, :create, :index]

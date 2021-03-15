@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_21_135639) do
+ActiveRecord::Schema.define(version: 2021_03_06_014758) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -136,8 +136,8 @@ ActiveRecord::Schema.define(version: 2021_02_21_135639) do
     t.decimal "rent", precision: 10, scale: 2
     t.decimal "service_charge", precision: 10, scale: 2
     t.decimal "deposit", precision: 10, scale: 2
-    t.string "contract", default: "image/upload/v1598991055/default_annonce_k6x0wm.png"
-    t.string "inventory", default: "image/upload/v1598991055/default_annonce_k6x0wm.png"
+    t.string "contract", default: "image/upload/v1613915595/default_annonce_tj0cet.png"
+    t.string "inventory", default: "image/upload/v1613915595/default_annonce_tj0cet.png"
     t.date "move_in_date"
     t.date "move_out_date"
     t.string "statut"
@@ -178,12 +178,14 @@ ActiveRecord::Schema.define(version: 2021_02_21_135639) do
     t.decimal "quantity", precision: 10, scale: 2
     t.string "photo", default: "image/upload/v1613915595/default_annonce_tj0cet.png"
     t.string "statut"
-    t.bigint "user_id"
-    t.bigint "tenant_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["tenant_id"], name: "index_waters_on_tenant_id"
-    t.index ["user_id"], name: "index_waters_on_user_id"
+    t.integer "company_id"
+    t.string "company_name"
+    t.integer "building_id"
+    t.string "building_name"
+    t.string "tenant_name"
+    t.integer "tenant_id"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
@@ -196,6 +198,4 @@ ActiveRecord::Schema.define(version: 2021_02_21_135639) do
   add_foreign_key "rents", "tenants"
   add_foreign_key "rents", "users"
   add_foreign_key "tenants", "users"
-  add_foreign_key "waters", "tenants"
-  add_foreign_key "waters", "users"
 end
