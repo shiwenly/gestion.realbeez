@@ -25,7 +25,6 @@ class WatersIndex extends Component {
              <td>{building_name}</td>
              <td>{tenant_name}</td>
              <td>{quantity}</td>
-
           </tr>
        )
     })

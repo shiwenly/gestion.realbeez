@@ -48,7 +48,6 @@ function WaterDropzone() {
       const data = await response.json();
       console.log(data)
     })
-
   }, [])
 
   const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop,
