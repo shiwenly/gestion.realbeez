@@ -19,8 +19,12 @@ class WatersNew extends Component {
   }
 
   onSubmit = (values) => {
-    const fd = new FormData();
-    fd.append("photo", values);
+    // const imageUpload = document.querySelector(".imageUpload").src;
+    // const fd = new FormData();
+    // fd.append("photo", imageUpload);
+    // fd.append("submission_date", submission_date);
+    // fd.append("quantity", quantity);
+    // fd.append("tenant_id", tenant_id);
     this.props.createWater(values, (post) => {
       this.props.history.push('/waters'); // Navigate after submit
       return post;
@@ -98,7 +102,8 @@ class WatersNew extends Component {
                  name="photo"
                  type="file"
                  component={WaterDropzone}
-                 // photo={this.props.fileUploaded()}
+                 // photo={document.querySelector(".imageUpload").src}
+                 values={document.querySelector(".imageUpload")}
                  // handleOnDrop={this.handleOnDrop}
                  rows="8"
                />

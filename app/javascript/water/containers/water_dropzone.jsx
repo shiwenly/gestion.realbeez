@@ -8,9 +8,11 @@ import { useState, useCallback} from 'react'
 import {useDropzone} from 'react-dropzone'
 import Dropzone from 'react-dropzone'
 import { fileUploaded } from '../actions/index';
+import {Image} from 'cloudinary-react';
 
 function WaterDropzone() {
 
+  const [uploadedFiles, setUploadedFiles] = useState([])
   // const cloudinary = require('cloudinary').v2;
 
   const onDrop = useCallback(acceptedFiles => {
@@ -47,6 +49,7 @@ function WaterDropzone() {
 
       const data = await response.json();
       console.log(data)
+      setUploadedFiles(old => [...old, data])
     })
   }, [])
 
@@ -56,13 +59,28 @@ function WaterDropzone() {
   })
 
   return (
-    <div {...getRootProps()} className="dropzone">
-      <input {...getInputProps()} />
-      {
-        isDragActive ?
-          <p>Drop the files here ...</p> :
-          <p>Drag 'n' drop some files here, or click to select files</p>
-      }
+    <div>
+      <div {...getRootProps()} className="dropzone">
+        <input {...getInputProps()} />
+        {
+          isDragActive ?
+            <p>Drop the files here ...</p> :
+            <p>Drag 'n' drop some files here, or click to select files</p>
+        }
+      </div>
+      <ul className="mt-3">
+        {uploadedFiles.map((file) => (
+          <li key={file.public_id}>
+            <Image
+            cloudName={process.env.CLOUDINARY_API}
+            publicId={file.public_id}
+            className="imageUpload"
+            width="300"
+            crop="scale"
+            />
+          </li>
+          ))}
+      </ul>
     </div>
   )
 }

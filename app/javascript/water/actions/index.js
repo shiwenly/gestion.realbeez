@@ -13,6 +13,7 @@ export function fileUploaded(file) {
     type: FILE_UPLOAD,
     file: file
   };
+  debugger
 }
 
 
@@ -57,7 +58,6 @@ export function createWater(body, callback) {
     body: JSON.stringify(body)
   }).then(response => response.json())
     .then(callback);
-
   return {
     type: WATER_CREATED,
     payload: request
