@@ -5,16 +5,6 @@ export const FETCH_WATERS = 'FETCH_WATERS';
 export const FETCH_WATER = 'FETCH_WATER';
 export const WATER_CREATED = 'WATER_CREATED';
 export const FETCH_TENANTS = 'FETCH_TENANTS';
-export const FILE_UPLOAD = 'FILE_UPLOAD';
-
-
-export function fileUploaded(file) {
-  return {
-    type: FILE_UPLOAD,
-    file: file
-  };
-  debugger
-}
 
 
 export function fetchTenants() {

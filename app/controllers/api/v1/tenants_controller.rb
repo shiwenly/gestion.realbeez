@@ -5,7 +5,7 @@ class Api::V1::TenantsController < ActionController::Base
   skip_before_action :verify_authenticity_token
 
   def index
-    @tenants = Tenant.all
+    @tenants = Tenant.where("statut = ?", "active").order(name: :asc)
     render json: @tenants
   end
 

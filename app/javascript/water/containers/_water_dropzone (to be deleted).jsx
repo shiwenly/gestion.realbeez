@@ -23,7 +23,7 @@ function WaterDropzone() {
       // const {signature, timestamp} = await getSignature();
 
       // Get the timestamp in seconds
-      const timestamp = Math.round((new Date).getTime()/1000);
+      // const timestamp = Math.round((new Date).getTime()/1000);
 
       // Get the signature using the Node.js SDK method api_sign_request
       // const signature = cloudinary.utils.api_sign_request({
@@ -85,16 +85,16 @@ function WaterDropzone() {
   )
 }
 
-function mapStateToProps(state) {
-  return { file: state.file };
-}
+// function mapStateToProps(state) {
+//   return { file: state.file };
+// }
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ fileUploaded }, dispatch)
-    // fileUploaded: (file) => dispatch(actions.fileUploaded(file))
-}
+// function mapDispatchToProps(dispatch) {
+//   return bindActionCreators({ fileUploaded }, dispatch)
+//     // fileUploaded: (file) => dispatch(actions.fileUploaded(file))
+// }
 
-export default connect(mapStateToProps, mapDispatchToProps)(WaterDropzone);
+export default WaterDropzone;
 
 // async function getSignature() {
 //   const response = await fetch("..components/pages/api/sign");

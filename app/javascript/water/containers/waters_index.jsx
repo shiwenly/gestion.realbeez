@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux';
 import { fetchWaters } from '../actions/index';
+import {Image} from 'cloudinary-react';
 
 class WatersIndex extends Component {
   componentDidMount() {
@@ -17,25 +18,30 @@ class WatersIndex extends Component {
 
   renderTableData() {
     return this.props.waters.map((water, index) => {
-       const { id, submission_date, quantity, tenant_name, building_name, company_name, photo } = water //destructuring
-       return (
-          <tr key={id}>
-             <td>{submission_date}</td>
-             <td>{company_name}</td>
-             <td>{building_name}</td>
-             <td>{tenant_name}</td>
-             <td>{quantity}</td>
-          </tr>
-       )
+      const { id, submission_date, quantity, tenant_name, building_name, company_name, photo } = water //destructuring
+      const photo_array = photo.split(',')
+      return (
+        <tr key={id}>
+           <td>{submission_date}</td>
+           <td>{company_name}</td>
+           <td>{building_name}</td>
+           <td>{tenant_name}</td>
+           <td>{quantity}</td>
+           <td>{photo_array.map((p, index) =>
+            <a key={index} className="btn-transparent mx-1" style={{fontSize:'12px'}} target="_blank" href={p}>Ouvrir</a>
+            )}
+           </td>
+        </tr>
+      )
     })
-   }
+  }
 
-   renderTableHeader() {
-       let header = ['Date', "Société", "Immeuble", "Locataire", "Consommation"]
-       return header.map((key, index) => {
-          return <th  key={index}>{key}</th>
-       })
-    }
+  renderTableHeader() {
+     let header = ['Date', "Société", "Immeuble", "Locataire", "Consommation", "Pièce jointe"]
+     return header.map((key, index) => {
+        return <th  key={index}>{key}</th>
+     })
+  }
 
   renderWaters() {
     // return this.props.waters.map((water) => {

@@ -21,13 +21,17 @@ class Api::V1::WatersController < ActionController::Base
 
   def create
     @water = Water.new(water_params)
-    # @water.user_id = current_user.id
+    @water.user_id = current_user.id
     @water.tenant_name = Tenant.find(@water.tenant_id).name
     @water.company_id = Tenant.find(@water.tenant_id).company_id
     @water.company_name = Tenant.find(@water.tenant_id).company_name
     @water.building_id = Tenant.find(@water.tenant_id).building_id
     @water.building_name = Tenant.find(@water.tenant_id).building_name
     @water.statut = "active"
+    if @water.photo == ""
+      @water.photo = "http://res.cloudinary.com/myhouze/image/upload/v1613915595/default_annonce_tj0cet.png"
+      @water.save
+    end
     @water.save
     render json: @water
     # if @water.save
@@ -80,7 +84,8 @@ class Api::V1::WatersController < ActionController::Base
       :submission_date,
       :quantity,
       :photo,
-      :tenant_id
+      :tenant_id,
+      :company_name
     )
   end
 

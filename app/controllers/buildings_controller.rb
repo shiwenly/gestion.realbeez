@@ -108,8 +108,11 @@ class BuildingsController < ApplicationController
             end
           end
         end
+      elsif params[:search][:company] == "n/a - détention en nom propre"
+        authorize @buildings = Building.where("statut = ? AND user_id = ? AND company_name = ?", "active", current_user.id, "n/a - détention en nom propre" ).order(created_at: :asc)
       else
-        authorize @buildings = Building.search_by_company(params[:search][:company])
+        authorize @buildings = Building.where("statut = ? AND company_name = ?", "active", params[:search][:company] ).order(created_at: :asc)
+        # authorize @buildings = Building.search_by_company(params[:search][:company])
       end
       @buildings_list = @buildings.sort_by{ |b| b.name}
     end

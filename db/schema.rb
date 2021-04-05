@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_06_014758) do
+ActiveRecord::Schema.define(version: 2021_04_05_125840) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -176,7 +176,7 @@ ActiveRecord::Schema.define(version: 2021_03_06_014758) do
   create_table "waters", force: :cascade do |t|
     t.date "submission_date"
     t.decimal "quantity", precision: 10, scale: 2
-    t.string "photo", default: "image/upload/v1613915595/default_annonce_tj0cet.png"
+    t.string "photo", default: "http://res.cloudinary.com/myhouze/image/upload/v1613915595/default_annonce_tj0cet.png"
     t.string "statut"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -186,6 +186,8 @@ ActiveRecord::Schema.define(version: 2021_03_06_014758) do
     t.string "building_name"
     t.string "tenant_name"
     t.integer "tenant_id"
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_waters_on_user_id"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
@@ -198,4 +200,5 @@ ActiveRecord::Schema.define(version: 2021_03_06_014758) do
   add_foreign_key "rents", "tenants"
   add_foreign_key "rents", "users"
   add_foreign_key "tenants", "users"
+  add_foreign_key "waters", "users"
 end
