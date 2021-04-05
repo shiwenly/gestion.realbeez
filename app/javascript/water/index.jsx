@@ -14,14 +14,12 @@ import WatersNew from './containers/waters_new';
 // import '../assets/stylesheets/application.scss';
 import watersReducer from './reducers/waters_reducer';
 import tenantsReducer from './reducers/tenants_reducer';
-import fileReducer from './reducers/file_reducer';
 import { reducer as formReducer } from 'redux-form';
 
 const reducers = combineReducers({
   waters: watersReducer,
   tenants: tenantsReducer,
   form: formReducer,
-  file: fileReducer,
 });
 
 const middlewares = applyMiddleware(reduxPromise, logger);
