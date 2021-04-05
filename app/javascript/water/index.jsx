@@ -5,7 +5,8 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import reduxPromise from 'redux-promise';
 import logger from 'redux-logger';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { createHistory as history } from 'history';
+// import { createHistory as history } from 'history';
+ import { createBrowserHistory } from 'history';
 
 import WatersIndex from './containers/waters_index';
 import WatersShow from './containers/waters_show';
@@ -24,6 +25,7 @@ const reducers = combineReducers({
 
 const middlewares = applyMiddleware(reduxPromise, logger);
 const water = document.getElementById('water')
+const history = createBrowserHistory();
 
 if (water) {
   const initialState = { waters: JSON.parse(water.dataset.posts) };
