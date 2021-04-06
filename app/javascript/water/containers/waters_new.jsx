@@ -47,7 +47,7 @@ const WaterDropzone = () => {
   // Upload to Cloudinary
   const onDrop = useCallback(acceptedFiles => {
     // const url = `https://api.cloudinary.com/v1_1/${ process.env.CLOUDINARY_API}/upload`
-    const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_API}/upload`
+    const url = `https://api.cloudinary.com/v1_1/myhouze/upload`
 
     // Uploar percentage calculation
     const options = {
@@ -65,7 +65,8 @@ const WaterDropzone = () => {
       formData.append("file", acceptedFile);
       formData.append(
         "upload_preset",
-        process.env.CLOUDINARY_PRESET
+        // process.env.CLOUDINARY_PRESET
+        "vj7q0nmq"
       );
 
       // const response = await fetch(url, {
