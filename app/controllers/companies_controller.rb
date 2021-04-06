@@ -4,20 +4,20 @@ class CompaniesController < ApplicationController
   before_action :set_company, only: [:edit, :show, :update, :destroy]
 
   def index
-    @companies = policy_scope(Company.where("statut = ?", "active" ).order(name: :asc))
-    @companies_active = Company.where("statut = ?", "active" ).order(name: :asc)
-    @companies_list = []
-    @companies_active.each do |c|
-      associe = c.associe.downcase.split(",").map(&:strip)
-      if associe.include?(current_user.email) || c.user == current_user
-        @companies_list << c
-      end
-    end
+    @companies_list = policy_scope(Company.where("statut = ? AND user_id = ?", "active", current_user.id ).order(name: :asc))
+    # @companies = policy_scope(Company.where("statut = ?", "active" ).order(name: :asc))
+    # @companies_active = Company.where("statut = ?", "active" ).order(name: :asc)
+    # @companies_active.each do |c|
+    #   associe = c.associe.downcase.split(",").map(&:strip)
+    #   if associe.include?(current_user.email) || c.user == current_user
+    #     @companies_list << c
+    #   end
+    # end
   end
 
   def show
     authorize @company
-    @buildings = policy_scope(Building.where("statut = ? AND company_id = ?", "active", @company.id ).order(created_at: :asc))
+    @buildings = policy_scope(Building.where("statut = ? AND company_id = ? AND user_id", "active", @company.id, current_user.id ).order(created_at: :asc))
 
     unless @buildings == []
       @company_building_sum_rent_ask = 0
