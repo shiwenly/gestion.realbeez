@@ -46,7 +46,8 @@ const WaterDropzone = () => {
 
   // Upload to Cloudinary
   const onDrop = useCallback(acceptedFiles => {
-    const url = `https://api.cloudinary.com/v1_1/${ process.env.CLOUDINARY_API}/upload`
+    // const url = `https://api.cloudinary.com/v1_1/${ process.env.CLOUDINARY_API}/upload`
+    const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_API}/upload`
 
     // Uploar percentage calculation
     const options = {
