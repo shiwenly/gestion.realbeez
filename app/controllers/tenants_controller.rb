@@ -6,145 +6,52 @@ class TenantsController < ApplicationController
     if params[:apartment_id] != nil
       authorize @apartment = Apartment.find(params[:apartment_id])
       @tenants_list = policy_scope(Tenant.where("statut = ? AND apartment_id = ?", "active", @apartment.id ).order(name: :asc))
-      @rents_active = Rent.where("statut = ?", "active")
+      @rents_active = Rent.where("statut = ? AND user_id = ?", "active", current_user.id)
       @rent_ask = @rents_active.select{ |r| r.tenant.apartment_id == @apartment.id && r.date_payment.strftime("%Y").to_i == Date.today.year }.map{ |r| r.rent_ask}.sum
       @service_charge_ask = @rents_active.select{ |r| r.tenant.apartment_id == @apartment.id && r.date_payment.strftime("%Y").to_i == Date.today.year }.map{ |r| r.service_charge_ask}.sum
       @rent_paid = @rents_active.select{ |r| r.tenant.apartment_id == @apartment.id && r.date_payment.strftime("%Y").to_i == Date.today.year }.map{ |r| r.rent_paid}.sum
       @service_charge_paid = @rents_active.select{ |r| r.tenant.apartment_id == @apartment.id && r.date_payment.strftime("%Y").to_i == Date.today.year}.map{ |r| r.service_charge_paid}.sum
       @solde = @rent_ask + @service_charge_ask - @rent_paid - @service_charge_paid
       @tenants = policy_scope(Tenant.where("statut = ? AND apartment_id = ?", "active", @apartment.id ).order(created_at: :desc))
-      # @tenants_passé = policy_scope(Tenant.where("statut = ? AND apartment_id = ? AND current_tenant = ?", "active", @apartment.id, false ).order(created_at: :desc))
-      # @waters = policy_scope(Water.where("statut = ?", "active").order(submission_date: :desc).limit(10))
-      # unless @tenants == []
-      #   @apartment_sum_rent_ask = 0
-      #   @apartment_sum_service_charge_ask = 0
-      #   @apartment_sum_rent_paid = 0
-      #   @apartment_sum_service_charge_paid = 0
-      #   @apartment_solde = 0
-      #   @loyer_annuel = (@apartment.tenants.last.rent + @apartment.tenants.last.service_charge) *12
-      #   # Calculation
-      #   @tenants.each do |tenant|
-      #     @rents_unorder = Rent.search_by_date(Date.today.year)
-      #     @rents = @rents_unorder.select{|a| a.statut == "active" && a.tenant_id == tenant.id }.sort_by { |b| b.period }
-      #     @sum_rent_ask = @rents.map{|a| a.rent_ask}.sum
-      #     @sum_service_charge_ask = @rents.map{|a| a.service_charge_ask }.sum
-      #     @sum_rent_paid = @rents.map{|a| a.rent_paid}.sum
-      #     @sum_service_charge_paid = @rents.map{|a| a.service_charge_paid }.sum
-      #     @solde = @sum_rent_ask + @sum_service_charge_ask - @sum_rent_paid - @sum_service_charge_paid
-      #     # add to appartment sum
-      #     @apartment_sum_rent_ask += @sum_rent_ask
-      #     @apartment_sum_service_charge_ask += @sum_service_charge_ask
-      #     @apartment_sum_rent_paid += @sum_rent_paid
-      #     @apartment_sum_service_charge_paid += @sum_service_charge_paid
-      #     @apartment_solde += @solde
-      #   end
-      # end
     else
-      # @tenants = policy_scope(Tenant.where("statut = ?", "active",).order(created_at: :desc))
-      # Companies and Buildings list for filter
-      # authorize @buildings = policy_scope(Building.where("statut = ?", "active" ).order(created_at: :asc))
-      # @companies_active = Company.where("statut = ?", "active" ).order(created_at: :asc)
-      # @companies = ["Toutes les sociétés", "n/a - détention en nom propre"]
-      # @companies_array = []
-      # @buildings = ["Tous les immeubles", "n/a - aucun immeuble"]
-      # @companies_active.each do |c|
-      #   associe = c.associe.downcase.split(",").map(&:strip)
-      #   if associe.include?(current_user.email) || c.user == current_user
-      #     @companies << c.name
-      #     @companies_array << c
-      #   end
-      # end
-      # @buildings_active = Building.where("statut = ?", "active" ).order(created_at: :asc)
-      # @apartments_active = Apartment.where("statut = ?", "active" ).order(created_at: :asc)
-      # @companies_array.each do |c|
-      #   @buildings_active.each do |b|
-      #     if b.company_name == c.name
-      #       @buildings << b.name
-      #     end
-      #   end
-      # end
-      # @buildings_active.each do |b|
-      #   if b.user == current_user
-      #     if @buildings.include?(b.name) == false
-      #       @buildings << b.name
-      #     end
-      #   end
-      # end
       # -------------- Paramters for Filter --------------
+      authorize @buildings = policy_scope(Building.where("statut = ?", "active" ).order(created_at: :asc))
+      @companies_active = Company.where("statut = ? AND user_id = ?", "active", current_user.id ).order(created_at: :asc)
+      @buildings_active = Building.where("statut = ? AND user_id = ?", "active", current_user.id ).order(created_at: :asc)
+      @apartments_active = Apartment.where("statut = ? AND user_id = ?", "active", current_user.id ).order(created_at: :asc)
+      @tenants_active = Tenant.where("statut = ? AND user_id = ?", "active", current_user.id ).order(created_at: :asc)
+      @companies_array = ["Toutes les sociétés", "n/a - détention en nom propre"]
+      @companies = []
+      @companies_active.each do |c|
+        # associe = c.associe.downcase.split(",").map(&:strip)
+        # if associe.include?(current_user.email) || c.user == current_user
+        #   @companies << c
+        #   @companies_array << c.name
+        # end
+        @companies << c
+        @companies_array << c.name
+      end
+      @buildings_array = ["Tous les immeubles", "n/a - aucun immeuble"]
+      @buildings = []
       if params[:search] == nil || params[:search][:company] == "Toutes les sociétés"
         # Companies and Buildings list for filter
-        authorize @buildings = policy_scope(Building.where("statut = ?", "active" ).order(created_at: :asc))
-        @companies_active = Company.where("statut = ?", "active" ).order(created_at: :asc)
-        @buildings_active = Building.where("statut = ?", "active" ).order(created_at: :asc)
-        @apartments_active = Apartment.where("statut = ?", "active" ).order(created_at: :asc)
-        @companies_array = ["Toutes les sociétés", "n/a - détention en nom propre"]
-        @companies = []
-        @buildings_array = ["Tous les immeubles", "n/a - aucun immeuble"]
-        @buildings = []
-        @apartments = []
-        @companies_active.each do |c|
-          associe = c.associe.downcase.split(",").map(&:strip)
-          if associe.include?(current_user.email) || c.user == current_user
-            @companies << c
-            @companies_array << c.name
-          end
-        end
-        @companies.each do |c|
-          @buildings_active.each do |b|
-            if b.company_name == c.name
-              @buildings_array << b.name
-              @buildings << b
-            end
-          end
-          @apartments_active.each do |a|
-            if a.company_name == c.name
-              if @apartments.include?(a) == false
-                @apartments << a
-              end
-            end
-          end
-        end
         @buildings_active.each do |b|
-          if b.user == current_user
-            if @buildings_array.include?(b.name) == false
-              @buildings_array << b.name
-              @buildings << b
-            end
-          end
+          # if b.company_name == c.name
+          #   @buildings_array << b.name
+          #   @buildings << b
+          # end
+          @buildings_array << b.name
+          @buildings << b
         end
-        @buildings.each do |b|
-          @apartments_active.each do |a|
-            if a.building_name == b.name
-              if @apartments.include?(a) == false
-                @apartments << a
-              end
-            end
-          end
-        end
-        @apartments_active.each do |a|
-          if a.user == current_user
-            if @apartments.include?(a) == false
-              @apartments << a
-            end
-          end
-        end
+        # @buildings_active.each do |b|
+        #   if b.user == current_user
+        #     if @buildings_array.include?(b.name) == false
+        #       @buildings_array << b.name
+        #       @buildings << b
+        #     end
+        #   end
+        # end
       else
-        # Companies and Buildings list for filter
-        authorize @buildings = policy_scope(Building.where("statut = ?", "active" ).order(created_at: :asc))
-        @companies_active = Company.where("statut = ?", "active" ).order(created_at: :asc)
-        @buildings_active = Building.where("statut = ?", "active" ).order(created_at: :asc)
-        @apartments_active = Apartment.where("statut = ?", "active" ).order(created_at: :asc)
-        @companies_array = ["Toutes les sociétés", "n/a - détention en nom propre"]
-        @companies = []
-        @buildings_array = ["Tous les immeubles", "n/a - aucun immeuble"]
-        @buildings = []
-        @companies_active.each do |c|
-          associe = c.associe.downcase.split(",").map(&:strip)
-          if associe.include?(current_user.email) || c.user == current_user
-            @companies << c
-            @companies_array << c.name
-          end
-        end
         @buildings_active.each do |b|
           if b.company_name == params[:search][:company]
             @buildings_array << b.name
@@ -154,103 +61,103 @@ class TenantsController < ApplicationController
       end
       # ------------ Result of selection -------------
       if params[:search] == nil || params[:search][:company] == "Toutes les sociétés" && params[:search][:building] == "Tous les immeubles"
+        @tenants_list = Tenant.where("statut = ? AND user_id = ?", "active", current_user.id ).order(created_at: :asc)
         # List of companies created by user or where user is an associate
-        @companies_list = []
-        @companies_active.each do |c|
-          associe = c.associe.downcase.split(",").map(&:strip)
-          if associe.include?(current_user.email) || c.user == current_user
-            @companies_list << c
-          end
-        end
-        @buildings_active = Building.where("statut = ?", "active" ).order(created_at: :asc)
-        @tenants_active = Tenant.where("statut = ?", "active" ).order(created_at: :asc)
-        @apartments_active = Apartment.where("statut = ?", "active" ).order(created_at: :asc)
-        @buildings_list = []
-        @apartments_list = []
-        @tenants_list = []
-        @companies_list.each do |c|
-          # List of buildings in companies of user
-          @buildings_active.each do |b|
-            if b.company_name == c.name
-              @buildings_list << b
-            end
-          end
-          # List of apartment in companies of user
-          @apartments_active.each do |a|
-            if a.company_name == c.name
-              @apartments_list << a
-            end
-          end
-          # List of tenants in companies of user
-          @tenants_active.each do |t|
-            if t.company_name == c.name
-              @tenants_list << t
-            end
-          end
-        end
-        # List of buildings created by user
-        @buildings_active.each do |b|
-          if b.user == current_user
-            if @buildings_list.include?(b.name) == false
-              @buildings_list << b
-            end
-          end
-        end
-        # list of apartments created by the user
-        @apartments_active.each do |a|
-          if a.user == current_user
-            if @apartments_list.include?(a) == false
-              @apartments_list << a
-            end
-          end
-        end
-        # list of tenants created by the user
-        @tenants_active.each do |t|
-          if t.user == current_user
-            if @tenants_list.include?(t) == false
-              @tenants_list << t
-            end
-          end
-        end
-        @buildings_list.each do |b|
-          # List of appartements in buildings of user
-          @apartments_active.each do |a|
-            if a.building_name == b.name
-              if @apartments_list.include?(a) == false
-                @apartments_list << a
-              end
-            end
-          end
-          # List of tenants in buildings of user
-          @tenants_active.each do |t|
-            if t.building_name == b.name
-              if @tenants_list.include?(t) == false
-                @tenants_list << t
-              end
-            end
-          end
-        end
-        # List of tenant in apartment of user
-        @apartments_list.each do |a|
-          @tenants_active.each do |t|
-            if t.building_name == a.name
-              if @tenants_list.include?(t) == false
-                @tenants_list << t
-              end
-            end
-          end
-        end
+        # @companies_list = []
+        # @companies_active.each do |c|
+        #   associe = c.associe.downcase.split(",").map(&:strip)
+        #   if associe.include?(current_user.email) || c.user == current_user
+        #     @companies_list << c
+        #   end
+        # end
+        # @buildings_active = Building.where("statut = ?", "active" ).order(created_at: :asc)
+        # @tenants_active = Tenant.where("statut = ?", "active" ).order(created_at: :asc)
+        # @apartments_active = Apartment.where("statut = ?", "active" ).order(created_at: :asc)
+        # @buildings_list = []
+        # @apartments_list = []
+        # @tenants_list = []
+        # @companies_list.each do |c|
+        #   # List of buildings in companies of user
+        #   @buildings_active.each do |b|
+        #     if b.company_name == c.name
+        #       @buildings_list << b
+        #     end
+        #   end
+        #   # List of apartment in companies of user
+        #   @apartments_active.each do |a|
+        #     if a.company_name == c.name
+        #       @apartments_list << a
+        #     end
+        #   end
+        #   # List of tenants in companies of user
+        #   @tenants_active.each do |t|
+        #     if t.company_name == c.name
+        #       @tenants_list << t
+        #     end
+        #   end
+        # end
+        # # List of buildings created by user
+        # @buildings_active.each do |b|
+        #   if b.user == current_user
+        #     if @buildings_list.include?(b.name) == false
+        #       @buildings_list << b
+        #     end
+        #   end
+        # end
+        # # list of apartments created by the user
+        # @apartments_active.each do |a|
+        #   if a.user == current_user
+        #     if @apartments_list.include?(a) == false
+        #       @apartments_list << a
+        #     end
+        #   end
+        # end
+        # # list of tenants created by the user
+        # @tenants_active.each do |t|
+        #   if t.user == current_user
+        #     if @tenants_list.include?(t) == false
+        #       @tenants_list << t
+        #     end
+        #   end
+        # end
+        # @buildings_list.each do |b|
+        #   # List of appartements in buildings of user
+        #   @apartments_active.each do |a|
+        #     if a.building_name == b.name
+        #       if @apartments_list.include?(a) == false
+        #         @apartments_list << a
+        #       end
+        #     end
+        #   end
+        #   # List of tenants in buildings of user
+        #   @tenants_active.each do |t|
+        #     if t.building_name == b.name
+        #       if @tenants_list.include?(t) == false
+        #         @tenants_list << t
+        #       end
+        #     end
+        #   end
+        # end
+        # # List of tenant in apartment of user
+        # @apartments_list.each do |a|
+        #   @tenants_active.each do |t|
+        #     if t.building_name == a.name
+        #       if @tenants_list.include?(t) == false
+        #         @tenants_list << t
+        #       end
+        #     end
+        #   end
+        # end
       elsif params[:search][:company] != "Toutes les sociétés" && params[:search][:building] == "Tous les immeubles"
-        @tenants_active = Tenant.where("statut = ?", "active" ).order(created_at: :asc)
-        @tenants_list = @tenants_active.select{ |t| t.company_name == params[:search][:company] }
+        @tenants_list = @tenants_active.select{ |t| t.company_name == params[:search][:company] && t.user_id == current_user.id }
       elsif params[:search][:company] != "Toutes les sociétés" && params[:search][:building] == "n/a - aucun immeuble"
-        @tenants_active = Tenant.where("statut = ?", "active" ).order(created_at: :asc)
-        @tenants_list = @tenants_active.select{ |t| t.company_name == params[:search][:company] && t.building_name == "n/a - aucun immeuble" }
+        # @tenants_active = Tenant.where("statut = ?", "active" ).order(created_at: :asc)
+        @tenants_list = @tenants_active.select{ |t| t.company_name == params[:search][:company] && t.building_name == "n/a - aucun immeuble" && t.user_id == current_user.id}
       else
         authorize @tenants = Tenant.search_by_building(params[:search][:building])
         @tenants_list = []
         @tenants.each do |t|
-          if t.statut == "active"
+          if t.statut == "active" && t.user_id == current_user.id
             @tenants_list << t
           end
         end

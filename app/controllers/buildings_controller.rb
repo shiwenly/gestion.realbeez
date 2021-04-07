@@ -8,23 +8,21 @@ class BuildingsController < ApplicationController
     if params[:company_id] != nil
       @company = Company.find(params[:company_id])
       authorize @buildings = policy_scope(Building.where("statut = ? AND company_id = ?", "active", @company.id ).order(name: :asc))
-      @rents_active = Rent.where("statut = ?", "active")
+      @rents_active = Rent.where("statut = ? AND user_id = ?", "active", current_user.id)
       @rent_ask = @rents_active.select{ |r| r.tenant.company_id == @company.id && r.date_payment.strftime("%Y").to_i == Date.today.year }.map{ |r| r.rent_ask}.sum
       @service_charge_ask = @rents_active.select{ |r| r.tenant.company_id == @company.id && r.date_payment.strftime("%Y").to_i == Date.today.year }.map{ |r| r.service_charge_ask}.sum
       @rent_paid = @rents_active.select{ |r| r.tenant.company_id == @company.id && r.date_payment.strftime("%Y").to_i == Date.today.year }.map{ |r| r.rent_paid}.sum
       @service_charge_paid = @rents_active.select{ |r| r.tenant.company_id == @company.id && r.date_payment.strftime("%Y").to_i == Date.today.year}.map{ |r| r.service_charge_paid}.sum
       @solde = @rent_ask + @service_charge_ask - @rent_paid - @service_charge_paid
     else
-      @companies_active = Company.where("statut = ?", "active" ).order(created_at: :asc)
+      @companies_active = Company.where("statut = ? AND user_id = ?", "active", current_user.id ).order(created_at: :asc)
       @companies = ["Toutes les sociétés", "n/a - détention en nom propre"]
       @companies_active.each do |c|
         # associe = c.associe.downcase.split(",").map(&:strip)
         # if associe.include?(current_user.email) || c.user == current_user
         #   @companies << c.name
         # end
-        if c.user_id == current_user.id
-          @companies << c.name
-        end
+        @companies << c.name
       end
       if params[:search] == nil || params[:search][:company] == "Toutes les sociétés"
         @companies_list = Company.where("statut = ? AND user_id = ?", "active", current_user.id)

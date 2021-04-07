@@ -7,18 +7,18 @@ class ApartmentsController < ApplicationController
     if params[:building_id] != nil
       @building = Building.find(params[:building_id])
       authorize @apartments = policy_scope(Apartment.where("statut = ? AND building_id = ?", "active", @building.id).order(name: :asc))
-      @rents_active = Rent.where("statut = ?", "active")
+      @rents_active = Rent.where("statut = ? AND user_id = ?", "active", current_user.id)
       @rent_ask = @rents_active.select{ |r| r.tenant.building_id == @building.id && r.date_payment.strftime("%Y").to_i == Date.today.year }.map{ |r| r.rent_ask}.sum
       @service_charge_ask = @rents_active.select{ |r| r.tenant.building_id == @building.id && r.date_payment.strftime("%Y").to_i == Date.today.year }.map{ |r| r.service_charge_ask}.sum
       @rent_paid = @rents_active.select{ |r| r.tenant.building_id == @building.id && r.date_payment.strftime("%Y").to_i == Date.today.year }.map{ |r| r.rent_paid}.sum
       @service_charge_paid = @rents_active.select{ |r| r.tenant.building_id == @building.id && r.date_payment.strftime("%Y").to_i == Date.today.year}.map{ |r| r.service_charge_paid}.sum
       @solde = @rent_ask + @service_charge_ask - @rent_paid - @service_charge_paid
     else
-      # Paramters for Filter
+      # Parameters for Filter
       authorize @buildings = policy_scope(Building.where("statut = ?", "active" ).order(created_at: :asc))
-      @companies_active = Company.where("statut = ?", "active" ).order(created_at: :asc)
-      @buildings_active = Building.where("statut = ?", "active" ).order(created_at: :asc)
-      @apartments_active = Apartment.where("statut = ?", "active" ).order(created_at: :asc)
+      @companies_active = Company.where("statut = ? AND user_id = ?", "active", current_user.id ).order(created_at: :asc)
+      @buildings_active = Building.where("statut = ? AND user_id = ?", "active", current_user.id ).order(created_at: :asc)
+      @apartments_active = Apartment.where("statut = ? AND user_id = ?", "active", current_user.id ).order(created_at: :asc)
       @companies_array = ["Toutes les sociétés", "n/a - détention en nom propre"]
       @companies = []
       @companies_active.each do |c|
@@ -27,10 +27,8 @@ class ApartmentsController < ApplicationController
         #   @companies << c
         #   @companies_array << c.name
         # end
-        if c.user_id == current_user.id
-          @companies << c
-          @companies_array << c.name
-        end
+        @companies << c
+        @companies_array << c.name
       end
       @buildings_array = ["Tous les immeubles", "n/a - aucun immeuble"]
       @buildings = []
@@ -41,10 +39,8 @@ class ApartmentsController < ApplicationController
           #   @buildings_array << b.name
           #   @buildings << b
           # end
-          if b.user_id == current_user.id
-            @buildings_array << b.name
-            @buildings << b
-          end
+          @buildings_array << b.name
+          @buildings << b
         end
         # @buildings_active.each do |b|
         #   if b.user == current_user
@@ -55,9 +51,8 @@ class ApartmentsController < ApplicationController
         #   end
         # end
       else
-        # Companies and Buildings list for filter
         @buildings_active.each do |b|
-          if b.company_name == params[:search][:company] && b.user_id == current_user.id
+          if b.company_name == params[:search][:company]
             @buildings_array << b.name
             @buildings << b
           end
