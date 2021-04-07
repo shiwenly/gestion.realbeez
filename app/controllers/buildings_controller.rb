@@ -157,7 +157,7 @@ class BuildingsController < ApplicationController
   end
 
   def new
-    @companies_user = Company.where("user_id = ? AND statut = ?", current_user.id, "active" ).order(created_at: :asc)
+    # @companies_user = Company.where("user_id = ? AND statut = ?", current_user.id, "active" ).order(created_at: :asc)
     # @companies = @companies_active.select { |c| c.user_id == current_user || c.associe }
     # create company détenu en nom propre if doesnt exist
     # if @companies_user.one? { |c| c.name == "n/a - détention en nom propre"} == false
@@ -168,14 +168,14 @@ class BuildingsController < ApplicationController
       @company = Company.find(params[:company_id])
     else
       authorize @building = Building.new
-      @companies_active = Company.where("statut = ?", "active" ).order(created_at: :asc)
-      @companies = []
-      @companies_active.each do |c|
-        associe = c.associe.downcase.split(",").map(&:strip)
-        if associe.include?(current_user.email) || c.user == current_user
-          @companies << c
-        end
-      end
+      @companies = Company.where("user_id = ? AND statut = ?", current_user.id, "active" ).order(created_at: :asc)
+      # @companies_active = Company.where("statut = ?", "active" ).order(created_at: :asc)
+      # @companies_active.each do |c|
+      #   associe = c.associe.downcase.split(",").map(&:strip)
+      #   if associe.include?(current_user.email) || c.user == current_user
+      #     @companies << c
+      #   end
+      # end
     end
   end
 
@@ -215,14 +215,14 @@ class BuildingsController < ApplicationController
 
   def edit
     authorize @building
-    @companies_active = Company.where("statut = ?", "active" ).order(created_at: :asc)
-    @companies = []
-    @companies_active.each do |c|
-      associe = c.associe.downcase.split(",").map(&:strip)
-      if associe.include?(current_user.email) || c.user == current_user
-        @companies << c
-      end
-    end
+    @companies = Company.where("user_id = ? AND statut = ?", current_user.id, "active" ).order(created_at: :asc)
+    # @companies_active = Company.where("statut = ?", "active" ).order(created_at: :asc)
+    # @companies_active.each do |c|
+    #   associe = c.associe.downcase.split(",").map(&:strip)
+    #   if associe.include?(current_user.email) || c.user == current_user
+    #     @companies << c
+    #   end
+    # end
   end
 
   def update

@@ -162,33 +162,33 @@ class ApartmentsController < ApplicationController
   end
 
   def new
-    @companies_user = Company.where("user_id = ? AND statut = ?", current_user.id, "active" ).order(created_at: :asc)
+    # @companies_user = Company.where("user_id = ? AND statut = ?", current_user.id, "active" ).order(created_at: :asc)
     if params[:building_id] != nil
       authorize @apartment = Apartment.new
       @building = Building.find(params[:building_id])
     else
       authorize @apartment = Apartment.new
       # List of companies of the user and where user is an associate
-      @companies_active = Company.where("statut = ?", "active" ).order(created_at: :asc)
-      @companies = []
-      @companies_active.each do |c|
-        associe = c.associe.downcase.split(",").map(&:strip)
-        if associe.include?(current_user.email) || c.user == current_user
-          @companies << c
-        end
-      end
+      @companies = Company.where("user_id = ? AND statut = ?", current_user.id, "active" ).order(created_at: :asc)
+      # @companies_active = Company.where("statut = ?", "active" ).order(created_at: :asc)
+      # @companies_active.each do |c|
+      #   associe = c.associe.downcase.split(",").map(&:strip)
+      #   if associe.include?(current_user.email) || c.user == current_user
+      #     @companies << c
+      #   end
+      # end
       # List of buildings détenu en nom propre
-      @buildings_active = Building.where("statut = ?", "active" ).order(created_at: :asc)
-      @buildings = []
-      @companies.each do |c|
-        @buildings_active.each do |b|
-          if @buildings.include?(b) == false
-            if b.company_name == "n/a - détention en nom propre"
-              @buildings << b
-            end
-          end
-        end
-      end
+      @buildings = Building.where("statut = ? AND company_name = ? AND user_id = ?", "active", "n/a - détention en nom propre", current_user.id ).order(created_at: :asc)
+      # @buildings_active = Building.where("statut = ?", "active" ).order(created_at: :asc)
+      # @companies.each do |c|
+      #   @buildings_active.each do |b|
+      #     if @buildings.include?(b) == false
+      #       if b.company_name == "n/a - détention en nom propre"
+      #         @buildings << b
+      #       end
+      #     end
+      #   end
+      # end
     end
   end
 
@@ -232,26 +232,26 @@ class ApartmentsController < ApplicationController
   def edit
     authorize @apartment
     # List of companies of the user and where user is an associate
-    @companies_active = Company.where("statut = ?", "active" ).order(created_at: :asc)
-    @companies = []
-    @companies_active.each do |c|
-      associe = c.associe.downcase.split(",").map(&:strip)
-      if associe.include?(current_user.email) || c.user == current_user
-        @companies << c
-      end
-    end
+    @companies = Company.where("user_id = ? AND statut = ?", current_user.id, "active" ).order(created_at: :asc)
+    # @companies_active = Company.where("statut = ?", "active" ).order(created_at: :asc)
+    # @companies_active.each do |c|
+    #   associe = c.associe.downcase.split(",").map(&:strip)
+    #   if associe.include?(current_user.email) || c.user == current_user
+    #     @companies << c
+    #   end
+    # end
     # List of buildings of company chosen
-    @buildings_active = Building.where("statut = ?", "active" ).order(created_at: :asc)
-    @buildings = []
-    @companies.each do |c|
-      @buildings_active.each do |b|
-        if @buildings.include?(b) == false
-          if b.company_name == @apartment.company_name
-            @buildings << b
-          end
-        end
-      end
-    end
+    @buildings = Building.where("statut = ? AND user_id = ? AND company_name = ?", "active", current_user.id, @apartment.company_name ).order(created_at: :asc)
+    # @buildings_active = Building.where("statut = ?", "active" ).order(created_at: :asc)
+    # @companies.each do |c|
+    #   @buildings_active.each do |b|
+    #     if @buildings.include?(b) == false
+    #       if b.company_name == @apartment.company_name
+    #         @buildings << b
+    #       end
+    #     end
+    #   end
+    # end
   end
 
   def update
