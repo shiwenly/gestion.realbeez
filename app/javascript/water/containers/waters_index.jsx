@@ -52,8 +52,6 @@ class WatersIndex extends Component {
     let watersArray = []
 
     if (this.state.company === "Toutes les sociétés" && this.state.building === "Tous les immeubles") {
-      console.log(this.state.company + " " + this.state.building)
-      // const watersArray = [this.props.waters]
       watersArray = this.props.waters
     } else if (this.state.company != "Toutes les sociétés" && this.state.building === "Tous les immeubles") {
       watersArray = this.props.waters.filter((w) => w.company_name === this.state.company)

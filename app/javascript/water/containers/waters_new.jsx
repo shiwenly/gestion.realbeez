@@ -186,11 +186,16 @@ const WaterDropzone = () => {
                 type="file"
                 {...getInputProps()}
               />
-
               {
                 isDragActive ?
-                  <p>Drop the files here ...</p> :
-                  <p>Drag 'n' drop some files here, or click to select files</p>
+                <div className="text-center">
+                  <Image className="text-center" style={{width: "50px"}} cloudName={process.env.REACT_APP_CLOUDINARY_API} publicId="upload-icon-20631_tuiiuz"/>
+                  <p style={{color: "#4285F4"}}>Déposez le fichier pour l'importer</p>
+                </div> :
+                <div className="text-center">
+                  <Image style={{width: "50px"}} cloudName={process.env.REACT_APP_CLOUDINARY_API} publicId="upload-icon-20631_tuiiuz"/>
+                  <p>Importer un fichier</p>
+                </div>
               }
             </div>
             <div className="mt-3">{ uploadPercentage > 0 ? progressInstance : null }</div>
