@@ -60,7 +60,7 @@
               <% else %>
                 <div class="row">
                   <div class="col-9 col-md pr-0 mt-1">
-                    <%= f.select :year,  @years,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: Date.today.year  %>
+                    <%= f.select :year,  @years,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: Date.today.year %>
                   </div>
                   <div class="col-9 col-md pr-0 mt-1">
                     <%= f.select :company, @companies_array ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false  %>

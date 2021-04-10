@@ -5,21 +5,26 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import reduxPromise from 'redux-promise';
 import logger from 'redux-logger';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+// import { Router, Route, Switch } from 'react-router-dom';
 // import { createHistory as history } from 'history';
  import { createBrowserHistory } from 'history';
 
 import WatersIndex from './containers/waters_index';
-import WatersShow from './containers/waters_show';
+// import WatersShow from './containers/waters_show';
 import WatersNew from './containers/waters_new';
 
 // import '../assets/stylesheets/application.scss';
 import watersReducer from './reducers/waters_reducer';
 import tenantsReducer from './reducers/tenants_reducer';
+import companiesReducer from './reducers/companies_reducer';
+import buildingsReducer from './reducers/buildings_reducer';
 import { reducer as formReducer } from 'redux-form';
 
 const reducers = combineReducers({
   waters: watersReducer,
   tenants: tenantsReducer,
+  companies: companiesReducer,
+  buildings: buildingsReducer,
   form: formReducer,
 });
 
@@ -38,7 +43,6 @@ if (water) {
           <Switch>
             <Route path="/waters" exact component={WatersIndex} />
             <Route path="/waters/new" component={WatersNew} />
-            <Route path="/waters/:id" component={WatersShow} />
           </Switch>
         </div>
       </Router>
@@ -47,3 +51,4 @@ if (water) {
   );
 }
 
+            // <Route path="/waters/:id" component={WatersShow} />

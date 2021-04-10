@@ -30,6 +30,8 @@ Rails.application.routes.draw do
   namespace :api, defaults: { format: :json } do
     namespace :v1 do
       resources :tenants, only: [ :index]
+      resources :companies, only: [ :index]
+      resources :buildings, only: [ :index]
     end
   end
 
