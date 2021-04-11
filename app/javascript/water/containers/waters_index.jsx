@@ -184,7 +184,7 @@ class WatersIndex extends Component {
   renderTenant() {
     let tenantsArray = []
     // Check selection and select tenants
-    // toutes les sociétés et tous les immeubles
+    // toutes les sociétés AND tous les immeubles
     if (this.state.company === "Toutes les sociétés" && this.state.building === "Tous les immeubles") {
       this.props.tenants.forEach((tenant) => {
         tenant.forEach((t) => {
@@ -192,7 +192,7 @@ class WatersIndex extends Component {
         })
       })
     }
-    // NOT toutes les sociétés et tous les immeubles
+    // NOT toutes les sociétés AND tous les immeubles
     if (this.state.company != "Toutes les sociétés" && this.state.building === "Tous les immeubles") {
       this.props.tenants.forEach((tenant) => {
         tenant.forEach((t) => {
@@ -202,7 +202,7 @@ class WatersIndex extends Component {
         })
       })
     }
-    // toutes les sociétés et NOT tous les immeubles
+    // toutes les sociétés NOT tous les immeubles
     if (this.state.company === "Toutes les sociétés" && this.state.building != "Tous les immeubles") {
       this.props.tenants.forEach((tenant) => {
         tenant.forEach((t) => {
@@ -212,7 +212,7 @@ class WatersIndex extends Component {
         })
       })
     }
-    // NOT toutes les sociétés et NOT tous les immeubles
+    // NOT toutes les sociétés NOT tous les immeubles
     if (this.state.company != "Toutes les sociétés" && this.state.building != "Tous les immeubles") {
       this.props.tenants.forEach((tenant) => {
         tenant.forEach((t) => {

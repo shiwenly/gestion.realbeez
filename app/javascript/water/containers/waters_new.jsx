@@ -189,12 +189,12 @@ const WaterDropzone = () => {
               {
                 isDragActive ?
                 <div className="text-center">
-                  <Image className="text-center" style={{width: "50px"}} cloudName={process.env.REACT_APP_CLOUDINARY_API} publicId="upload-icon-20631_tuiiuz"/>
+                  <div><i style={{fontSize: "30px", color:"#4285F4"}} class="fas fa-cloud-upload-alt"></i></div>
                   <p style={{color: "#4285F4"}}>Déposez le fichier pour l'importer</p>
                 </div> :
                 <div className="text-center">
-                  <Image style={{width: "50px"}} cloudName={process.env.REACT_APP_CLOUDINARY_API} publicId="upload-icon-20631_tuiiuz"/>
-                  <p>Importer un fichier</p>
+                  <div><i style={{fontSize: "30px", color:"#4285F4", opacity: "0.8"}} class="fas fa-cloud-upload-alt"></i></div>
+                  <p>Déposez des fichiers ici ou cliquez pour charger.</p>
                 </div>
               }
             </div>
