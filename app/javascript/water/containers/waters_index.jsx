@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux';
 import { fetchWaters } from '../actions/index';
 import { fetchCompanies } from '../actions/index';
 import { fetchBuildings } from '../actions/index';
+import { fetchTenants } from '../actions/index';
 import {Image} from 'cloudinary-react';
 
 class WatersIndex extends Component {
@@ -14,9 +15,11 @@ class WatersIndex extends Component {
    this.state = {
     company: 'Toutes les sociétés',
     building: 'Tous les immeubles',
+    tenant: 'Tous les locataires'
   };
    this.handleChangeCompany = this.handleChangeCompany.bind(this);
    this.handleChangeBuilding = this.handleChangeBuilding.bind(this);
+   this.handleChangeTenant = this.handleChangeTenant.bind(this);
    this.handleSubmit = this.handleSubmit.bind(this);
 
   }
@@ -31,16 +34,25 @@ class WatersIndex extends Component {
     if (!this.fetchBuildings) {
       this.props.fetchBuildings();
     }
+    if (!this.fetchTenants) {
+      this.props.fetchTenants();
+    }
   }
 
 
   handleChangeCompany(event) {
     this.setState({company: event.target.value});
     this.setState({building: 'Tous les immeubles'});
+    this.setState({tenant: 'Tous les locataires'});
   }
 
   handleChangeBuilding(event) {
     this.setState({building: event.target.value});
+    this.setState({tenant: 'Tous les locataires'});
+  }
+
+  handleChangeTenant(event) {
+    this.setState({tenant: event.target.value});
   }
 
   handleSubmit(event) {
@@ -50,33 +62,66 @@ class WatersIndex extends Component {
 
   renderTableData() {
     let watersArray = []
-
-    if (this.state.company === "Toutes les sociétés" && this.state.building === "Tous les immeubles") {
+    // Select the waters based on selection from user
+    // Toutes les sociétés AND Tous les immeubles AND Tous les locataires
+    if (this.state.company === "Toutes les sociétés" && this.state.building === "Tous les immeubles" && this.state.tenant === "Tous les locataires") {
       watersArray = this.props.waters
-    } else if (this.state.company != "Toutes les sociétés" && this.state.building === "Tous les immeubles") {
-      watersArray = this.props.waters.filter((w) => w.company_name === this.state.company)
-    } else if (this.state.company === "Toutes les sociétés" && this.state.building != "Tous les immeubles") {
+    }
+    // Toutes les sociétés NOT Tous les immeubles AND Tous les locataires
+     if (this.state.company === "Toutes les sociétés" && this.state.building != "Tous les immeubles" && this.state.tenant === "Tous les locataires") {
       watersArray = this.props.waters.filter((w) => w.building_name === this.state.building)
-    } else if (this.state.company != "Toutes les sociétés" && this.state.building != "Tous les immeubles") {
+    }
+    // Toutes les sociétés AND Tous les immeubles NOT Tous les locataires
+     if (this.state.company === "Toutes les sociétés" && this.state.building === "Tous les immeubles" && this.state.tenant != "Tous les locataires") {
+      watersArray = this.props.waters.filter((w) => w.tenant_name === this.state.tenant)
+    }
+    // Toutes les sociétés NOT Tous les immeubles NOT Tous les locataires
+     if (this.state.company === "Toutes les sociétés" && this.state.building != "Tous les immeubles" && this.state.tenant != "Tous les locataires") {
+      watersArray = this.props.waters.filter((w) => w.building_name === this.state.building && w.tenant_name === this.state.tenant)
+    }
+    // NOT Toutes les sociétés AND Tous les immeubles AND Tous les locataires
+     if (this.state.company != "Toutes les sociétés" && this.state.building === "Tous les immeubles" && this.state.tenant === "Tous les locataires") {
+      watersArray = this.props.waters.filter((w) => w.company_name === this.state.company)
+    }
+    // NOT Toutes les sociétés NOT Tous les immeubles AND Tous les locataires
+     if (this.state.company != "Toutes les sociétés" && this.state.building != "Tous les immeubles" && this.state.tenant === "Tous les locataires") {
       watersArray = this.props.waters.filter((w) => w.company_name === this.state.company && w.building_name === this.state.building)
     }
+    // NOT Toutes les sociétés AND Tous les immeubles NOT Tous les locataires
+     if (this.state.company != "Toutes les sociétés" && this.state.building === "Tous les immeubles" && this.state.tenant != "Tous les locataires") {
+      watersArray = this.props.waters.filter((w) => w.company_name === this.state.company && w.tenant_name === this.state.tenant)
+    }
+    // NOT Toutes les sociétés NOT Tous les immeubles NOT Tous les locataires
+     if (this.state.company != "Toutes les sociétés" && this.state.building != "Tous les immeubles" && this.state.tenant != "Tous les locataires") {
+      watersArray = this.props.waters.filter((w) => w.company_name === this.state.company && w.building_name === this.state.building && w.tenant_name === this.state.tenant)
+    }
+    // else if (this.state.company != "Toutes les sociétés" && this.state.building === "Tous les immeubles") {
+    //   watersArray = this.props.waters.filter((w) => w.company_name === this.state.company)
+    // } else if (this.state.company === "Toutes les sociétés" && this.state.building != "Tous les immeubles") {
 
+    // } else if (this.state.company != "Toutes les sociétés" && this.state.building != "Tous les immeubles") {
+    //   watersArray = this.props.waters.filter((w) => w.company_name === this.state.company && w.building_name === this.state.building)
+    // }
+    console.log(this.state.company + " " +  this.state.building + " " + this.state.tenant)
+    console.log(watersArray)
+
+    // Display selection in table
     return watersArray.map((water, index) => {
       const { id, submission_date, quantity, tenant_name, building_name, company_name, photo } = water //destructuring
       const photo_array = photo.split(',')
-        return (
-          <tr key={id}>
-             <td>{submission_date}</td>
-             <td>{company_name}</td>
-             <td>{building_name}</td>
-             <td>{tenant_name}</td>
-             <td>{quantity}</td>
-             <td>{photo_array.map((p, index) =>
-              <a key={index} className="btn-transparent mx-1" style={{fontSize:'12px'}} target="_blank" href={p}>Ouvrir</a>
-              )}
-             </td>
-          </tr>
-        )
+      return (
+        <tr key={id}>
+           <td>{submission_date}</td>
+           <td>{company_name}</td>
+           <td>{building_name}</td>
+           <td>{tenant_name}</td>
+           <td>{quantity}</td>
+           <td>{photo_array.map((p, index) =>
+            <a key={index} className="btn-transparent mx-1" style={{fontSize:'12px'}} target="_blank" href={p}>Ouvrir</a>
+            )}
+           </td>
+        </tr>
+      )
     })
   }
 
@@ -88,46 +133,100 @@ class WatersIndex extends Component {
   }
 
   renderWaters() {
-    // return this.props.waters.map((water) => {
-      return (
-        <div style={{overflow: 'scroll'}}>
-          <table id='waters' className='mt-0' style={{backgroundColor: 'white'}} >
-             <tbody>
-                <tr>{this.renderTableHeader()}</tr>
-                 {this.renderTableData()}
-             </tbody>
-          </table>
-        </div>
-      );
-    // });
+    return (
+      <div style={{overflow: 'scroll'}}>
+        <table id='waters' className='mt-0' style={{backgroundColor: 'white'}} >
+           <tbody>
+              <tr>{this.renderTableHeader()}</tr>
+               {this.renderTableData()}
+           </tbody>
+        </table>
+      </div>
+    );
   }
-
     // Display all the company in the form select
   renderCompany() {
-    // return tenants.map((tenant) => {
-      return this.props.companies.map((company) => {
-        return company.map((c) => {
-          return (
-            <option value={c.name} key={c.id}>{c.name}</option>
-          );
-        })
+    return this.props.companies.map((company) => {
+      return company.map((c) => {
+        return (
+          <option value={c.name} key={c.id}>{c.name}</option>
+        );
       })
-    // })
+    })
   }
 
   renderBuilding() {
-    return this.props.buildings.map((building) => {
-      return building.map((b) => {
-        if (this.state.company === '' || this.state.company === "Toutes les sociétés") {
-          return (
-            <option value={b.name} key={b.id}>{b.name}</option>
-          );
-        } else if (this.state.company === b.company_name) {
-          return (
-            <option value={b.name} key={b.id}>{b.name}</option>
-          );
-        }
+    let buildingsArray = []
+    // Check company field and select buildings
+    if (this.state.company === "Toutes les sociétés") {
+      this.props.buildings.forEach((building) => {
+        building.forEach((b) => {
+          buildingsArray.push(b)
+        })
       })
+    } else if (this.state.company != "Toutes les sociétés") {
+      this.props.buildings.forEach((building) => {
+        building.forEach((b) => {
+          if (b.company_name === this.state.company) {
+            buildingsArray.push(b)
+          }
+        })
+      })
+    }
+    // Display options in dropdown list
+    return buildingsArray.map((building) => {
+      return (
+        <option value={building.name} key={building.id}>{building.name}</option>
+      );
+    })
+  }
+
+  renderTenant() {
+    let tenantsArray = []
+    // Check selection and select tenants
+    // toutes les sociétés et tous les immeubles
+    if (this.state.company === "Toutes les sociétés" && this.state.building === "Tous les immeubles") {
+      this.props.tenants.forEach((tenant) => {
+        tenant.forEach((t) => {
+          tenantsArray.push(t)
+        })
+      })
+    }
+    // NOT toutes les sociétés et tous les immeubles
+    if (this.state.company != "Toutes les sociétés" && this.state.building === "Tous les immeubles") {
+      this.props.tenants.forEach((tenant) => {
+        tenant.forEach((t) => {
+          if (this.state.company === t.company_name) {
+            tenantsArray.push(t)
+          }
+        })
+      })
+    }
+    // toutes les sociétés et NOT tous les immeubles
+    if (this.state.company === "Toutes les sociétés" && this.state.building != "Tous les immeubles") {
+      this.props.tenants.forEach((tenant) => {
+        tenant.forEach((t) => {
+          if (this.state.building === t.building_name) {
+            tenantsArray.push(t)
+          }
+        })
+      })
+    }
+    // NOT toutes les sociétés et NOT tous les immeubles
+    if (this.state.company != "Toutes les sociétés" && this.state.building != "Tous les immeubles") {
+      this.props.tenants.forEach((tenant) => {
+        tenant.forEach((t) => {
+          if (this.state.company === t.company_name && this.state.building === t.building_name) {
+            tenantsArray.push(t)
+          }
+        })
+      })
+    }
+    // Display options in dropdown list
+    return tenantsArray.map((tenant) => {
+      return (
+        <option value={tenant.name} key={tenant.id}>{tenant.name}</option>
+      );
     })
   }
 
@@ -166,6 +265,19 @@ class WatersIndex extends Component {
                   {this.renderBuilding()}
                 </select>
               </div>
+              <div className="col-9 col-md-3 pr-0 mt-1">
+                <select
+                  className="form-control"
+                  label="Tenant"
+                  name="tenant"
+                  type="text"
+                  value={this.state.tenant}
+                  onChange={this.handleChangeTenant}
+                >
+                  <option value={"Tous les locataires"} key="01">Tous les locataires</option>
+                  {this.renderTenant()}
+                </select>
+              </div>
             </div>
           </form>
           <h5 className="border-top pt-3"></h5>
@@ -185,12 +297,13 @@ function mapStateToProps(state) {
   return {
     waters: state.waters ,
     companies: state.companies,
-    buildings: state.buildings
+    buildings: state.buildings,
+    tenants: state.tenants
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ fetchWaters, fetchCompanies, fetchBuildings }, dispatch);
+  return bindActionCreators({ fetchWaters, fetchCompanies, fetchBuildings, fetchTenants }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(WatersIndex);
