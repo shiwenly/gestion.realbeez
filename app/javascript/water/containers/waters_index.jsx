@@ -3,9 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux';
 import { fetchWaters } from '../actions/index';
-import { fetchCompanies } from '../actions/index';
-import { fetchBuildings } from '../actions/index';
-import { fetchTenants } from '../actions/index';
+import { fetchCompanies, fetchBuildings, fetchTenants } from '../actions/index';
 import {Image} from 'cloudinary-react';
 
 class WatersIndex extends Component {

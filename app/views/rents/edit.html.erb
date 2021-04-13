@@ -4,9 +4,9 @@
     <div class="col-12 col-md-6 col-lg-6">
       <div class="center">
         <%= simple_form_for [@rent] do |f| %>
-          <%= f.input :statut, collection: @companies, label: "Selectionner une société", include_blank: false, include_hidden: false, class:"field_input", selected: @rent.tenant.company_name %>
-          <%= f.input :name, collection: @buildings, label: "Selectionner un immeuble", include_blank: false, include_hidden: false, selected: @rent.tenant.building_name %>
-          <%= f.input :tenant_id, collection: @tenants, label: "Selectionner un locataire", include_blank: false, include_hidden: false, class:"field_input" %>
+          <%= f.input :statut, collection: @companies, label: "Selectionnez une société", include_blank: false, include_hidden: false, class:"field_input", selected: @rent.tenant.company_name %>
+          <%= f.input :name, collection: @buildings, label: "Selectionnez un immeuble", include_blank: false, include_hidden: false, selected: @rent.tenant.building_name %>
+          <%= f.input :tenant_id, collection: @tenants, label: "Selectionnez un locataire", include_blank: false, include_hidden: false, class:"field_input" %>
           <%= f.input :date_payment, label: "Date d'encaissement", :order => [:day, :month, :year] %>
           <%= f.input :period, label: "Période", :order => [:month, :year] %>
           <%= f.input :rent_ask, label: "Montant du loyer à payer" %>

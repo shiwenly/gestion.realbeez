@@ -13,7 +13,7 @@
           <% end %>
         <% else %>
           <%= simple_form_for [@building] do |f| %>
-            <%= f.input :company_id, collection: @companies, label: "Selectionner une société", include_blank: "n/a - détention en nom propre", include_hidden: false %>
+            <%= f.input :company_id, collection: @companies, label: "Selectionnez une société", include_blank: "n/a - détention en nom propre", include_hidden: false %>
             <%= f.input :name, label: "Saisir un nom, identifiant, référence ou numéro unique" %>
             <%= f.input :address, label: "Adresse de l'immeuble" %>
             <%= f.input :number_of_flat, label: "Nombre d'appartements détenus" %>

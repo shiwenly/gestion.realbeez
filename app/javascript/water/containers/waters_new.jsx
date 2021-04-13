@@ -3,7 +3,7 @@ import { connect, useSelector, useDispatch, useActions } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 import { createWater } from '../actions';
 import { bindActionCreators } from 'redux';
-import { fetchTenants } from '../actions';
+import { fetchTenants, fetchBuildings, fetchCompanies } from '../actions';
 import { useState, useCallback} from 'react'
 import {useDropzone} from 'react-dropzone'
 import Dropzone from 'react-dropzone'
@@ -12,44 +12,41 @@ import { useForm } from 'react-hook-form';
 import { useHistory } from "react-router";
 import axios from 'axios';
 import ProgressBar from 'react-bootstrap/ProgressBar'
-// import { fileUploaded } from '../actions/index';
 
 const WaterDropzone = () => {
 
-  const TENANT_URL = '/api/v1/tenants'
-
   // History hook
   const history = useHistory();
-
-  // TO DO : Need to modify with functional component !!!
-  // const componentDidMount = () => {
-  //   this.props.fetchTenants();
-  // }
 
   // React hooks for uploading file
   const [uploadedFiles, setUploadedFiles] = useState([]);
 
   // React hooks for progress bar
   const [uploadPercentage, setUploadPercentage] = useState(0);
+  const [companySelected, setCompanySelected ] = useState("Toutes les sociétés");
+  const [buildingSelected, setBuildingSelected ] = useState("Tous les immeubles");
+  const [tenantSelected, setTenantSelected ] = useState("");
 
   // MapDispatchToProp hook
   const dispatch = useDispatch()
 
   // MapStateToProp hook for tenants
   const tenants = useSelector( state => state.tenants)
-  // console.log(tenants)
+  const companies = useSelector( state => state.companies)
+  const buildings = useSelector( state => state.buildings)
 
-  // ComponentDidMount hook to retrieve tenants info from redux
+  // ComponentDidMount hook to retrieve tenants, companies, buildings info from redux
   useEffect(() => {
        dispatch(fetchTenants());
+       dispatch(fetchCompanies());
+       dispatch(fetchBuildings());
   }, []);
 
   // Upload to Cloudinary
   const onDrop = useCallback(acceptedFiles => {
     const url = `https://api.cloudinary.com/v1_1/${ process.env.REACT_APP_CLOUDINARY_API}/upload`
-    // const url = `https://api.cloudinary.com/v1_1/myhouze/upload`
 
-    // Uploar percentage calculation
+    // Upload percentage calculation
     const options = {
       onUploadProgress: (progressEvent) => {
         const {loaded, total} = progressEvent;
@@ -60,7 +57,6 @@ const WaterDropzone = () => {
     }
 
     acceptedFiles.forEach(async (acceptedFile) => {
-
       const formData = new FormData();
       formData.append("file", acceptedFile);
       formData.append(
@@ -69,18 +65,10 @@ const WaterDropzone = () => {
         // "vj7q0nmq"
       );
 
-      // const response = await fetch(url, {
-      //   method: "post",
-      //   body: formData,
-      // })
-
       // post requrest via axios
       axios.post(url, formData, options ).then(response => {
-        // console.log(response)
         const data = response.data;
         setUploadPercentage(0)
-        // console.log(uploadPercentage)
-        // console.log(data)
         setUploadedFiles(old => [...old, data])
       })
     })
@@ -97,32 +85,111 @@ const WaterDropzone = () => {
 
   // Call API and post data from form
   const onSubmit = (data) => {
-    // const ROOT_URL = '../api/v1/waters';
-    // const response = fetch(ROOT_URL, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Accept': 'application/json',
-    //     'Content-Type': 'application/json'
-    //   },
-    //   credentials: 'same-origin',
-    //   body: JSON.stringify(data)
-    // }).then(response => response.json())
-    //   // .then(callback);
-    //   history.push("/waters");
     createWater(data, (post) => {
       history.push('/waters'); // Navigate after submit
       return post;
     });
   }
 
-  // Display all the tenants in the form select
-  const renderPosts = (tenants) => {
-    return tenants.map((tenant) => {
-      return tenant.map((t) => {
+  const setCompany = (event) => {
+    setCompanySelected(event.target.value)
+    setBuildingSelected("Tous les immeubles")
+  }
+
+  const setBuilding = (event) => {
+    setBuildingSelected(event.target.value)
+  }
+
+  const setTenant = (event) => {
+    setTenantSelected(event.target.value)
+  }
+
+  // Display all the companies in the form select
+  const renderCompanies = (companies) => {
+    return companies.map((company) => {
+      return company.map((c) => {
         return (
-          <option value={t.id} key={t.id}>{t.first_name} {t.last_name}</option>
+          <option value={c.name} key={c.id}>{c.name}</option>
         );
       })
+    })
+  }
+
+    // Display all the buildings in the form select
+  const renderBuildings = (buildings) => {
+
+    let buildingsArray = []
+    // Check company field and select buildings
+    if (companySelected === "Toutes les sociétés") {
+      buildings.forEach((building) => {
+        building.forEach((b) => {
+          buildingsArray.push(b)
+        })
+      })
+    } else if (companySelected != "Toutes les sociétés") {
+      buildings.forEach((building) => {
+        building.forEach((b) => {
+          if (b.company_name === companySelected) {
+            buildingsArray.push(b)
+          }
+        })
+      })
+    }
+    return buildingsArray.map((b) => {
+      return (
+        <option value={b.name} key={b.id}>{b.name}</option>
+      );
+    })
+  }
+
+  // Display all the tenants in the form select
+  const renderTenants = (tenants) => {
+
+    let tenantsArray = []
+    // Check selection and select tenants
+    // toutes les sociétés AND tous les immeubles
+    if (companySelected === "Toutes les sociétés" && buildingSelected === "Tous les immeubles") {
+      tenants.forEach((tenant) => {
+        tenant.forEach((t) => {
+          tenantsArray.push(t)
+        })
+      })
+    }
+    // NOT toutes les sociétés AND tous les immeubles
+    if (companySelected != "Toutes les sociétés" && buildingSelected === "Tous les immeubles") {
+      tenants.forEach((tenant) => {
+        tenant.forEach((t) => {
+          if (companySelected === t.company_name) {
+            tenantsArray.push(t)
+          }
+        })
+      })
+    }
+    // toutes les sociétés NOT tous les immeubles
+    if (companySelected === "Toutes les sociétés" && buildingSelected != "Tous les immeubles") {
+      tenants.forEach((tenant) => {
+        tenant.forEach((t) => {
+          if (buildingSelected === t.building_name) {
+            tenantsArray.push(t)
+          }
+        })
+      })
+    }
+    // NOT toutes les sociétés NOT tous les immeubles
+    if (companySelected != "Toutes les sociétés" && buildingSelected != "Tous les immeubles") {
+      tenants.forEach((tenant) => {
+        tenant.forEach((t) => {
+          if (companySelected === t.company_name && buildingSelected === t.building_name) {
+            tenantsArray.push(t)
+          }
+        })
+      })
+    }
+
+    return tenantsArray.map((t) => {
+      return (
+        <option value={t.id} key={t.id}>{t.first_name} {t.last_name}</option>
+      );
     })
   }
 
@@ -154,16 +221,46 @@ const WaterDropzone = () => {
               type="date"
           />
           <div>
-            <label htmlFor="tenant_id" className=" mt-3">Locataire</label>
+            <label htmlFor="company_id" className=" mt-3">Sélectionnez une société</label>
             <select
-              // onClick={() => dispatch(fetchTenants())}
+              ref={register}
+              className="form-control"
+              label="Company_id"
+              name="company_id"
+              type="text"
+              value={companySelected}
+              onChange={c => setCompany(c)}>
+               <option value="Toutes les sociétés" key="01">Toutes les sociétés</option>
+               <option value="n/a - détention en nom propre" key="02">n/a - détention en nom propre</option>
+               {renderCompanies(companies)}
+            </select>
+          </div>
+          <div>
+            <label htmlFor="building_id" className=" mt-3">Sélectionnez un immeuble</label>
+            <select
+              ref={register}
+              className="form-control"
+              label="Building_id"
+              name="building_id"
+              type="text"
+              value={buildingSelected}
+              onChange={b => setBuilding(b)}>
+                <option value="Tous les immeubles" key="01">Tous les immeubles</option>
+                <option value="n/a - aucun immeuble" key="02">n/a - aucun immeuble</option>
+               {renderBuildings(buildings)}
+            </select>
+          </div>
+          <div>
+            <label htmlFor="tenant_id" className=" mt-3">Sélectionnez un locataire</label>
+            <select
               ref={register}
               className="form-control"
               label="Tenant_id"
               name="tenant_id"
               type="text"
-              defaultValue="">
-               {renderPosts(tenants)}
+              value={tenantSelected}
+              onChange={t => setTenant(t)}>
+               {renderTenants(tenants)}
             </select>
           </div>
           <div className="mt-3">
@@ -189,11 +286,11 @@ const WaterDropzone = () => {
               {
                 isDragActive ?
                 <div className="text-center">
-                  <div><i style={{fontSize: "30px", color:"#4285F4"}} class="fas fa-cloud-upload-alt"></i></div>
+                  <div><i style={{fontSize: "30px", color:"#4285F4"}} className="fas fa-cloud-upload-alt"></i></div>
                   <p style={{color: "#4285F4"}}>Déposez le fichier pour l'importer</p>
                 </div> :
-                <div className="text-center">
-                  <div><i style={{fontSize: "30px", color:"#4285F4", opacity: "0.8"}} class="fas fa-cloud-upload-alt"></i></div>
+                <div className="text-center" style={{cursor: "pointer"}}>
+                  <div><i style={{fontSize: "30px", color:"#4285F4", opacity: "0.8"}} className="fas fa-cloud-upload-alt"></i></div>
                   <p>Déposez des fichiers ici ou cliquez pour charger.</p>
                 </div>
               }
@@ -225,22 +322,14 @@ const WaterDropzone = () => {
               value={ uploadedFiles.map((pic) => pic.url) }
             />
           </div>
-          <button disabled={!isEnabled} className="btn btn-yellow-mustard" onSubmit={() => dispatch(createWater())}>Submit</button>
+          <button disabled={!isEnabled} className="btn btn-yellow-mustard" onSubmit={() => dispatch(createWater())}>Valider</button>
         </form>
       </div>
     </div>
   )
 }
 
-// function mapStateToProps(state) {
-//   return {
-//     tenants: state.tenants
-//   };
-// }
-
-// function mapDispatchToProps(dispatch) {
-//   return bindActionCreators({ fetchTenants}, dispatch);
-// }
+export default WaterDropzone;
 
 // to display image after upload
 // <Image
@@ -251,7 +340,6 @@ const WaterDropzone = () => {
 // crop="scale"
 // />
 
-// export default connect(mapStateToProps, mapDispatchToProps)(WaterDropzone);
-export default WaterDropzone;
+
 
 

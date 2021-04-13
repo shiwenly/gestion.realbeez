@@ -16,9 +16,9 @@
           <% end %>
         <% else %>
           <%= simple_form_for [@rent] do |f| %>
-            <%= f.input :statut, collection: @companies, label: "Selectionner une société", include_blank: "n/a - détention en nom propre", include_hidden: false, class:"field_input" %>
-            <%= f.input :name, collection: @buildings, label: "Selectionner un immeuble", include_blank: false, include_hidden: false %>
-            <%= f.input :tenant_id, collection: @tenants, label: "Selectionner un locataire", include_blank: false, include_hidden: false, class:"field_input" %>
+            <%= f.input :statut, collection: @companies, label: "Selectionnez une société", include_blank: "n/a - détention en nom propre", include_hidden: false, class:"field_input" %>
+            <%= f.input :name, collection: @buildings, label: "Selectionnez un immeuble", include_blank: false, include_hidden: false %>
+            <%= f.input :tenant_id, collection: @tenants, label: "Selectionnez un locataire", include_blank: false, include_hidden: false, class:"field_input" %>
             <%= f.input :date_payment, label: "Date d'encaissement", :order => [:day, :month, :year] %>
             <%= f.input :period, label: "Période", :order => [:month, :year] %>
             <% unless @tenants == [] || @tenants == nil  %>

@@ -4,8 +4,8 @@
     <div class="col-12 col-md-6 col-lg-6">
       <div class="center">
         <%= simple_form_for [@apartment] do |f| %>
-          <%= f.input :company_id, collection: @companies, label: "Selectionner une société", include_blank: "n/a - détention en nom propre", include_hidden: false, class:"field_input" %>
-          <%= f.input :building_id, collection: @buildings, label: "Selectionner un immeuble", include_blank: "n/a - aucun immeuble", include_hidden: false %>
+          <%= f.input :company_id, collection: @companies, label: "Selectionnez une société", include_blank: "n/a - détention en nom propre", include_hidden: false, class:"field_input" %>
+          <%= f.input :building_id, collection: @buildings, label: "Selectionnez un immeuble", include_blank: "n/a - aucun immeuble", include_hidden: false %>
           <%= f.input :name, label: "Saisir un nom, identifiant, référence ou numéro unique" %>
           <%= f.input :water, label: "Numéro du compteur d'eau" %>
           <%= f.submit "Modifier", class: "btn btn-yellow-mustard mb-2" %>
