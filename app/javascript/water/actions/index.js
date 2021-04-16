@@ -6,6 +6,7 @@ const BUILDING_URL = '/api/v1/buildings'
 export const FETCH_WATERS = 'FETCH_WATERS';
 export const FETCH_WATER = 'FETCH_WATER';
 export const WATER_CREATED = 'WATER_CREATED';
+export const DELETE_WATER = 'DELETE_WATER';
 export const FETCH_TENANTS = 'FETCH_TENANTS';
 export const FETCH_COMPANIES = 'FETCH_COMPANIES';
 export const FETCH_BUILDINGS = 'FETCH_BUILDINGS';
@@ -71,5 +72,22 @@ export function createWater(body, callback) {
   return {
     type: WATER_CREATED,
     payload: request
+  };
+}
+
+export function deleteWater(water, callback) {
+  const request = fetch(`${ROOT_URL}/${water.id}`, {
+    method: 'DELETE',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    credentials: 'same-origin'
+    // body: JSON.stringify(body)
+  }).then(response => response.json())
+    .then({ status: 'Delete successful' }, callback);
+  return {
+    type: DELETE_WATER,
+    payload: water
   };
 }

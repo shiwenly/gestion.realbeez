@@ -3,23 +3,23 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux';
 import { fetchWaters } from '../actions/index';
-import { fetchCompanies, fetchBuildings, fetchTenants } from '../actions/index';
+import { fetchCompanies, fetchBuildings, fetchTenants, deleteWater } from '../actions/index';
 import {Image} from 'cloudinary-react';
 
 class WatersIndex extends Component {
 
   constructor(props) {
-   super(props);
-   this.state = {
-    company: 'Toutes les sociétés',
-    building: 'Tous les immeubles',
-    tenant: 'Tous les locataires'
-  };
-   this.handleChangeCompany = this.handleChangeCompany.bind(this);
-   this.handleChangeBuilding = this.handleChangeBuilding.bind(this);
-   this.handleChangeTenant = this.handleChangeTenant.bind(this);
-   this.handleSubmit = this.handleSubmit.bind(this);
-
+    super(props);
+    this.state = {
+      company: 'Toutes les sociétés',
+      building: 'Tous les immeubles',
+      tenant: 'Tous les locataires'
+    };
+    this.handleChangeCompany = this.handleChangeCompany.bind(this);
+    this.handleChangeBuilding = this.handleChangeBuilding.bind(this);
+    this.handleChangeTenant = this.handleChangeTenant.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    // this.handleRemoveWater = this.handleRemoveWater.bind(this);
   }
 
   componentDidMount() {
@@ -56,6 +56,17 @@ class WatersIndex extends Component {
   handleSubmit(event) {
    // alert('A name was submitted: ' + this.state.value);
    // event.preventDefault();
+  }
+
+  handleRemoveWater(water) {
+    // console.log(water.id)
+    // alert("Confirmez la suppression de la saisie?");
+
+    this.props.deleteWater(water, (post) => {
+      this.props.history.push('/waters'); // Navigate after submit
+      // return post;
+    });
+
   }
 
   renderTableData() {
@@ -118,13 +129,20 @@ class WatersIndex extends Component {
             <a key={index} className="btn-transparent mx-1" style={{fontSize:'12px'}} target="_blank" href={p}>Ouvrir</a>
             )}
            </td>
+           <td>
+            <button className="btn-icon fas fa-edit">
+            </button>
+            {/*<button className="btn-icon fas fa-trash" onClick={() => this.handleRemoveWater(water)}>*/}
+            <button className="btn-icon fas fa-trash" onClick={() => { if (window.confirm(`Confirmez-vous la suppression de la saisie du ${water.submission_date} ?`)) this.handleRemoveWater(water) }} >
+            </button>
+           </td>
         </tr>
       )
     })
   }
 
   renderTableHeader() {
-     let header = ['Date', "Société", "Immeuble", "Locataire", "Consommation", "Pièce jointe"]
+     let header = ['Date', "Société", "Immeuble", "Locataire", "Consommation", "Pièce jointe", ""]
      return header.map((key, index) => {
         return <th  key={index}>{key}</th>
      })
@@ -228,6 +246,8 @@ class WatersIndex extends Component {
     })
   }
 
+
+
   render() {
     return (
       <div className="" style={{fontSize: '12px' }}>
@@ -301,7 +321,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ fetchWaters, fetchCompanies, fetchBuildings, fetchTenants }, dispatch);
+  return bindActionCreators({ fetchWaters, fetchCompanies, fetchBuildings, fetchTenants, deleteWater }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(WatersIndex);

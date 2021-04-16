@@ -24,7 +24,7 @@
                   <div class="d-flex align-items-center mb-4 justify-content-center">
                     <p class="m-0 p-0" style="color: #D8A727; font-family: Simply Rounded; font-size: 22px; letter-spacing: 1px"><%= company.name %></p>
                     <%= link_to "", edit_company_path(company), class:"fas fa-edit ml-2", style:"font-size:12px"  %> /
-                    <%= link_to "", company_path(company), method: :delete, data: { confirm: "Confirmez la suppression de la société #{company.name}?" }, class:"fas fa-trash", style:"font-size:12px" %>
+                    <%= link_to "", company_path(company), method: :delete, data: { confirm: "Confirmez-vous la suppression de la société #{company.name}?" }, class:"fas fa-trash", style:"font-size:12px" %>
                   </div>
                   <!-- <p class=" mt-0 mb-3" style="" ><i class="fas fa-city mr-3" style="color: #D8A727"></i><%#= company.name %></p> -->
                   <p class=" mt-0 mb-3" style="" ><i class="fas fa-map-marker-alt mr-3" style="color: #D8A727"></i><%= company.address %></p>

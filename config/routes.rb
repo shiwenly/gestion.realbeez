@@ -42,7 +42,7 @@ Rails.application.routes.draw do
   # get '/waters/new', to: '/waters#index'
   namespace :api, defaults: { format: :json } do
     namespace :v1 do
-      resources :waters, only: [ :index, :show, :create ]
+      resources :waters, only: [ :index, :show, :create, :destroy, :update ]
     end
   end
 

@@ -66,15 +66,16 @@ class Api::V1::WatersController < ActionController::Base
   end
 
   def destroy
-    authorize @water
+    # authorize @water
+    render json: @water
     @water.statut = "deleted"
     @water.save
-    associe = @water.tenant.apartment.building.company.associe.downcase.split(",").map(&:strip)
-    if associe.include?(current_user.email) || @water.tenant.apartment.building.company.user == current_user || @water.tenant.apartment.user == current_user || current_user.admin == true
-      redirect_to apartment_tenants_path(@water.tenant.apartment)
-    else
-      redirect_to tenant_path(@water.tenant)
-    end
+    # associe = @water.tenant.apartment.building.company.associe.downcase.split(",").map(&:strip)
+    # if associe.include?(current_user.email) || @water.tenant.apartment.building.company.user == current_user || @water.tenant.apartment.user == current_user || current_user.admin == true
+    #   redirect_to apartment_tenants_path(@water.tenant.apartment)
+    # else
+    # redirect_to waters_path
+    # end
   end
 
   private

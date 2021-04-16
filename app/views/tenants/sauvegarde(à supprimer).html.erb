@@ -67,7 +67,7 @@
                             <div class="d-flex align-items-center mb-4 justify-content-center">
                               <p class="m-0 p-0" style="color: #D8A727; font-family: Simply Rounded; font-size: 22px; letter-spacing: 1px"><%= tenant.first_name %> <%= tenant.last_name %> </p>
                               <%= link_to "", edit_tenant_path(tenant)  , class:"fas fa-edit ml-2", style:"font-size:12px"  %> /
-                              <%= link_to "", tenant_path(tenant), method: :delete, data: { confirm: "Confirmez la suppression du locataire #{tenant.first_name} #{tenant.last_name}?" }, class:"fas fa-trash", style:"font-size:12px" %>
+                              <%= link_to "", tenant_path(tenant), method: :delete, data: { confirm: "Confirmez-vous la suppression du locataire #{tenant.first_name} #{tenant.last_name}?" }, class:"fas fa-trash", style:"font-size:12px" %>
                             </div>
                             <%= link_to tenant_path(tenant), style:"text-decoration:none; color: rgb(100, 100, 100)" do %>
                               <p>Locataire en place : <%= tenant.current_tenant ? "Oui" : "Non"%></p>
@@ -155,7 +155,7 @@
                                     <% if associe.include?(current_user.email) || tenant.apartment.building.company.user == current_user || tenant.user == current_user %>
                                       <td>
                                         <%= link_to "", edit_rent_path(rent), class:"fas fa-edit mr-1" %>/
-                                        <%= link_to "",rent_path(rent), method: :delete, data: { confirm: "Confirmez la suppression de la saisie?" }, class:"fas fa-trash" %>
+                                        <%= link_to "",rent_path(rent), method: :delete, data: { confirm: "Confirmez-vous la suppression de la saisie?" }, class:"fas fa-trash" %>
                                       </td>
                                     <% end %>
                                   </tr>
@@ -212,7 +212,7 @@
                                     <td>
                                       <% if associe.include?(current_user.email) || tenant.apartment.building.company.user == current_user || @tenant.user == current_user %>
                                         <%= link_to "", edit_water_path(water), class:"fas fa-edit mr-1" %>/
-                                        <%= link_to "", water_path(water), method: :delete, data: { confirm: "Confirmez la suppression de la saisie?" }, class:"fas fa-trash" %>
+                                        <%= link_to "", water_path(water), method: :delete, data: { confirm: "Confirmez-vous la suppression de la saisie?" }, class:"fas fa-trash" %>
                                       <% end %>
                                     </td>
                                   </tr>
@@ -242,7 +242,7 @@
               // add class
               target.classList.add("active");
               };
-              
+
                this.addEventListener("click", (e) => {
                 console.log(e)
                 const whereToShow = document.querySelector("#friends-toPlace");
@@ -260,7 +260,7 @@
                               <div class="d-flex align-items-center mb-4 justify-content-center">
                                 <p class="m-0 p-0" style="color: #D8A727; font-family: Simply Rounded; font-size: 22px; letter-spacing: 1px"><%= tenant.first_name %> <%= tenant.last_name %> </p>
                                 <%= link_to "", edit_tenant_path(tenant)  , class:"fas fa-edit ml-2", style:"font-size:12px"  %> /
-                                <%= link_to "", tenant_path(tenant), method: :delete, data: { confirm: "Confirmez la suppression du locataire #{tenant.first_name} #{tenant.last_name}?" }, class:"fas fa-trash", style:"font-size:12px" %>
+                                <%= link_to "", tenant_path(tenant), method: :delete, data: { confirm: "Confirmez-vous la suppression du locataire #{tenant.first_name} #{tenant.last_name}?" }, class:"fas fa-trash", style:"font-size:12px" %>
                               </div>
                               <%= link_to tenant_path(tenant), style:"text-decoration:none; color: rgb(100, 100, 100)" do %>
                                 <p>Locataire en place : <%= tenant.current_tenant ? "Oui" : "Non"%></p>
@@ -345,7 +345,7 @@
                                       <% if associe.include?(current_user.email) || tenant.apartment.building.company.user == current_user || tenant.user == current_user %>
                                         <td>
                                           <%= link_to "", edit_rent_path(rent), class:"fas fa-edit mr-2" %>
-                                          <%= link_to "",rent_path(rent), method: :delete, data: { confirm: "Confirmez la suppression de la saisie?" }, class:"fas fa-trash" %>
+                                          <%= link_to "",rent_path(rent), method: :delete, data: { confirm: "Confirmez-vous la suppression de la saisie?" }, class:"fas fa-trash" %>
                                         </td>
                                       <% end %>
                                     </tr>
@@ -402,7 +402,7 @@
                                       <td>
                                         <% if associe.include?(current_user.email) || tenant.apartment.building.company.user == current_user || @tenant.user == current_user %>
                                           <%= link_to "", edit_water_path(water), class:"fas fa-edit mr-2" %>
-                                          <%= link_to "", water_path(water), method: :delete, data: { confirm: "Confirmez la suppression de la saisie?" }, class:"fas fa-trash" %>
+                                          <%= link_to "", water_path(water), method: :delete, data: { confirm: "Confirmez-vous la suppression de la saisie?" }, class:"fas fa-trash" %>
                                         <% end %>
                                       </td>
                                     </tr>
@@ -431,7 +431,7 @@
                               <div class="d-flex align-items-center mb-4 justify-content-center">
                                 <p class="m-0 p-0" style="color: #D8A727; font-family: Simply Rounded; font-size: 22px; letter-spacing: 1px"><%= tenant.first_name %> <%= tenant.last_name %> </p>
                                 <%= link_to "", edit_tenant_path(tenant)  , class:"fas fa-edit ml-2", style:"font-size:12px"  %> /
-                                <%= link_to "", tenant_path(tenant), method: :delete, data: { confirm: "Confirmez la suppression du locataire #{tenant.first_name} #{tenant.last_name}?" }, class:"fas fa-trash", style:"font-size:12px" %>
+                                <%= link_to "", tenant_path(tenant), method: :delete, data: { confirm: "Confirmez-vous la suppression du locataire #{tenant.first_name} #{tenant.last_name}?" }, class:"fas fa-trash", style:"font-size:12px" %>
                               </div>
                               <%= link_to tenant_path(tenant), style:"text-decoration:none; color: rgb(100, 100, 100)" do %>
                                 <p>Locataire en place : <%= tenant.current_tenant ? "Oui" : "Non"%></p>

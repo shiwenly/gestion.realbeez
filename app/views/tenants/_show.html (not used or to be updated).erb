@@ -148,7 +148,7 @@
                     <td>
                       <%# if associe.include?(current_user.email) || @tenant.apartment.building.company.user == current_user || @tenant.user == current_user %>
                       <%= link_to "", edit_water_path(water), class:"fas fa-edit mr-1" %>/
-                      <%= link_to "", water_path(water), method: :delete, data: { confirm: "Confirmez la suppression de la saisie?" }, class:"fas fa-trash" %>
+                      <%= link_to "", water_path(water), method: :delete, data: { confirm: "Confirmez-vous la suppression de la saisie?" }, class:"fas fa-trash" %>
                       <%# end %>
                     </td>
                   </tr>

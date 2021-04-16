@@ -13,7 +13,7 @@ import { useHistory } from "react-router";
 import axios from 'axios';
 import ProgressBar from 'react-bootstrap/ProgressBar'
 
-const WaterNew = () => {
+const WaterEdit = () => {
 
   // History hook
   const history = useHistory();
@@ -329,7 +329,7 @@ const WaterNew = () => {
   )
 }
 
-export default WaterNew;
+export default WaterEdit;
 
 // to display image after upload
 // <Image

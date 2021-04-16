@@ -37,7 +37,7 @@
             <div class="d-flex align-items-center mb-4 justify-content-center">
               <p class="m-0 p-0" style="color: #D8A727; font-family: Simply Rounded; font-size: 22px; letter-spacing: 1px"><%= tenant.first_name %> <%= tenant.last_name %> </p>
               <%= link_to "", edit_tenant_path(tenant)  , class:"fas fa-edit ml-2", style:"font-size:12px"  %> /
-              <%= link_to "", tenant_path(tenant), method: :delete, data: { confirm: "Confirmez la suppression du locataire #{tenant.first_name} #{tenant.last_name}?" }, class:"fas fa-trash", style:"font-size:12px" %>
+              <%= link_to "", tenant_path(tenant), method: :delete, data: { confirm: "Confirmez-vous la suppression du locataire #{tenant.first_name} #{tenant.last_name}?" }, class:"fas fa-trash", style:"font-size:12px" %>
             </div>
             <p>Locataire en place : <%= tenant.current_tenant ? "Oui" : "Non"%></p>
             <p class=" mt-0 mb-2" style="" ><i class="fas fa-city mr-3" style="color: #D8A727"></i><%= tenant.company_name%></p>
