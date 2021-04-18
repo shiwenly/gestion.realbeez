@@ -307,11 +307,10 @@ const WaterNew = () => {
                     style={{width: "50px"}}
                   />
                   <span
-                    className="text-primary cursor-pointer ml-3"
-                    style={{cursor: "pointer"}}
+                    className="text-primary cursor-pointer ml-3 fas fa-times"
+                    style={{cursor: "pointer", color: "red"}}
                     onClick={() => removeFile(file)}
                   >
-                    supprimer
                   </span>
                 </li>
                 ))}
