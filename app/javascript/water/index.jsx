@@ -4,7 +4,8 @@ import { Provider } from 'react-redux';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import reduxPromise from 'redux-promise';
 import logger from 'redux-logger';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+
 // import { Router, Route, Switch } from 'react-router-dom';
 // import { createHistory as history } from 'history';
  import { createBrowserHistory } from 'history';
@@ -29,6 +30,7 @@ const reducers = combineReducers({
   form: formReducer,
 });
 
+// let { id } = useParams();
 const middlewares = applyMiddleware(reduxPromise, logger);
 const water = document.getElementById('water')
 const history = createBrowserHistory();
@@ -44,7 +46,7 @@ if (water) {
           <Switch>
             <Route path="/waters" exact component={WatersIndex} />
             <Route path="/waters/new" component={WatersNew} />
-            <Route path="/waters/edit" component={WatersEdit} />
+            <Route path="/waters/edit/:id" component={WatersEdit} />
           </Switch>
         </div>
       </Router>

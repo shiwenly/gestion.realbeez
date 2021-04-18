@@ -1,4 +1,4 @@
-import { FETCH_WATERS, FETCH_WATER, WATER_CREATED, DELETE_WATER } from '../actions';
+import { FETCH_WATERS, FETCH_WATER, WATER_CREATED, DELETE_WATER, UPDATE_WATER } from '../actions';
 
 export default function(state = [], action) {
   switch(action.type) {
@@ -12,6 +12,8 @@ export default function(state = [], action) {
       return state.filter(
         water => action.payload !== water
       );
+    case UPDATE_WATER:
+      return [ action.payload ];
     default:
       return state;
   }

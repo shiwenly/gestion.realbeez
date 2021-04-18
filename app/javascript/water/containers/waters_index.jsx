@@ -66,7 +66,15 @@ class WatersIndex extends Component {
       this.props.history.push('/waters'); // Navigate after submit
       // return post;
     });
+  }
 
+  handleUpdateWater(water) {
+    // this.props.history.push(`/waters/edit/${water.id}`)
+
+    this.props.history.push({
+    pathname: `/waters/edit/${water.id}`,
+    state: water // your data array of objects
+    })
   }
 
   renderTableData() {
@@ -77,31 +85,31 @@ class WatersIndex extends Component {
       watersArray = this.props.waters
     }
     // Toutes les sociétés NOT Tous les immeubles AND Tous les locataires
-     if (this.state.company === "Toutes les sociétés" && this.state.building != "Tous les immeubles" && this.state.tenant === "Tous les locataires") {
+    else if (this.state.company === "Toutes les sociétés" && this.state.building != "Tous les immeubles" && this.state.tenant === "Tous les locataires") {
       watersArray = this.props.waters.filter((w) => w.building_name === this.state.building)
     }
     // Toutes les sociétés AND Tous les immeubles NOT Tous les locataires
-     if (this.state.company === "Toutes les sociétés" && this.state.building === "Tous les immeubles" && this.state.tenant != "Tous les locataires") {
+    else if (this.state.company === "Toutes les sociétés" && this.state.building === "Tous les immeubles" && this.state.tenant != "Tous les locataires") {
       watersArray = this.props.waters.filter((w) => w.tenant_name === this.state.tenant)
     }
     // Toutes les sociétés NOT Tous les immeubles NOT Tous les locataires
-     if (this.state.company === "Toutes les sociétés" && this.state.building != "Tous les immeubles" && this.state.tenant != "Tous les locataires") {
+    else if (this.state.company === "Toutes les sociétés" && this.state.building != "Tous les immeubles" && this.state.tenant != "Tous les locataires") {
       watersArray = this.props.waters.filter((w) => w.building_name === this.state.building && w.tenant_name === this.state.tenant)
     }
     // NOT Toutes les sociétés AND Tous les immeubles AND Tous les locataires
-     if (this.state.company != "Toutes les sociétés" && this.state.building === "Tous les immeubles" && this.state.tenant === "Tous les locataires") {
+    else if (this.state.company != "Toutes les sociétés" && this.state.building === "Tous les immeubles" && this.state.tenant === "Tous les locataires") {
       watersArray = this.props.waters.filter((w) => w.company_name === this.state.company)
     }
     // NOT Toutes les sociétés NOT Tous les immeubles AND Tous les locataires
-     if (this.state.company != "Toutes les sociétés" && this.state.building != "Tous les immeubles" && this.state.tenant === "Tous les locataires") {
+    else if (this.state.company != "Toutes les sociétés" && this.state.building != "Tous les immeubles" && this.state.tenant === "Tous les locataires") {
       watersArray = this.props.waters.filter((w) => w.company_name === this.state.company && w.building_name === this.state.building)
     }
     // NOT Toutes les sociétés AND Tous les immeubles NOT Tous les locataires
-     if (this.state.company != "Toutes les sociétés" && this.state.building === "Tous les immeubles" && this.state.tenant != "Tous les locataires") {
+    else if (this.state.company != "Toutes les sociétés" && this.state.building === "Tous les immeubles" && this.state.tenant != "Tous les locataires") {
       watersArray = this.props.waters.filter((w) => w.company_name === this.state.company && w.tenant_name === this.state.tenant)
     }
     // NOT Toutes les sociétés NOT Tous les immeubles NOT Tous les locataires
-     if (this.state.company != "Toutes les sociétés" && this.state.building != "Tous les immeubles" && this.state.tenant != "Tous les locataires") {
+    else if (this.state.company != "Toutes les sociétés" && this.state.building != "Tous les immeubles" && this.state.tenant != "Tous les locataires") {
       watersArray = this.props.waters.filter((w) => w.company_name === this.state.company && w.building_name === this.state.building && w.tenant_name === this.state.tenant)
     }
     // else if (this.state.company != "Toutes les sociétés" && this.state.building === "Tous les immeubles") {
@@ -111,13 +119,13 @@ class WatersIndex extends Component {
     // } else if (this.state.company != "Toutes les sociétés" && this.state.building != "Tous les immeubles") {
     //   watersArray = this.props.waters.filter((w) => w.company_name === this.state.company && w.building_name === this.state.building)
     // }
-    console.log(this.state.company + " " +  this.state.building + " " + this.state.tenant)
-    console.log(watersArray)
+    // console.log(this.state.company + " " +  this.state.building + " " + this.state.tenant)
+    // console.log(watersArray)
 
     // Display selection in table
     return watersArray.map((water, index) => {
       const { id, submission_date, quantity, tenant_name, building_name, company_name, photo } = water //destructuring
-      const photo_array = photo.split(',')
+      const photoArray = photo.split(',')
       return (
         <tr key={id}>
            <td>{submission_date}</td>
@@ -125,12 +133,12 @@ class WatersIndex extends Component {
            <td>{building_name}</td>
            <td>{tenant_name}</td>
            <td>{quantity}</td>
-           <td>{photo_array.map((p, index) =>
+           <td>{photoArray.map((p, index) =>
             <a key={index} className="btn-transparent mx-1" style={{fontSize:'12px'}} target="_blank" href={p}>Ouvrir</a>
             )}
            </td>
            <td>
-            <button className="btn-icon fas fa-edit">
+            <button className="btn-icon fas fa-edit" onClick={() => this.handleUpdateWater(water)}>
             </button>
             {/*<button className="btn-icon fas fa-trash" onClick={() => this.handleRemoveWater(water)}>*/}
             <button className="btn-icon fas fa-trash" onClick={() => { if (window.confirm(`Confirmez-vous la suppression de la saisie du ${water.submission_date} ?`)) this.handleRemoveWater(water) }} >
@@ -209,7 +217,7 @@ class WatersIndex extends Component {
       })
     }
     // NOT toutes les sociétés AND tous les immeubles
-    if (this.state.company != "Toutes les sociétés" && this.state.building === "Tous les immeubles") {
+    else if (this.state.company != "Toutes les sociétés" && this.state.building === "Tous les immeubles") {
       this.props.tenants.forEach((tenant) => {
         tenant.forEach((t) => {
           if (this.state.company === t.company_name) {
@@ -219,7 +227,7 @@ class WatersIndex extends Component {
       })
     }
     // toutes les sociétés NOT tous les immeubles
-    if (this.state.company === "Toutes les sociétés" && this.state.building != "Tous les immeubles") {
+    else if (this.state.company === "Toutes les sociétés" && this.state.building != "Tous les immeubles") {
       this.props.tenants.forEach((tenant) => {
         tenant.forEach((t) => {
           if (this.state.building === t.building_name) {
@@ -229,7 +237,7 @@ class WatersIndex extends Component {
       })
     }
     // NOT toutes les sociétés NOT tous les immeubles
-    if (this.state.company != "Toutes les sociétés" && this.state.building != "Tous les immeubles") {
+    else if (this.state.company != "Toutes les sociétés" && this.state.building != "Tous les immeubles") {
       this.props.tenants.forEach((tenant) => {
         tenant.forEach((t) => {
           if (this.state.company === t.company_name && this.state.building === t.building_name) {

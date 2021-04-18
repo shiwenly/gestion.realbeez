@@ -1,9 +1,8 @@
 import React, { Component, useEffect } from 'react';
 import { connect, useSelector, useDispatch, useActions } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
-import { createWater } from '../actions';
 import { bindActionCreators } from 'redux';
-import { fetchTenants, fetchBuildings, fetchCompanies } from '../actions';
+import { fetchTenants, fetchBuildings, fetchCompanies, updateWater } from '../actions';
 import { useState, useCallback} from 'react'
 import {useDropzone} from 'react-dropzone'
 import Dropzone from 'react-dropzone'
@@ -12,8 +11,13 @@ import { useForm } from 'react-hook-form';
 import { useHistory } from "react-router";
 import axios from 'axios';
 import ProgressBar from 'react-bootstrap/ProgressBar'
+import { useRouteMatch } from "react-router-dom";
 
-const WaterEdit = () => {
+const WaterEdit = (props) => {
+
+  let match = useRouteMatch("/waters/edit/:id");
+  const tenantParams = props.location.state
+  const [photoArray, setPhotoArray ] = useState(tenantParams.photo.split(','))
 
   // History hook
   const history = useHistory();
@@ -23,9 +27,9 @@ const WaterEdit = () => {
 
   // React hooks for progress bar
   const [uploadPercentage, setUploadPercentage] = useState(0);
-  const [companySelected, setCompanySelected ] = useState("Toutes les sociétés");
-  const [buildingSelected, setBuildingSelected ] = useState("Tous les immeubles");
-  const [tenantSelected, setTenantSelected ] = useState("");
+  const [companySelected, setCompanySelected ] = useState(tenantParams.company_name);
+  const [buildingSelected, setBuildingSelected ] = useState(tenantParams.building_name);
+  const [tenantSelected, setTenantSelected ] = useState(tenantParams.tenant_id);
 
   // MapDispatchToProp hook
   const dispatch = useDispatch()
@@ -70,6 +74,7 @@ const WaterEdit = () => {
         const data = response.data;
         setUploadPercentage(0)
         setUploadedFiles(old => [...old, data])
+        setPhotoArray(old => [...old, data.url])
       })
     })
   }, [])
@@ -85,7 +90,9 @@ const WaterEdit = () => {
 
   // Call API and post data from form
   const onSubmit = (data) => {
-    createWater(data, (post) => {
+    console.log(data)
+    console.log(match.params.id)
+    updateWater(data, (post) => {
       history.push('/waters'); // Navigate after submit
       return post;
     });
@@ -206,12 +213,31 @@ const WaterEdit = () => {
     setUploadedFiles(old => [...old])
   }
 
+   // Remove file previously uploaded
+  const removePreviousFile = (file) => {
+    const index = photoArray.findIndex(f => f === file)
+    photoArray.splice(index, 1)
+    setPhotoArray(old => [...old])
+  }
+
   // React Form
   return (
     <div className="row justify-content-center mt-5">
       <div className="col-12 col-md-6">
       <h3 className="text-center mb-5" style={{}}>Déclarer ma consommation d'eau</h3>
         <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="mt-3">
+            <label htmlFor="idSelected"></label>
+             <input
+               ref={register}
+               className="form-control"
+               label="idSelected"
+               name="idSelected"
+               type="hidden"
+               rows="8"
+               defaultValue={match.params.id}
+             />
+          </div>
           <label htmlFor="date" className="mt-3">Date</label>
           <input
               ref={register}
@@ -219,6 +245,7 @@ const WaterEdit = () => {
               label="Date"
               name="submission_date"
               type="date"
+              defaultValue={tenantParams.submission_date}
           />
           <div>
             <label htmlFor="company_id" className=" mt-3">Sélectionnez une société</label>
@@ -272,6 +299,7 @@ const WaterEdit = () => {
                name="quantity"
                type="text"
                rows="8"
+               defaultValue={tenantParams.quantity}
              />
           </div>
           <div>
@@ -297,18 +325,24 @@ const WaterEdit = () => {
             </div>
             <div className="mt-3">{ uploadPercentage > 0 ? progressInstance : null }</div>
             <ul className="mt-3">
-              {uploadedFiles.map((file) => (
-                <li key={file.public_id}>
-                  { file.original_filename }
+              {photoArray.map((file, index) =>
+                <li key={index}>
+                  <Image
+                    cloudName={process.env.REACT_APP_CLOUDINARY_API}
+                    publicId={ file.match(/.*\/(.*)\/(.*)....$/)[2] }
+                    className="imageUpload mb-1"
+                    style={{width: "50px"}}
+                  />
                   <span
                     className="text-primary cursor-pointer ml-3"
                     style={{cursor: "pointer"}}
-                    onClick={() => removeFile(file)}
+                    onClick={() => removePreviousFile(file)}
                   >
-                    supprimer
+                  supprimer
                   </span>
                 </li>
-                ))}
+                )
+              }
             </ul>
           </div>
           <div className="mt-3">
@@ -319,7 +353,7 @@ const WaterEdit = () => {
               label="photo"
               name="photo"
               type="hidden"
-              value={ uploadedFiles.map((pic) => pic.url) }
+              value={ photoArray.map((pic) => pic)}
             />
           </div>
           <button disabled={!isEnabled} className="btn btn-yellow-mustard" onSubmit={() => dispatch(createWater())}>Valider</button>

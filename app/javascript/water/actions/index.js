@@ -1,4 +1,5 @@
 const ROOT_URL = '../api/v1/waters';
+const ROOT_URL_update = '/../../api/v1/waters';
 const TENANT_URL = '/api/v1/tenants'
 const COMPANY_URL = '/api/v1/companies'
 const BUILDING_URL = '/api/v1/buildings'
@@ -7,6 +8,7 @@ export const FETCH_WATERS = 'FETCH_WATERS';
 export const FETCH_WATER = 'FETCH_WATER';
 export const WATER_CREATED = 'WATER_CREATED';
 export const DELETE_WATER = 'DELETE_WATER';
+export const UPDATE_WATER = 'UPDATE_WATER';
 export const FETCH_TENANTS = 'FETCH_TENANTS';
 export const FETCH_COMPANIES = 'FETCH_COMPANIES';
 export const FETCH_BUILDINGS = 'FETCH_BUILDINGS';
@@ -89,5 +91,23 @@ export function deleteWater(water, callback) {
   return {
     type: DELETE_WATER,
     payload: water
+  };
+}
+
+
+export function updateWater(body, callback) {
+  const request = fetch(`${ROOT_URL_update}/${parseInt(body.idSelected, 10)}`, {
+    method: 'PUT',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    credentials: 'same-origin',
+    body: JSON.stringify(body)
+  }).then(response => response.json())
+    .then(callback);
+  return {
+    type: UPDATE_WATER,
+    payload: request
   };
 }

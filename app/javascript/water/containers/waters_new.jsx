@@ -156,7 +156,7 @@ const WaterNew = () => {
       })
     }
     // NOT toutes les sociétés AND tous les immeubles
-    if (companySelected != "Toutes les sociétés" && buildingSelected === "Tous les immeubles") {
+    else if (companySelected != "Toutes les sociétés" && buildingSelected === "Tous les immeubles") {
       tenants.forEach((tenant) => {
         tenant.forEach((t) => {
           if (companySelected === t.company_name) {
@@ -166,7 +166,7 @@ const WaterNew = () => {
       })
     }
     // toutes les sociétés NOT tous les immeubles
-    if (companySelected === "Toutes les sociétés" && buildingSelected != "Tous les immeubles") {
+    else if (companySelected === "Toutes les sociétés" && buildingSelected != "Tous les immeubles") {
       tenants.forEach((tenant) => {
         tenant.forEach((t) => {
           if (buildingSelected === t.building_name) {
@@ -176,7 +176,7 @@ const WaterNew = () => {
       })
     }
     // NOT toutes les sociétés NOT tous les immeubles
-    if (companySelected != "Toutes les sociétés" && buildingSelected != "Tous les immeubles") {
+    else if (companySelected != "Toutes les sociétés" && buildingSelected != "Tous les immeubles") {
       tenants.forEach((tenant) => {
         tenant.forEach((t) => {
           if (companySelected === t.company_name && buildingSelected === t.building_name) {
@@ -219,6 +219,7 @@ const WaterNew = () => {
               label="Date"
               name="submission_date"
               type="date"
+              required=""
           />
           <div>
             <label htmlFor="company_id" className=" mt-3">Sélectionnez une société</label>
@@ -299,7 +300,12 @@ const WaterNew = () => {
             <ul className="mt-3">
               {uploadedFiles.map((file) => (
                 <li key={file.public_id}>
-                  { file.original_filename }
+                  <Image
+                    cloudName={process.env.REACT_APP_CLOUDINARY_API}
+                    publicId={file.public_id}
+                    className="imageUpload mb-1"
+                    style={{width: "50px"}}
+                  />
                   <span
                     className="text-primary cursor-pointer ml-3"
                     style={{cursor: "pointer"}}
@@ -331,14 +337,7 @@ const WaterNew = () => {
 
 export default WaterNew;
 
-// to display image after upload
-// <Image
-// cloudName={process.env.CLOUDINARY_API}
-// publicId={file.public_id}
-// className="imageUpload"
-// width="50"
-// crop="scale"
-// />
+
 
 
 

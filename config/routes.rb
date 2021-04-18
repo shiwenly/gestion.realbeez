@@ -37,6 +37,7 @@ Rails.application.routes.draw do
 
   get '/waters/new', to: 'waters#index'
   get '/waters/:id', to: 'waters#index'
+  get '/waters/edit/:id', to: 'waters#index'
 
   resources :waters, only: [:index]
   # get '/waters/new', to: '/waters#index'
