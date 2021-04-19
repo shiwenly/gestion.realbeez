@@ -12,6 +12,13 @@ import { useHistory } from "react-router";
 import axios from 'axios';
 import ProgressBar from 'react-bootstrap/ProgressBar'
 import { useRouteMatch } from "react-router-dom";
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+
+let schema = yup.object().shape({
+  submission_date: yup.date().required(),
+  quantity: yup.number().required(),
+});
 
 const WaterEdit = (props) => {
 
@@ -86,7 +93,9 @@ const WaterEdit = (props) => {
   })
 
   // React form hook
-  const {register, handleSubmit} = useForm()
+  const { register, handleSubmit, errors } = useForm({
+    resolver: yupResolver(schema),
+  });
 
   // Call API and post data from form
   const onSubmit = (data) => {
@@ -238,7 +247,7 @@ const WaterEdit = (props) => {
                defaultValue={match.params.id}
              />
           </div>
-          <label htmlFor="date" className="mt-3">Date</label>
+          <label htmlFor="date" className="mt-3">Date *</label>
           <input
               ref={register}
               className="form-control"
@@ -247,8 +256,9 @@ const WaterEdit = (props) => {
               type="date"
               defaultValue={tenantParams.submission_date}
           />
+          <p className="mt-2" style={{color: "red", fontSize: "12px"}}>{errors["submission_date"]?.message}</p>
           <div>
-            <label htmlFor="company_id" className=" mt-3">Sélectionnez une société</label>
+            <label htmlFor="company_id" className="">Sélectionnez une société</label>
             <select
               ref={register}
               className="form-control"
@@ -291,7 +301,7 @@ const WaterEdit = (props) => {
             </select>
           </div>
           <div className="mt-3">
-            <label htmlFor="quantity">Quantité</label>
+            <label htmlFor="quantity">Quantité *</label>
              <input
                ref={register}
                className="form-control"
@@ -301,6 +311,7 @@ const WaterEdit = (props) => {
                rows="8"
                defaultValue={tenantParams.quantity}
              />
+             <p className="mt-2" style={{color: "red", fontSize: "12px"}}>{errors["quantity"]?.message}</p>
           </div>
           <div>
             <p className="mt-3 mb-2" >Pièce jointe</p>

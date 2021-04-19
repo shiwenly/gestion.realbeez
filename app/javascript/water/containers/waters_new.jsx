@@ -11,7 +11,14 @@ import {Image} from 'cloudinary-react';
 import { useForm } from 'react-hook-form';
 import { useHistory } from "react-router";
 import axios from 'axios';
-import ProgressBar from 'react-bootstrap/ProgressBar'
+import ProgressBar from 'react-bootstrap/ProgressBar';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+
+let schema = yup.object().shape({
+  submission_date: yup.date().required(),
+  quantity: yup.number().required(),
+});
 
 const WaterNew = () => {
 
@@ -37,9 +44,9 @@ const WaterNew = () => {
 
   // ComponentDidMount hook to retrieve tenants, companies, buildings info from redux
   useEffect(() => {
-       dispatch(fetchTenants());
-       dispatch(fetchCompanies());
-       dispatch(fetchBuildings());
+    dispatch(fetchTenants());
+    dispatch(fetchCompanies());
+    dispatch(fetchBuildings());
   }, []);
 
   // Upload to Cloudinary
@@ -81,25 +88,33 @@ const WaterNew = () => {
   })
 
   // React form hook
-  const {register, handleSubmit} = useForm()
+  const { register, handleSubmit, errors } = useForm({
+    resolver: yupResolver(schema),
+  });
 
   // Call API and post data from form
   const onSubmit = (data) => {
-    createWater(data, (post) => {
-      history.push('/waters'); // Navigate after submit
-      return post;
-    });
+    const isValid = schema.isValid(data)
+    console.log(data)
+    console.log(isValid)
+    // createWater(data, (post) => {
+    //   history.push('/waters'); // Navigate after submit
+    //   return post;
+    // });
   }
 
+  // Set the state of the company
   const setCompany = (event) => {
     setCompanySelected(event.target.value)
     setBuildingSelected("Tous les immeubles")
   }
 
+  // Set the state of the building
   const setBuilding = (event) => {
     setBuildingSelected(event.target.value)
   }
 
+  // Set the state of the tenant
   const setTenant = (event) => {
     setTenantSelected(event.target.value)
   }
@@ -117,7 +132,6 @@ const WaterNew = () => {
 
     // Display all the buildings in the form select
   const renderBuildings = (buildings) => {
-
     let buildingsArray = []
     // Check company field and select buildings
     if (companySelected === "Toutes les sociétés") {
@@ -144,7 +158,6 @@ const WaterNew = () => {
 
   // Display all the tenants in the form select
   const renderTenants = (tenants) => {
-
     let tenantsArray = []
     // Check selection and select tenants
     // toutes les sociétés AND tous les immeubles
@@ -212,7 +225,7 @@ const WaterNew = () => {
       <div className="col-12 col-md-6">
       <h3 className="text-center mb-5" style={{}}>Déclarer ma consommation d'eau</h3>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <label htmlFor="date" className="mt-3">Date</label>
+          <label htmlFor="date" className="mt-3">Date *</label>
           <input
               ref={register}
               className="form-control"
@@ -221,8 +234,9 @@ const WaterNew = () => {
               type="date"
               required=""
           />
+          <p className="mt-2" style={{color: "red", fontSize: "12px"}}>{errors["submission_date"]?.message}</p>
           <div>
-            <label htmlFor="company_id" className=" mt-3">Sélectionnez une société</label>
+            <label htmlFor="company_id" className="">Sélectionnez une société</label>
             <select
               ref={register}
               className="form-control"
@@ -265,7 +279,7 @@ const WaterNew = () => {
             </select>
           </div>
           <div className="mt-3">
-            <label htmlFor="quantity">Quantité</label>
+            <label htmlFor="quantity">Quantité *</label>
              <input
                ref={register}
                className="form-control"
@@ -274,6 +288,7 @@ const WaterNew = () => {
                type="text"
                rows="8"
              />
+             <p className="mt-2" style={{color: "red", fontSize: "12px"}}>{errors["quantity"]?.message}</p>
           </div>
           <div>
             <p className="mt-3 mb-2" >Pièce jointe</p>
