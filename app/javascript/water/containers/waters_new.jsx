@@ -94,13 +94,10 @@ const WaterNew = () => {
 
   // Call API and post data from form
   const onSubmit = (data) => {
-    const isValid = schema.isValid(data)
-    console.log(data)
-    console.log(isValid)
-    // createWater(data, (post) => {
-    //   history.push('/waters'); // Navigate after submit
-    //   return post;
-    // });
+    createWater(data, (post) => {
+      history.push('/waters'); // Navigate after submit
+      return post;
+    });
   }
 
   // Set the state of the company
