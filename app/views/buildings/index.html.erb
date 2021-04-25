@@ -81,7 +81,7 @@
           <div class="row ml-3">
             <div class="mt-5 mb-3 d-flex align-items-center">
               <% if params[:search] != nil %>
-                <%= f.select :company, @companies, class: 'form-control' html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:company]  %>
+                <%= f.select :company, @companies, html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false, selected: params[:search][:company]  %>
               <% else %>
                 <%= f.select :company, @companies ,html: { style:"border: solid; width:10vh"}, include_blank: false, include_hidden: false  %>
               <% end %>
