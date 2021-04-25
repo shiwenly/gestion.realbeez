@@ -12,8 +12,8 @@ import { BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 
 import WatersIndex from './containers/waters_index';
 // import WatersShow from './containers/waters_show';
-import WatersNew from './containers/waters_new';
-import WatersEdit from './containers/waters_edit';
+import WaterNew from './containers/waters_new';
+import WaterEdit from './containers/waters_edit';
 
 // import '../assets/stylesheets/application.scss';
 import watersReducer from './reducers/waters_reducer';
@@ -45,8 +45,8 @@ if (water) {
         <div className="thin-container">
           <Switch>
             <Route path="/waters" exact component={WatersIndex} />
-            <Route path="/waters/new" component={WatersNew} />
-            <Route path="/waters/edit/:id" component={WatersEdit} />
+            <Route path="/waters/new" component={WaterNew} />
+            <Route path="/waters/edit/:id" component={WaterEdit} />
           </Switch>
         </div>
       </Router>
