@@ -99,8 +99,6 @@ const WaterEdit = (props) => {
 
   // Call API and post data from form
   const onSubmit = (data) => {
-    console.log(data)
-    console.log(match.params.id)
     updateWater(data, (post) => {
       history.push('/waters'); // Navigate after submit
       return post;

@@ -23,18 +23,10 @@ class WatersIndex extends Component {
   }
 
   componentDidMount() {
-    if (!this.fetchWaters) {
-      this.props.fetchWaters();
-    }
-    if (!this.fetchCompanies) {
-      this.props.fetchCompanies();
-    }
-    if (!this.fetchBuildings) {
-      this.props.fetchBuildings();
-    }
-    if (!this.fetchTenants) {
-      this.props.fetchTenants();
-    }
+    this.props.fetchWaters();
+    this.props.fetchCompanies();
+    this.props.fetchBuildings();
+    this.props.fetchTenants();
   }
 
 
@@ -140,7 +132,6 @@ class WatersIndex extends Component {
            <td>
             <button className="btn-icon fas fa-edit" onClick={() => this.handleUpdateWater(water)}>
             </button>
-            {/*<button className="btn-icon fas fa-trash" onClick={() => this.handleRemoveWater(water)}>*/}
             <button className="btn-icon fas fa-trash" onClick={() => { if (window.confirm(`Confirmez-vous la suppression de la saisie du ${water.submission_date} ?`)) this.handleRemoveWater(water) }} >
             </button>
            </td>

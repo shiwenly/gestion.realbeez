@@ -16,8 +16,8 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 let schema = yup.object().shape({
-  submission_date: yup.date().required(),
-  quantity: yup.number().required(),
+  submission_date: yup.string().required(),
+  quantity: yup.string().required(),
 });
 
 const WaterNew = () => {
